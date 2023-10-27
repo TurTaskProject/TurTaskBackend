@@ -1,7 +1,12 @@
 from django.urls import path
-from . import views
+from rest_framework_simplejwt import views as jwt_views
+from .views import ObtainTokenPairWithCustomView, CustomUserCreate, GreetingView, GoogleLogin
 
 urlpatterns = [
-    path('', views.home),
-    path('logout', views.logout_view),
+    path('user/create/', CustomUserCreate.as_view(), name="create_user"),
+    path('token/obtain/', jwt_views.TokenObtainPairView.as_view(), name='token_create'),
+    path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/custom_obtain/', ObtainTokenPairWithCustomView.as_view(), name='token_create_custom'),
+    path('hello/', GreetingView.as_view(), name='hello_world'),
+    path('dj-rest-auth/google/', GoogleLogin.as_view(), name="google_login"),
 ]
