@@ -10,6 +10,9 @@ import axiosapi from '../api/axiosapi';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
 
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
+
 const useStyles = makeStyles((theme) => ({
     // Styles for various elements
     paper: {
@@ -144,7 +147,7 @@ export default function Login() {
                 </form>
 
                 <GoogleLogin
-                    clientId="YOUR_GOOGLE_CLIENT_ID"
+                    clientId={GOOGLE_CLIENT_ID}
                     buttonText="Login"
                     onSuccess={responseGoogle}
                     onFailure={responseGoogle}
