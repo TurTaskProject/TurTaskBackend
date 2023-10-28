@@ -8,11 +8,11 @@ import {
   SiCss3,
 } from "react-icons/si";
 
-import homeLogo from "../assests/home.png";
-import calendarLogo from "../assests/calendar.png";
-import planLogo from "../assests/planning.png";
-import pieLogo from "../assests/pie-chart.png";
-import plusLogo from "../assests/plus.png";
+import homeLogo from "../assets/home.png";
+import calendarLogo from "../assets/calendar.png";
+import planLogo from "../assets/planning.png";
+import pieLogo from "../assets/pie-chart.png";
+import plusLogo from "../assets/plus.png";
 
 const IconSideNav = () => {
   return (
