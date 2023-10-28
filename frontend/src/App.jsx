@@ -27,6 +27,7 @@ import {BrowserRouter, Route, Routes, Link} from "react-router-dom";
 import Login from "./components/login";
 import TestAuth from './components/testAuth';
 import Signup from './components/signup';
+import IconSideNav from "./components/IconSideNav";
 
 const App = () => {
     return (
@@ -45,6 +46,7 @@ const App = () => {
                         <Route path="/testAuth" element={<TestAuth/>}/>
                     </Routes>
         </div>
+        <IconSideNav />
         </BrowserRouter>
     );
 }
