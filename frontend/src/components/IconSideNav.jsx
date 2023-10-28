@@ -1,18 +1,19 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import {
-  SiFramer,
-  SiTailwindcss,
-  SiReact,
-  SiJavascript,
-  SiCss3,
-} from "react-icons/si";
-
+import { AnimatePresence, motion } from "framer-motion";
+import { SiFramer, SiTailwindcss, SiReact, SiJavascript, SiCss3 } from "react-icons/si";
 import homeLogo from "../assets/home.png";
 import calendarLogo from "../assets/calendar.png";
 import planLogo from "../assets/planning.png";
 import pieLogo from "../assets/pie-chart.png";
 import plusLogo from "../assets/plus.png";
+
+const menuItems = [
+  { id: 0, icon: <homeLogo />, logo: homeLogo },
+  { id: 1, icon: <calendarLogo />, logo: calendarLogo },
+  { id: 2, icon: <planLogo />, logo: planLogo },
+  { id: 3, icon: <pieLogo />, logo: pieLogo },
+  { id: 4, icon: <plusLogo />, logo: plusLogo },
+];
 
 const IconSideNav = () => {
   return (
@@ -25,34 +26,6 @@ const IconSideNav = () => {
 
 const SideNav = () => {
   const [selected, setSelected] = useState(0);
-
-  const menuItems = [
-    {
-      id: 0,
-      icon: <homeLogo />,
-      logo: homeLogo,
-    },
-    {
-      id: 1,
-      icon: <calendarLogo />,
-      logo: calendarLogo,
-    },
-    {
-      id: 2,
-      icon: <planLogo />,
-      logo: planLogo,
-    },
-    {
-      id: 3,
-      icon: <pieLogo />,
-      logo: pieLogo,
-    },
-    {
-      id: 4,
-      icon: <plusLogo />,
-      logo: plusLogo,
-    },
-  ];
 
   return (
     <nav className="h-[500px] w-fit bg-slate-950 p-4 flex flex-col items-center gap-2">
@@ -73,7 +46,7 @@ const SideNav = () => {
 const NavItem = ({ icon, selected, id, setSelected, logo }) => {
   return (
     <motion.button
-      className="p-3 text-xl bg-slate-800 hover:bg-slate-700 rounded-md transition-colors relative"
+      className="p-3 text-xl bg-slate-800 hover-bg-slate-700 rounded-md transition-colors relative"
       onClick={() => setSelected(id)}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
@@ -95,6 +68,5 @@ const NavItem = ({ icon, selected, id, setSelected, logo }) => {
     </motion.button>
   );
 };
-
 
 export default IconSideNav;

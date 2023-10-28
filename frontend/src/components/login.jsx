@@ -8,10 +8,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axiosapi from '../api/axiosapi';
 import { useNavigate } from 'react-router-dom';
-import { GoogleLogin } from 'react-google-login';
-
-
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
+import { useGoogleLogin } from '@react-oauth/google';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     // Styles for various elements
@@ -35,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
-    const history = useNavigate();
+    const history = useHistory();
     const classes = useStyles();
 
     const [email, setEmail] = useState("");
@@ -79,7 +77,7 @@ export default function Login() {
 
     const responseGoogle = async (response) => {
         // Handle Google login response
-        let googleResponse = await axiosapi.googleLogin(response.accessToken);
+        let googleResponse = await axiosapi.googleLogin(response.access_token);
         console.log('Google Response:\n', googleResponse);
 
         if (googleResponse.status === 200) {
@@ -90,6 +88,13 @@ export default function Login() {
             history.push('/testAuth');
         }
     }
+
+    const googleLoginflow = useGoogleLogin({
+        onSuccess: async tokenResponse => {
+          console.log(tokenResponse);
+          responseGoogle(tokenResponse);
+        },
+    })
 
     return (
         <Container component="main" maxWidth="xs">
@@ -147,13 +152,10 @@ export default function Login() {
                     </Button>
                 </form>
 
-                <GoogleLogin
-                    clientId={GOOGLE_CLIENT_ID}
-                    buttonText="Login"
-                    onSuccess={responseGoogle}
-                    onFailure={responseGoogle}
-                    cookiePolicy={'single_host_origin'}
-                />
+                
+                    <button onClick={() => googleLoginflow()}>
+                    Sign in with Google 🚀{' '}
+                    </button>
             </div>
         </Container>
     );
