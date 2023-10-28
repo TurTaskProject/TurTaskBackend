@@ -73,6 +73,7 @@ export default function Login() {
             history.push('/testAuth');
         }).catch(err => {
             console.log('Login failed'); // Handle login failure
+            console.log(err)
         });
     }
 

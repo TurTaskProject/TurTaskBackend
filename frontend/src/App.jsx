@@ -26,6 +26,7 @@ import './App.css';
 import {BrowserRouter, Route, Routes, Link} from "react-router-dom";
 import Login from "./components/login";
 import TestAuth from './components/testAuth';
+import Signup from './components/signup';
 
 const App = () => {
     return (
@@ -34,11 +35,13 @@ const App = () => {
                     <nav>
                         <Link className={"nav-link"} to={"/"}>Home</Link>
                         <Link className={"nav-link"} to={"/login"}>Login</Link>
+                        <Link className={"nav-link"} to={"/signup"}>Signup</Link>
                         <Link className={"nav-link"} to={"/testAuth"}>testAuth</Link>
                     </nav>
                     <Routes>
                         <Route path={"/"} render={() => <h1>This is Home page!</h1>} />
                         <Route path="/login" element={<Login/>}/>
+                        <Route path="/signup" element={<Signup/>}/>
                         <Route path="/testAuth" element={<TestAuth/>}/>
                     </Routes>
         </div>

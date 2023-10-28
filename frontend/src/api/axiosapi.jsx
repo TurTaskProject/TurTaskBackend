@@ -83,11 +83,31 @@ const getGreeting = () => {
         });
 }
 
+const config = {
+    headers: {
+        "Content-Type": "application/json"
+    }
+};
+
+// Function to register
+const createUser = async (formData) => {
+  try {
+    axios.defaults.withCredentials = true
+    const resposne = axios.post("http://localhost:8000/api/user/create/", formData);
+    // const response = await axiosInstance.post('/user/create/', formData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 // Export the functions and Axios instance
 export default {
     axiosInstance,
     apiUserLogin,
     apiUserLogout,
     getGreeting: getGreeting,
-    googleLogin
+    googleLogin,
+    createUser
 };
