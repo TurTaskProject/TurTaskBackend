@@ -10,8 +10,8 @@ class Reminder(models.Model):
     - startDate: The optional date for which the reminder is set.
     - time: The time at which the reminder is triggered.
     """
-    startDate = models.DateField(null=True, blank=True)
-    time = models.DateTimeField()
+    startDate = models.DateField(auto_now_add=True, null=True, blank=True)
+    alertTime = models.DateTimeField(null=False, blank=False)
 
 class Tag(models.Model):
     """
@@ -59,14 +59,14 @@ class Task(models.Model):
     type = models.CharField(max_length=15, choices=TASK_TYPES, default='habit')
     title = models.TextField()
     notes = models.TextField(default='')
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, blank=True)
     completed = models.BooleanField(default=False)
     exp = models.FloatField(default=0)
     priority = models.FloatField(default=1, validators=[
         validators.MinValueValidator(0.1),
         validators.MaxValueValidator(2),
     ])
-    difficulty = models.PositiveSmallIntegerField(choices=DIFFICULTY_CHOICES, unique=True)
+    difficulty = models.PositiveSmallIntegerField(choices=DIFFICULTY_CHOICES)
     attribute = models.CharField(max_length=15, choices=[
         ('str', 'Strength'),
         ('int', 'Intelligence'),
@@ -76,7 +76,7 @@ class Task(models.Model):
     ], default='str')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     challenge = models.BooleanField(default=False)
-    reminders = models.ManyToManyField(Reminder)
+    reminders = models.ManyToManyField(Reminder, blank=True)
     fromSystem = models.BooleanField(default=False)
     creation_date = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
