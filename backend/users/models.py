@@ -26,3 +26,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         # String representation of the user
         return self.username
+
+
+# class UserStats(models.Model):
+#     """
+#     Represents User Profiles and Attributes.
+#     Fields:
+#     - health: health points of the user.
+#     - gold: gold points of the user.
+#     - experience: experience points of the user.
+#     """
+#     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+#     health = models.IntegerField(default=100)
+#     gold = models.IntegerField(default=0)
+#     experience = models.FloatField(default=0)
