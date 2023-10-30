@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axiosapi from '../../api/axiosapi';
 
 import Avatar from '@mui/material/Avatar';
@@ -32,6 +33,9 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+
+    const Navigate = useNavigate();
+
     const [formData, setFormData] = useState({
       email: '',
       username: '',
@@ -53,6 +57,7 @@ export default function SignUp() {
       } finally {
           setIsSubmitting(false);
       }
+      Navigate('/login');
     };
   
     const handleChange = (e) => {

@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
 
 function TestAuth() {
-    let history = useNavigate();
+    let Navigate = useNavigate();
 
     const [message, setMessage] = useState("");
 
@@ -22,19 +22,19 @@ function TestAuth() {
     const logout = () => {
         // Log out the user, clear tokens, and navigate to the "/testAuth" route
         axiosapi.apiUserLogout();
-        history('/testAuth');
+        Navigate('/testAuth');
     }
 
     return (
         <div>
             {message !== "" && (
                 <div>
-                    <h1>Hello!</h1>
+                    <h1 class="text-xl font-bold">Login! Hello!</h1>
                     <h2>{message}</h2>
                     <Button variant="contained" onClick={logout}>Logout</Button>
                 </div>
             )}
-            {message === "" && <h1>Need to sign in</h1>}
+            {message === "" && <h1 class="text-xl font-bold">Need to sign in, No authentication found</h1>}
         </div>
     );
 }

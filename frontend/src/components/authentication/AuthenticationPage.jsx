@@ -69,7 +69,7 @@ export default function SignInSide() {
             localStorage.setItem('access_token', res.data.access);
             localStorage.setItem('refresh_token', res.data.refresh);
             axiosapi.axiosInstance.defaults.headers['Authorization'] = "Bearer " + res.data.access;
-            Navigate('/testAuth');
+            Navigate('/');
         }).catch(err => {
             console.log('Login failed'); // Handle login failure
             console.log(err)
@@ -86,7 +86,7 @@ export default function SignInSide() {
             localStorage.setItem('access_token', googleResponse.data.access_token);
             localStorage.setItem('refresh_token', googleResponse.data.refresh_token);
             axiosapi.axiosInstance.defaults.headers['Authorization'] = "Bearer " + googleResponse.data.access_token;
-            Navigate('/testAuth');
+            Navigate('/');
         }
     }
 
@@ -103,6 +103,7 @@ export default function SignInSide() {
             // Save the tokens in localStorage
             localStorage.setItem('access_token', access_token);
             localStorage.setItem('refresh_token', refresh_token);
+            Navigate('/');
               }
         } catch (error) {
           console.error('Error with the POST request:', error);
