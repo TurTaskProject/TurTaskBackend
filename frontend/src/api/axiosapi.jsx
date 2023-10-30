@@ -62,13 +62,12 @@ const apiUserLogout = () => {
 }
 
 // Function for Google login
-const googleLogin = async (accesstoken) => {
+const googleLogin = async (token) => {
     axios.defaults.withCredentials = true
     let res = await axios.post(
-        "http://localhost:8000/api/dj-rest-auth/google/",
+        "http://localhost:8000/api/auth/google/",
         {
-            access_token: accesstoken,
-            id_token: accesstoken,
+            token: token,
         }
     );
     // console.log('service google login res: ', res);

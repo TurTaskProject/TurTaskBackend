@@ -46,19 +46,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    'tasks',
+    'django.contrib.sites',
 
+    'tasks',
     'users',
-    'rest_framework',
+
     'corsheaders',
 
-    'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
+    'rest_framework',
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'rest_framework.authtoken',
@@ -70,10 +70,10 @@ REST_FRAMEWORK = {
         
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
     ]
 }
 
@@ -105,7 +105,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
-CSRF_TRUSTED_ORIGINS = ["http://*"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
 
 CORS_ORIGIN_WHITELIST = ["*"]
 
