@@ -3,11 +3,11 @@ from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from ..models import Task
-from .serializers import TaskSerializer
+from .serializers import TaskCreateSerializer, TaskGeneralSerializer
 
 class TaskCreateView(CreateAPIView):
     queryset = Task.objects.all()
-    serializer_class = TaskSerializer
+    serializer_class = TaskCreateSerializer
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
@@ -22,12 +22,12 @@ class TaskCreateView(CreateAPIView):
 
 class TaskRetrieveView(RetrieveAPIView):
     queryset = Task.objects.all()
-    serializer_class = TaskSerializer
+    serializer_class = TaskGeneralSerializer
 
 
 class TaskUpdateView(RetrieveUpdateAPIView):
     queryset = Task.objects.all()
-    serializer_class = TaskSerializer
+    serializer_class = TaskGeneralSerializer
     permission_classes = [IsAuthenticated]
 
 
