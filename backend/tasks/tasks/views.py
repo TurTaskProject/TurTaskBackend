@@ -23,6 +23,7 @@ class TaskCreateView(CreateAPIView):
 class TaskRetrieveView(RetrieveAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskGeneralSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class TaskUpdateView(RetrieveUpdateAPIView):
