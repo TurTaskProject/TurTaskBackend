@@ -9,7 +9,6 @@ import Container from '@material-ui/core/Container';
 import axiosapi from '../api/axiosapi';
 import { useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
-import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     // Styles for various elements
@@ -33,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
-    const history = useHistory();
+    const history = useNavigate();
     const classes = useStyles();
 
     const [email, setEmail] = useState("");
