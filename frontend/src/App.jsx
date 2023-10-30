@@ -46,7 +46,9 @@ const App = () => {
                         <Route path="/testAuth" element={<TestAuth/>}/>
                     </Routes>
         </div>
-        <IconSideNav />
+        <div>
+            <IconSideNav />
+        </div>
         </BrowserRouter>
     );
 }
