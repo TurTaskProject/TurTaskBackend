@@ -82,8 +82,8 @@ REST_USE_JWT = True
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': config('GOOGLE_CLIENT_ID'),
-            'secret': config('GOOGLE_CLIENT_SECRET'),
+            'client_id': config('GOOGLE_CLIENT_ID', default='fake-client-id'),
+            'secret': config('GOOGLE_CLIENT_SECRET', default='fake-client-secret'),
             'key': ''
         },
         "SCOPE": [
@@ -118,7 +118,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # "allauth.account.middleware.AccountMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'core.urls'
