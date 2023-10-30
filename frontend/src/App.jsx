@@ -24,10 +24,10 @@
 
 import './App.css';
 import {BrowserRouter, Route, Routes, Link} from "react-router-dom";
-import Login from "./components/login";
 import TestAuth from './components/testAuth';
-import Signup from './components/signup';
 import IconSideNav from "./components/IconSideNav";
+import AuthenticantionPage from "./components/authentication/AuthenticationPage"
+import SignUpPage from "./components/authentication/SignUpPage"
 
 const App = () => {
     return (
@@ -41,14 +41,14 @@ const App = () => {
                     </nav>
                     <Routes>
                         <Route path={"/"} render={() => <h1>This is Home page!</h1>} />
-                        <Route path="/login" element={<Login/>}/>
-                        <Route path="/signup" element={<Signup/>}/>
+                        <Route path="/login" element={<AuthenticantionPage/>}/>
+                        <Route path="/signup" element={<SignUpPage/>}/>
                         <Route path="/testAuth" element={<TestAuth/>}/>
                     </Routes>
         </div>
-        <div>
+        {/* <div>
             <IconSideNav />
-        </div>
+        </div> */}
         </BrowserRouter>
     );
 }

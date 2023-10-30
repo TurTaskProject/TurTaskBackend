@@ -9,3 +9,6 @@ markdown>=3.5
 django-filter>=23.3
 djangorestframework-simplejwt>=5.3
 django-cors-headers>=4.3
+google_api_python_client>=2.1
+google_auth_oauthlib>=1.1
+google-auth-httplib2>=0.1
