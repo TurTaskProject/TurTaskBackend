@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import IsAuthenticated from '../authentication/IsAuthenticated';
+import axiosapi from '../../api/axiosapi';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,6 +15,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import Stack from '@mui/material/Stack';
 
 const pages = {
     TestAuth: '/testAuth',
@@ -22,7 +25,6 @@ const settings = {
     Profile: '/profile',
     Account: '/account',
     Dashboard: '/dashboard',
-    Logout: '/logout',
   };
 
 function NavBar() {
@@ -43,6 +45,14 @@ function NavBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const isAuthenticated = IsAuthenticated();
+
+  const logout = () => {
+    // Log out the user, clear tokens, and navigate to the "/testAuth" route
+    axiosapi.apiUserLogout();
+    Navigate('/testAuth');
+}
 
   return (
     <AppBar position="static">
@@ -138,37 +148,53 @@ function NavBar() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+        {isAuthenticated ? (
+        <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Bullet" src="https://us-tuna-sounds-images.voicemod.net/f322631f-689a-43ac-81ab-17a70f27c443-1692187175560.png" />
-              </IconButton>
+            </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
+            sx={{ mt: '45px' }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
+            }}
+            keepMounted
+            transformOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
             >
             {Object.entries(settings).map(([setting, path]) => (
-            <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
                 <Link to={path} className="nav-link">
-                <Typography textAlign="center">{setting}</Typography>
+                    <Typography textAlign="center">{setting}</Typography>
                 </Link>
-            </MenuItem>
+                </MenuItem>
             ))}
+              <MenuItem>
+                <Link to={'/'} onClick={logout} className="nav-link">
+                    <Typography textAlign="center">Logout</Typography>
+                </Link>
+              </MenuItem>
             </Menu>
-          </Box>
+        </Box>
+        ) : (
+            <Stack direction="row" spacing={2}>
+                <Button variant="contained" href="/login" color="secondary">
+                Login
+                </Button>
+                <Button variant="contained" href="/signup" color="secondary">
+                Sign Up
+                </Button>
+            </Stack>
+        )}
         </Toolbar>
       </Container>
     </AppBar>

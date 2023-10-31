@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axiosapi from './axiosapi';
+import axiosapi from '../../api/axiosapi';
 
 function IsAuthenticated() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
