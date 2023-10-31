@@ -13,12 +13,6 @@ const App = () => {
         <BrowserRouter>
         <div className="App">
                     <NavBar/>
-                    <nav>
-                        <Link className={"nav-link"} to={"/"}>Home</Link>
-                        <Link className={"nav-link"} to={"/login"}>Login</Link>
-                        <Link className={"nav-link"} to={"/signup"}>Signup</Link>
-                        <Link className={"nav-link"} to={"/testAuth"}>testAuth</Link>
-                    </nav>
                     <Routes>
                         <Route path={"/"} render={() => <h1>This is Home page!</h1>} />
                         <Route path="/login" element={<AuthenticantionPage/>}/>

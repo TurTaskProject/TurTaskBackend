@@ -95,6 +95,8 @@ class GoogleRetrieveUserInfo(APIView):
     """
     Retrieve user information from Google and create a user if not exists.
     """
+    permission_classes = (AllowAny,)
+
     def post(self, request):
         access_token = request.data.get("token")
 
