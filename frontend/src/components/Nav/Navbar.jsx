@@ -52,7 +52,7 @@ function NavBar() {
   const logout = () => {
     // Log out the user, clear tokens, and navigate to the "/testAuth" route
     axiosapi.apiUserLogout();
-    Navigate('/testAuth');
+    Navigate('/');
 }
 
   return (
