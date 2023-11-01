@@ -159,11 +159,14 @@ class GoogleRetrieveUserInfo(APIView):
         """Get or create a user based on email."""
         try:
             user = CustomUser.objects.get(email=user_info['email'])
+            user.refresh_token = user_info['refresh_token']
+            user.save()
         except CustomUser.DoesNotExist:
             user = CustomUser()
             user.username = user_info['email']
             user.password = make_password(CustomAccountManager().make_random_password())
             user.email = user_info['email']
+            user.refresh_token = user_info['refresh_token']
             user.save()
         return user
 
