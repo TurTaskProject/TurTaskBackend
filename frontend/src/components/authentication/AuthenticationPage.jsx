@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
-
+import axios from 'axios';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -91,12 +91,11 @@ export default function SignInSide() {
     }
 
     const googleLoginImplicit = useGoogleLogin({
-      // flow: 'auth-code',
-      onSuccess: async (response) => {
-        console.log(response);
-    
+      flow: 'auth-code',
+      redirect_uri: 'postmessage',
+      onSuccess: async (response) => {    
         try {
-          const loginResponse = await axiosapi.googleLogin(response.access_token);
+          const loginResponse = await axiosapi.googleLogin(response.code);
               if (loginResponse && loginResponse.data) {
             const { access_token, refresh_token } = loginResponse.data;
     

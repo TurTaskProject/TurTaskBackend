@@ -3,6 +3,7 @@
 import json
 import requests
 
+from django.conf import settings
 from django.contrib.auth.hashers import make_password
 
 from rest_framework import status
@@ -15,6 +16,8 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 
 from dj_rest_auth.registration.views import SocialLoginView
+
+from google_auth_oauthlib.flow import InstalledAppFlow
 
 from .serializers import MyTokenObtainPairSerializer, CustomUserSerializer
 from .managers import CustomAccountManager
@@ -96,17 +99,28 @@ class GoogleRetrieveUserInfo(APIView):
     Retrieve user information from Google and create a user if not exists.
     """
     permission_classes = (AllowAny,)
+    client_config = {"web":{"client_id": settings.GOOGLE_CLIENT_ID,
+                            "project_id":"turtask","auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                            "token_uri": "https://oauth2.googleapis.com/token",
+                            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+                            "client_secret": settings.GOOGLE_CLIENT_SECRET,
+                            }
+                    }
+    scopes = [
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/calendar.readonly',
+    ]
 
     def post(self, request):
-        access_token = request.data.get("token")
-
-        user_info = self.get_google_user_info(access_token)
-
-        if 'error' in user_info:
-            error_message = 'Wrong Google token or the token has expired.'
-            return Response({'message': error_message, 'error': user_info['error']})
-
-        user = self.get_or_create_user(user_info)
+        code = request.data.get("code")
+        payload = self.exchange_authorization_code(code=code)
+        if 'error' in payload:
+            return Response({'error': payload['error']})
+        user_info = self.call_google_api(api_url='https://www.googleapis.com/oauth2/v2/userinfo?alt=json',
+                                        access_token=payload['access_token'])
+        payload['email'] = user_info['email']
+        user = self.get_or_create_user(payload)
         token = RefreshToken.for_user(user)
         
         response = {
@@ -117,13 +131,32 @@ class GoogleRetrieveUserInfo(APIView):
         
         return Response(response)
 
-    def get_google_user_info(self, access_token):
-        url = 'https://www.googleapis.com/oauth2/v2/userinfo'
-        payload = {'access_token': access_token}
-        response = requests.get(url, params=payload)
+    def get(self, request):
+        """Get authorization url."""
+        flow = InstalledAppFlow.from_client_config(client_config=self.client_config,
+                                                   scopes=self.scopes)
+        flow.redirect_uri = 'http://localhost:5173/'
+        authorization_url, state = flow.authorization_url(
+            access_type='offline',
+            # include_granted_scopes='true',
+        )
+        return Response({'url': authorization_url})
+
+    def exchange_authorization_code(self, code):
+        """Exchange authorization code for access, id, refresh token."""
+        url = 'https://oauth2.googleapis.com/token'
+        payload = {
+            'code': code,
+            'client_id': settings.GOOGLE_CLIENT_ID,
+            'client_secret': settings.GOOGLE_CLIENT_SECRET,
+            'redirect_uri': 'postmessage',
+            'grant_type': 'authorization_code',
+        }
+        response = requests.post(url, data=payload)        
         return json.loads(response.text)
 
     def get_or_create_user(self, user_info):
+        """Get or create a user based on email."""
         try:
             user = CustomUser.objects.get(email=user_info['email'])
         except CustomUser.DoesNotExist:
@@ -133,3 +166,14 @@ class GoogleRetrieveUserInfo(APIView):
             user.email = user_info['email']
             user.save()
         return user
+
+    def call_google_api(self, api_url, access_token):
+        """Call Google API with access token."""
+        headers = {
+            'Authorization': f'Bearer {access_token}'
+        }
+
+        response = requests.get(api_url, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        raise Exception('Google API Error', response)

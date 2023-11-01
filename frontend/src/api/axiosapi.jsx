@@ -67,7 +67,7 @@ const googleLogin = async (token) => {
     let res = await axios.post(
         "http://localhost:8000/api/auth/google/",
         {
-            token: token,
+            code: token,
         }
     );
     // console.log('service google login res: ', res);
