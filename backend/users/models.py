@@ -19,6 +19,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # Custom manager
     objects = CustomAccountManager()
 
+    # Google API
+    refresh_token = models.CharField(max_length=255, blank=True, null=True)
+
     # Fields for authentication
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name']

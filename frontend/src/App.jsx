@@ -6,6 +6,7 @@ import IconSideNav from './components/IconSideNav';
 import AuthenticantionPage from './components/authentication/AuthenticationPage';
 import SignUpPage from './components/authentication/SignUpPage';
 import NavBar from './components/Nav/Navbar';
+import Home from './components/Home';
 
 
 const App = () => {
@@ -14,7 +15,7 @@ const App = () => {
         <div className="App">
                     <NavBar/>
                     <Routes>
-                        <Route path={"/"} render={() => <h1>This is Home page!</h1>} />
+                        <Route path="/" element={<Home/>}/>
                         <Route path="/login" element={<AuthenticantionPage/>}/>
                         <Route path="/signup" element={<SignUpPage/>}/>
                         <Route path="/testAuth" element={<TestAuth/>}/>

@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
-
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -17,6 +16,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import refreshAccessToken from './refreshAcesstoken';
 import axiosapi from '../../api/axiosapi';
 
 
@@ -24,8 +24,8 @@ function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="https://github.com/TurTaskProject/TurTaskWeb">
+        TurTask
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -39,6 +39,12 @@ const defaultTheme = createTheme();
 export default function SignInSide() {
 
     const Navigate = useNavigate();
+
+    useEffect(() => {
+      if (!refreshAccessToken()) {
+        Navigate("/");
+    }
+    }, []);
 
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
@@ -76,27 +82,12 @@ export default function SignInSide() {
         });
     }
 
-    const responseGoogle = async (response) => {
-        // Handle Google login response
-        let googleResponse = await axiosapi.googleLogin(response.access_token);
-        console.log('Google Response:\n', googleResponse);
-
-        if (googleResponse.status === 200) {
-            // Store Google login tokens and set the authorization header on success
-            localStorage.setItem('access_token', googleResponse.data.access_token);
-            localStorage.setItem('refresh_token', googleResponse.data.refresh_token);
-            axiosapi.axiosInstance.defaults.headers['Authorization'] = "Bearer " + googleResponse.data.access_token;
-            Navigate('/');
-        }
-    }
-
     const googleLoginImplicit = useGoogleLogin({
-      // flow: 'auth-code',
-      onSuccess: async (response) => {
-        console.log(response);
-    
+      flow: 'auth-code',
+      redirect_uri: 'postmessage',
+      onSuccess: async (response) => {    
         try {
-          const loginResponse = await axiosapi.googleLogin(response.access_token);
+          const loginResponse = await axiosapi.googleLogin(response.code);
               if (loginResponse && loginResponse.data) {
             const { access_token, refresh_token } = loginResponse.data;
     

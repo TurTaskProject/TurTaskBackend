@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import IsAuthenticated from '../authentication/IsAuthenticated';
 import axiosapi from '../../api/axiosapi';
 import AppBar from '@mui/material/AppBar';
@@ -28,6 +28,7 @@ const settings = {
   };
 
 function NavBar() {
+  const Navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -51,7 +52,7 @@ function NavBar() {
   const logout = () => {
     // Log out the user, clear tokens, and navigate to the "/testAuth" route
     axiosapi.apiUserLogout();
-    Navigate('/testAuth');
+    Navigate('/');
 }
 
   return (

@@ -79,11 +79,14 @@ REST_FRAMEWORK = {
 
 REST_USE_JWT = True
 
+GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID', default='fake-client-id')
+GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET', default='fake-client-secret')
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': config('GOOGLE_CLIENT_ID', default='fake-client-id'),
-            'secret': config('GOOGLE_CLIENT_SECRET', default='fake-client-secret'),
+            'client_id': GOOGLE_CLIENT_ID,
+            'secret': GOOGLE_CLIENT_SECRET,
             'key': ''
         },
         "SCOPE": [
