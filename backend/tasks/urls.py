@@ -1,11 +1,13 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from .api import GoogleCalendarEventViewset
 from .tasks.views import TaskCreateView, TaskRetrieveView, TaskUpdateView, TaskDeleteView
 from .misc.views import TagViewSet, ReminderViewSet
 
 router = DefaultRouter()
 router.register(r'reminders', ReminderViewSet)
 router.register(r'tags', TagViewSet)
+router.register(r'calendar-events', GoogleCalendarEventViewset, basename='calendar-events')
 
 urlpatterns = [
     path('', include(router.urls)),

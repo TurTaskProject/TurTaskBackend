@@ -19,6 +19,7 @@ from dj_rest_auth.registration.views import SocialLoginView
 
 from google_auth_oauthlib.flow import InstalledAppFlow
 
+from .access_token_cache import store_token
 from .serializers import MyTokenObtainPairSerializer, CustomUserSerializer
 from .managers import CustomAccountManager
 from .models import CustomUser
@@ -168,6 +169,8 @@ class GoogleRetrieveUserInfo(APIView):
             user.email = user_info['email']
             user.refresh_token = user_info['refresh_token']
             user.save()
+        store_token(user.id, user_info['access_token'], 'access')
+        store_token(user.id, user_info['id_token'], 'id')
         return user
 
     def call_google_api(self, api_url, access_token):
