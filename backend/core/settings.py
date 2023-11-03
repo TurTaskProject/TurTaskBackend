@@ -164,10 +164,12 @@ DATABASES = {
 
 # Cache
 
+CACHES_LOCATION = f"{config('DB_NAME', default='db_test')}_cache"
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-        "LOCATION": "dbtest",
+        "LOCATION": CACHES_LOCATION,
     }
 }
 

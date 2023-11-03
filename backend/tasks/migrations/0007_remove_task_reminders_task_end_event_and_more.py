@@ -14,16 +14,6 @@ class Migration(migrations.Migration):
             model_name='task',
             name='reminders',
         ),
-        migrations.AddField(
-            model_name='task',
-            name='end_event',
-            field=models.DateTimeField(blank=True, null=True),
-        ),
-        migrations.AddField(
-            model_name='task',
-            name='start_event',
-            field=models.DateTimeField(blank=True, null=True),
-        ),
         migrations.DeleteModel(
             name='Reminder',
         ),

@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core import validators
-
+from django.utils import timezone
 
 class Tag(models.Model):
     """
@@ -70,8 +70,8 @@ class Task(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
     google_calendar_id = models.CharField(blank=True, null=True, max_length=255)
-    start_event = models.DateTimeField(blank=True, null=True)
-    end_event = models.DateTimeField(blank=True, null=True)
+    start_event = models.DateTimeField(null=True)
+    end_event = models.DateTimeField(null=True)
 
 
 class Subtask(models.Model):
