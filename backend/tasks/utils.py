@@ -1,6 +1,6 @@
 from googleapiclient.discovery import build
 
-from users.access_token_cache import get_credential_from_cache_token
+from authentications.access_token_cache import get_credential_from_cache_token
 
 
 def get_service(request):
