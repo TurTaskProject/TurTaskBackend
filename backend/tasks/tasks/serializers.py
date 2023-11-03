@@ -5,7 +5,7 @@ class TaskCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         # fields = '__all__'
-        exclude = ('tags', 'reminders')
+        exclude = ('tags',)
 
     def create(self, validated_data):
         # Create a new task with validated data
