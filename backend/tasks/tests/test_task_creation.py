@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from .utils import create_test_user, login_user
+from tasks.tests.utils import create_test_user, login_user
 from ..models import Task
 
 class TaskCreateViewTests(APITestCase):

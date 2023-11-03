@@ -34,7 +34,6 @@ def create_task_json(user, **kwargs):
         "difficulty": 1,
         "attribute": "str",
         "challenge": False,
-        "reminders": False,
         "fromSystem": False,
         "creation_date": None,
         "last_update": None,
@@ -57,7 +56,6 @@ def create_test_task(user, **kwargs):
         'difficulty': 1,
         'attribute': 'str',
         'challenge': False,
-        'reminders': False,
         'fromSystem': False,
     }
 

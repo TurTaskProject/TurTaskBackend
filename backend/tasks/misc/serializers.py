@@ -1,10 +1,6 @@
 from rest_framework import serializers
-from ..models import Reminder, Tag
+from ..models import Tag
 
-class ReminderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Reminder
-        fields = '__all__'
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:

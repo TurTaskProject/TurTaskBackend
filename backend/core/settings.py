@@ -162,6 +162,17 @@ DATABASES = {
 }
 
 
+# Cache
+
+CACHES_LOCATION = f"{config('DB_NAME', default='db_test')}_cache"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": CACHES_LOCATION,
+    }
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

@@ -1,17 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core import validators
-
-
-class Reminder(models.Model):
-    """
-    Represents a reminder associated with a task.
-    Fields:
-    - startDate: The optional date for which the reminder is set.
-    - time: The time at which the reminder is triggered.
-    """
-    startDate = models.DateField(auto_now_add=True, null=True, blank=True)
-    alertTime = models.DateTimeField(null=False, blank=False)
+from django.utils import timezone
 
 class Tag(models.Model):
     """
@@ -66,7 +56,7 @@ class Task(models.Model):
         validators.MinValueValidator(0.1),
         validators.MaxValueValidator(2),
     ])
-    difficulty = models.PositiveSmallIntegerField(choices=DIFFICULTY_CHOICES)
+    difficulty = models.PositiveSmallIntegerField(choices=DIFFICULTY_CHOICES, default=1)
     attribute = models.CharField(max_length=15, choices=[
         ('str', 'Strength'),
         ('int', 'Intelligence'),
@@ -76,10 +66,12 @@ class Task(models.Model):
     ], default='str')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     challenge = models.BooleanField(default=False)
-    reminders = models.ManyToManyField(Reminder, blank=True)
     fromSystem = models.BooleanField(default=False)
     creation_date = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
+    google_calendar_id = models.CharField(blank=True, null=True, max_length=255)
+    start_event = models.DateTimeField(null=True)
+    end_event = models.DateTimeField(null=True)
 
 
 class Subtask(models.Model):
