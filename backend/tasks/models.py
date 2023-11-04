@@ -8,30 +8,35 @@ from django.utils import timezone
 class Tag(models.Model):
     """
     Represents a tag that can be associated with tasks.
-    Fields:
-    - name: The unique name of the tag.
+
+    :param name: The unique name of the tag.
     """
     name = models.CharField(max_length=255)
+
 
 class Task(models.Model):
     """
     Represents a task, such as Habit, Daily, Todo, or Reward.
-    Fields:
-    - type: The type of the tasks
-    - title: Title of the task.
-    - notes: Optional additional notes for the task.
-    - tags: Associated tags for the task.
-    - completed: A boolean field indicating whether the task is completed.
-    - exp: The experience values user will get from the task.
-    - priority: The priority of the task (range: 0.1 to 2).
-    - difficulty: The difficulty of the task (range: 1 to 5).
-    - attribute: The attribute linked to the task
-    - user: The user who owns the task.
-    - challenge: Associated challenge (optional).
-    - reminders: A Many-to-Many relationship with Reminder.
-    - fromSystem: A boolean field indicating if the task is from System.
-    - creation_date: Creation date of the task.
-    - last_update: Last updated date of the task.
+
+    :param type: The type of the tasks
+    :param title: Title of the task.
+    :param notes: Optional additional notes for the task.
+    :param tags: Associated tags for the task.
+    :param completed: A boolean field indicating whether the task is completed.
+    :param exp: The experience values user will get from the task.
+    :param priority: The priority of the task (1, 2, .., 4), using Eisenhower Matrix Idea.
+    :param importance: The importance of the task (range: 1 to 5)
+    :param difficulty: The difficulty of the task (range: 1 to 5).
+    :param attribute: The attribute linked to the task
+    :param user: The user who owns the task.
+    :param challenge: Associated challenge (optional).
+    :param reminders: A Many-to-Many relationship with Reminder.
+    :param fromSystem: A boolean field indicating if the task is from System.
+    :param creation_date: Creation date of the task.
+    :param last_update: Last updated date of the task.
+    :param: google_calendar_id: Google Calendar Event ID of the task.
+    :param start_event: Start event of the task.
+    :param end_event: End event(Due Date) of the task.
     """
     TASK_TYPES = [
         ('daily', 'Daily'),
@@ -83,6 +88,11 @@ class Task(models.Model):
     end_event = models.DateTimeField(null=True)
 
     def calculate_eisenhower_matrix_category(self):
+        """
+        Classify the task into one of the four categories in the Eisenhower Matrix.
+
+        :return: The category of the task (1, 2, 3, or 4).
+        """
         if self.end_event:
             time_until_due = (self.end_event - datetime.now(timezone.utc)).days
         else:
@@ -113,9 +123,9 @@ class Task(models.Model):
 class Subtask(models.Model):
     """
     Represents a subtask associated with a task.
-    - description: Description of the subtask.
-    - completed: A boolean field indicating whether the subtask is completed.
-    - parent_task: The parent task of the subtask.
+    :param description: Description of the subtask.
+    :param completed: A boolean field indicating whether the subtask is completed.
+    :param parent_task: The parent task of the subtask.
     """
     description = models.TextField()
     completed = models.BooleanField(default=False)
@@ -125,10 +135,10 @@ class Subtask(models.Model):
 class UserNotification(models.Model):
     """
     Represents a user notification.
-    Fields:
-    - type: The type of the notification (e.g., 'NEW_CHAT_MESSAGE').
-    - data: JSON data associated with the notification.
-    - seen: A boolean field indicating whether the notification has been seen.
+
+    :param type: The type of the notification (e.g., 'NEW_CHAT_MESSAGE').
+    :param data: JSON data associated with the notification.
+    :param seen: A boolean field indicating whether the notification has been seen.
     """
     NOTIFICATION_TYPES = (
         ('LEVEL_UP', 'Level Up'),
@@ -160,12 +170,12 @@ class UserNotification(models.Model):
 class Transaction(models.Model):
     """
     Represents a transaction involving currencies in the system.
-    Fields:
-    - currency: The type of currency used in the transaction
-    - transactionType: The type of the transaction
-    - description: Additional text.
-    - amount: The transaction amount.
-    - user: The user involved in the transaction.
+
+    :param currency: The type of currency used in the transaction
+    :param transactionType: The type of the transaction
+    :param description: Additional text.
+    :param amount: The transaction amount.
+    :param user: The user involved in the transaction.
     """
     CURRENCIES = (('gold', 'Gold'),)
     TRANSACTION_TYPES = (

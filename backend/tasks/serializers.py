@@ -2,7 +2,6 @@ from rest_framework import serializers
 from django.utils.dateparse import parse_datetime
 from .models import Task
 
-from datetime import datetime
 
 class GoogleCalendarEventSerializer(serializers.Serializer):
     summary = serializers.CharField()
