@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.conf import settings
 from django.core import validators
@@ -46,24 +48,31 @@ class Task(models.Model):
         (5, 'Devil'),
     ]
 
+    ATTRIBUTE = [
+        ('str', 'Strength'),
+        ('int', 'Intelligence'),
+        ('end', 'Endurance'),
+        ('per', 'Perception'),
+        ('luck', 'Luck'),
+    ]
+
+    EISENHOWER_MATRIX = [
+        (1, 'Important & Urgent'),
+        (2, 'Important & Not Urgent'),
+        (3, 'Not Important & Urgent'),
+        (4, 'Not Important & Not Urgent'),
+    ]
+
     type = models.CharField(max_length=15, choices=TASK_TYPES, default='habit')
     title = models.TextField()
     notes = models.TextField(default='')
     tags = models.ManyToManyField(Tag, blank=True)
     completed = models.BooleanField(default=False)
     exp = models.FloatField(default=0)
-    priority = models.FloatField(default=1, validators=[
-        validators.MinValueValidator(0.1),
-        validators.MaxValueValidator(2),
-    ])
+    priority = models.PositiveSmallIntegerField(choices=EISENHOWER_MATRIX, default=4)
+    importance = models.PositiveSmallIntegerField(choices=[(i, str(i)) for i in range(1, 6)], default=1)
     difficulty = models.PositiveSmallIntegerField(choices=DIFFICULTY_CHOICES, default=1)
-    attribute = models.CharField(max_length=15, choices=[
-        ('str', 'Strength'),
-        ('int', 'Intelligence'),
-        ('end', 'Endurance'),
-        ('per', 'Perception'),
-        ('luck', 'Luck'),
-    ], default='str')
+    attribute = models.CharField(max_length=15, choices=ATTRIBUTE, default='str')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     challenge = models.BooleanField(default=False)
     fromSystem = models.BooleanField(default=False)
@@ -72,6 +81,33 @@ class Task(models.Model):
     google_calendar_id = models.CharField(blank=True, null=True, max_length=255)
     start_event = models.DateTimeField(null=True)
     end_event = models.DateTimeField(null=True)
+
+    def calculate_eisenhower_matrix_category(self):
+        if self.end_event:
+            time_until_due = (self.end_event - datetime.now(timezone.utc)).days
+        else:
+            time_until_due = float('inf')
+
+        urgency_threshold = 3
+        importance_threshold = 3
+
+        if time_until_due <= urgency_threshold and self.importance >= importance_threshold:
+            return 1
+        elif time_until_due > urgency_threshold and self.importance >= importance_threshold:
+            return 2
+        elif time_until_due <= urgency_threshold and self.importance < importance_threshold:
+            return 3
+        else:
+            return 4
+
+    def save(self, *args, **kwargs):
+        self.priority = self.calculate_eisenhower_matrix_category()
+        super(Task, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = 'Task'
+        verbose_name_plural = 'Tasks'
+
 
 
 class Subtask(models.Model):

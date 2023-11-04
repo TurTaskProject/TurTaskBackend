@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -11,6 +13,8 @@ class TaskCreateViewTests(APITestCase):
         self.user = create_test_user()
         self.client = login_user(self.user)
         self.url = reverse("add-task")
+        self.due_date = datetime.now() + timedelta(days=5)
+
 
     def test_create_valid_task(self):
         """
@@ -21,9 +25,10 @@ class TaskCreateViewTests(APITestCase):
             'type': 'habit',
             'exp': 10,
             'attribute': 'str',
-            'priority': 1.5,
+            'priority': 1,
             'difficulty': 1,
             'user': self.user.id,
+            'end_event': self.due_date,
         }
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -63,9 +68,10 @@ class TaskCreateViewTests(APITestCase):
             'title': 'Test Task',
             'type': 'habit',
             'exp': 10,
-            'priority': 1.5,
+            'priority': 1,
             'difficulty': 1,
             'user': 999,  # Invalid user ID
+            'end_event': self.due_date,
         }
 
         response = self.client.post(self.url, data, format='json')
