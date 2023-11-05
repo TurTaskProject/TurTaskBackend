@@ -236,9 +236,9 @@ ACCOUNT_EMAIL_REQUIRED = True
 
 # Storages
 
-AWS_ACCESS_KEY_ID = config('AMAZON_S3_ACCESS_KEY')
-AWS_SECRET_ACCESS_KEY = config('AMAZON_S3_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = config('BUCKET_NAME')
+AWS_ACCESS_KEY_ID = config('AMAZON_S3_ACCESS_KEY', default='fake-access-key')
+AWS_SECRET_ACCESS_KEY = config('AMAZON_S3_SECRET_ACCESS_KEY', default='fake-secret-access-key')
+AWS_STORAGE_BUCKET_NAME = config('BUCKET_NAME', default='fake-bucket-name')
 AWS_DEFAULT_ACL = 'public-read'
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
