@@ -14,3 +14,4 @@ google_auth_oauthlib>=1.1
 google-auth-httplib2>=0.1
 django-storages[s3]>=1.14
 Pillow>=10.1
+drf-spectacular>=0.26
