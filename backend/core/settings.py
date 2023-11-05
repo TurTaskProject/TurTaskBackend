@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
 import os
 from pathlib import Path
 from decouple import config, Csv
@@ -79,6 +80,11 @@ REST_FRAMEWORK = {
 }
 
 REST_USE_JWT = True
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=3),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+}
 
 GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID', default='fake-client-id')
 GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET', default='fake-client-secret')
