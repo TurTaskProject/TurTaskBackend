@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosapi from '../api/axiosapi';
-import Button from '@material-ui/core/Button';
+import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 function TestAuth() {

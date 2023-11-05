@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
 import os
 from pathlib import Path
 from decouple import config, Csv
@@ -79,6 +80,11 @@ REST_FRAMEWORK = {
 }
 
 REST_USE_JWT = True
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=3),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+}
 
 GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID', default='fake-client-id')
 GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET', default='fake-client-secret')
@@ -227,3 +233,26 @@ LOGOUT_REDIRECT_URL = '/'
 AUTH_USER_MODEL = "users.CustomUser"
 
 ACCOUNT_EMAIL_REQUIRED = True
+
+# Storages
+
+AWS_ACCESS_KEY_ID = config('AMAZON_S3_ACCESS_KEY', default='fake-access-key')
+AWS_SECRET_ACCESS_KEY = config('AMAZON_S3_SECRET_ACCESS_KEY', default='fake-secret-access-key')
+AWS_STORAGE_BUCKET_NAME = config('BUCKET_NAME', default='fake-bucket-name')
+AWS_DEFAULT_ACL = 'public-read'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
+MEDIA_URL = '/mediafiles/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
