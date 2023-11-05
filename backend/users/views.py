@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 
 from users.serializers import CustomUserSerializer, UpdateProfileSerializer
-
+from users.models import CustomUser
 
 class CustomUserCreate(APIView):
     """
@@ -49,8 +49,12 @@ class CustomUserProfileUpdate(APIView):
         return Response(data)
 
     def post(self, request):
-        serializer = UpdateProfileSerializer(data=request.data)
+        if not CustomUser.objects.filter(email=request.user.email).exists():
+            return Response ({
+                'error': 'User does not exist'
+            }, status=status.HTTP_404_NOT_FOUND)
+        serializer = UpdateProfileSerializer(request.user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

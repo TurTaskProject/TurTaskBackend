@@ -31,6 +31,19 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
     """
     Serializer for updating user profile.
     """
+    profile_pic = serializers.ImageField(required=False)
+    first_name = serializers.CharField(max_length=255, required=False)
+    about = serializers.CharField(required=False)
+
     class Meta:
         model = CustomUser
         fields = ('profile_pic', 'first_name', 'about')
+
+    def update(self, instance, validated_data):
+        """
+        Update an existing user's profile.
+        """
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
