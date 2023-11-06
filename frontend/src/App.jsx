@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
 import TestAuth from './components/testAuth';
 import LoginPage from './components/authentication/LoginPage';
 import SignUpPage from './components/authentication/SignUpPage';
-import NavBar from './components/Nav/Navbar';
+import NavBar from './components/nav/Navbar';
 import Home from './components/Home';
 import ProfileUpdate from './components/ProfileUpdatePage';
 import Calendar from './components/calendar/calendar';
