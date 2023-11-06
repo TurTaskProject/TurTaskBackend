@@ -31,6 +31,10 @@ class GoogleCalendarEventViewset(viewsets.ViewSet):
         for event in events.get('items', []):
             if event.get('recurringEventId'):
                 continue
+            event['start_datetime'] = event.get('start').get('dateTime')
+            event['end_datetime'] = event.get('end').get('dateTime')
+            event.pop('start')
+            event.pop('end')
             try:
                 task = Todo.objects.get(google_calendar_id=event['id'])
                 serializer = TodoUpdateSerializer(instance=task, data=event)
