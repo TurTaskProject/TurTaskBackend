@@ -2,11 +2,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
-from ..models import Task
+from ..models import Todo
 from .serializers import TaskCreateSerializer, TaskGeneralSerializer
 
 class TaskCreateView(CreateAPIView):
-    queryset = Task.objects.all()
+    queryset = Todo.objects.all()
     serializer_class = TaskCreateSerializer
     permission_classes = [IsAuthenticated]
 
@@ -21,17 +21,17 @@ class TaskCreateView(CreateAPIView):
 
 
 class TaskRetrieveView(RetrieveAPIView):
-    queryset = Task.objects.all()
+    queryset = Todo.objects.all()
     serializer_class = TaskGeneralSerializer
     permission_classes = [IsAuthenticated]
 
 
 class TaskUpdateView(RetrieveUpdateAPIView):
-    queryset = Task.objects.all()
+    queryset = Todo.objects.all()
     serializer_class = TaskGeneralSerializer
     permission_classes = [IsAuthenticated]
 
 
 class TaskDeleteView(DestroyAPIView):
-    queryset = Task.objects.all()
+    queryset = Todo.objects.all()
     permission_classes = [IsAuthenticated]

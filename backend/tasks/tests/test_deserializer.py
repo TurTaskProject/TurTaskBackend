@@ -5,8 +5,8 @@ from django.test import TestCase
 from django.utils import timezone
 
 from tasks.tests.utils import create_test_user, login_user
-from tasks.serializers import TaskUpdateSerializer
-from tasks.models import Task
+from tasks.serializers import TodoUpdateSerializer
+from tasks.models import Todo
 
 class TaskUpdateSerializerTest(TestCase):
     def setUp(self):
@@ -25,14 +25,14 @@ class TaskUpdateSerializerTest(TestCase):
             'end_datetie': self.end_time,
         }
 
-        serializer = TaskUpdateSerializer(data=data, user=self.user)
+        serializer = TodoUpdateSerializer(data=data, user=self.user)
         self.assertTrue(serializer.is_valid())
         serializer.is_valid()
         task = serializer.save()
-        self.assertIsInstance(task, Task)
+        self.assertIsInstance(task, Todo)
 
     def test_serializer_update(self):
-        task = Task.objects.create(title='Original Task', notes='Original description', user=self.user)
+        task = Todo.objects.create(title='Original Task', notes='Original description', user=self.user)
 
         data = {
             'id': '32141cwaNcapufh8jq2conw',
@@ -44,7 +44,7 @@ class TaskUpdateSerializerTest(TestCase):
             'end_datetie': self.end_time,
         }
 
-        serializer = TaskUpdateSerializer(instance=task, data=data)
+        serializer = TodoUpdateSerializer(instance=task, data=data)
         self.assertTrue(serializer.is_valid())
         updated_task = serializer.save()
 
