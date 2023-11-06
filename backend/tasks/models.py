@@ -68,27 +68,8 @@ class Todo(Todo):
 
     priority = models.PositiveSmallIntegerField(choices=EisenhowerMatrix.choices, default=EisenhowerMatrix.NOT_IMPORTANT_NOT_URGENT)
 
-    def calculate_eisenhower_matrix_category(self):
-        if self.end_event:
-            time_until_due = (self.end_event - timezone.now()).days
-        else:
-            time_until_due = float('inf')
-
-        urgency_threshold = 3
-        importance_threshold = 3
-
-        if time_until_due <= urgency_threshold and self.importance >= importance_threshold:
-            return Todo.EisenhowerMatrix.IMPORTANT_URGENT
-        elif time_until_due > urgency_threshold and self.importance >= importance_threshold:
-            return Todo.EisenhowerMatrix.IMPORTANT_NOT_URGENT
-        elif time_until_due <= urgency_threshold and self.importance < importance_threshold:
-            return Todo.EisenhowerMatrix.NOT_IMPORTANT_URGENT
-        else:
-            return Todo.EisenhowerMatrix.NOT_IMPORTANT_NOT_URGENT
-
-    def save(self, *args, **kwargs):
-        self.priority = self.calculate_eisenhower_matrix_category()
-        super(Todo, self).save(*args, **kwargs)
+    def __str__(self):
+        return self.title
 
 
 class Subtask(models.Model):
