@@ -1,7 +1,7 @@
 from rest_framework.test import APIClient
 
 from users.models import CustomUser
-from ..models import Task
+from ..models import Todo
 
 
 def create_test_user(email="testusertestuser@example.com", username="testusertestuser",
@@ -61,4 +61,4 @@ def create_test_task(user, **kwargs):
 
     task_attributes = {**defaults, **kwargs}
 
-    return Task.objects.create(user=user, **task_attributes)
+    return Todo.objects.create(user=user, **task_attributes)
