@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from tasks.utils import get_service
-from tasks.models import Todo
-from tasks.serializers import TaskUpdateSerializer
+from tasks.models import Todo, RecurrenceTask
+from tasks.serializers import TodoUpdateSerializer, RecurrenceTaskUpdateSerializer
 
 
 class GoogleCalendarEventViewset(viewsets.ViewSet):
@@ -17,28 +17,30 @@ class GoogleCalendarEventViewset(viewsets.ViewSet):
     def __init__(self, *args, **kwargs):
         super().__init__()
         self.current_time = datetime.now(tz=timezone.utc).isoformat()
-        self.event_fields = 'items(id,summary,description,created,updated,start,end)'
+        self.event_fields = 'items(id,summary,description,created,recurringEventId,updated,start,end)'
 
     def _validate_serializer(self, serializer):
         if serializer.is_valid():
             serializer.save()
-            return Response("Task Sync Successfully", status=200)
+            return Response("Validate Successfully", status=200)
         return Response(serializer.errors, status=400)
 
     def post(self, request):
         service = get_service(request)
         events = service.events().list(calendarId='primary', fields=self.event_fields).execute()
         for event in events.get('items', []):
+            if event.get('recurringEventId'):
+                continue
             try:
                 task = Todo.objects.get(google_calendar_id=event['id'])
-                serializer = TaskUpdateSerializer(instance=task, data=event)
+                serializer = TodoUpdateSerializer(instance=task, data=event)
                 return self._validate_serializer(serializer)
             except Todo.DoesNotExist:
-                serializer = TaskUpdateSerializer(data=event, user=request.user)
+                serializer = TodoUpdateSerializer(data=event, user=request.user)
                 return self._validate_serializer(serializer)
                 
     def list(self, request, days=7):
-        max_time = (datetime.now(tz=timezone.utc) + timedelta(days=3)).isoformat()
+        max_time = (datetime.now(tz=timezone.utc) + timedelta(days=days)).isoformat()
         
         service = get_service(request)
         events = []
@@ -49,11 +51,11 @@ class GoogleCalendarEventViewset(viewsets.ViewSet):
                 calendarId='primary',
                 timeMin=self.current_time,
                 timeMax=max_time,
-                maxResults=20,
+                maxResults=200,
                 singleEvents=True,
                 orderBy='startTime',
                 pageToken=next_page_token,
-                fields='items(id,summary,description,created,updated,start,end)',
+                fields='items(id,summary,description,created,recurringEventId,updated,start,end)',
             )
 
             page_results = query.execute()
