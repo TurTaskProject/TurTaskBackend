@@ -7,7 +7,7 @@ from rest_framework.test import APITestCase
 from tasks.tests.utils import create_test_user, login_user
 from ..models import Todo
 
-class TaskCreateViewTests(APITestCase):
+class TodoCreateViewTests(APITestCase):
     def setUp(self):
 
         self.user = create_test_user()
@@ -16,7 +16,7 @@ class TaskCreateViewTests(APITestCase):
         self.due_date = datetime.now() + timedelta(days=5)
 
 
-    def test_create_valid_task(self):
+    def test_create_valid_todo(self):
         """
         Test creating a valid task using the API.
         """
@@ -35,7 +35,7 @@ class TaskCreateViewTests(APITestCase):
         self.assertEqual(Todo.objects.count(), 1)
         self.assertEqual(Todo.objects.get().title, 'Test Task')
 
-    def test_create_invalid_task(self):
+    def test_create_invalid_todo(self):
         """
         Test creating an invalid task using the API.
         """
