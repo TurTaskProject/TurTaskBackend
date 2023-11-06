@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from tasks.tests.utils import create_test_user, login_user
 from tasks.serializers import TaskUpdateSerializer
-from tasks.models import Task
+from tasks.models import Todo
 
 class TaskUpdateSerializerTest(TestCase):
     def setUp(self):
@@ -29,10 +29,10 @@ class TaskUpdateSerializerTest(TestCase):
         self.assertTrue(serializer.is_valid())
         serializer.is_valid()
         task = serializer.save()
-        self.assertIsInstance(task, Task)
+        self.assertIsInstance(task, Todo)
 
     def test_serializer_update(self):
-        task = Task.objects.create(title='Original Task', notes='Original description', user=self.user)
+        task = Todo.objects.create(title='Original Task', notes='Original description', user=self.user)
 
         data = {
             'id': '32141cwaNcapufh8jq2conw',

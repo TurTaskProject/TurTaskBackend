@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from tasks.tests.utils import create_test_user, login_user
-from ..models import Task
+from ..models import Todo
 
 class TaskCreateViewTests(APITestCase):
     def setUp(self):
@@ -32,8 +32,8 @@ class TaskCreateViewTests(APITestCase):
         }
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Task.objects.count(), 1)
-        self.assertEqual(Task.objects.get().title, 'Test Task')
+        self.assertEqual(Todo.objects.count(), 1)
+        self.assertEqual(Todo.objects.get().title, 'Test Task')
 
     def test_create_invalid_task(self):
         """
@@ -45,7 +45,7 @@ class TaskCreateViewTests(APITestCase):
 
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(Task.objects.count(), 0)  # No task should be created
+        self.assertEqual(Todo.objects.count(), 0)  # No task should be created
 
     def test_missing_required_fields(self):
         """
@@ -58,7 +58,7 @@ class TaskCreateViewTests(APITestCase):
 
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(Task.objects.count(), 0)  # No task should be created
+        self.assertEqual(Todo.objects.count(), 0)  # No task should be created
 
     def test_invalid_user_id(self):
         """
@@ -76,4 +76,4 @@ class TaskCreateViewTests(APITestCase):
 
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(Task.objects.count(), 0)  # No task should be created
+        self.assertEqual(Todo.objects.count(), 0)  # No task should be created

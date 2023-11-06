@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.utils.dateparse import parse_datetime
-from .models import Task
+from .models import Todo
 
 
 class GoogleCalendarEventSerializer(serializers.Serializer):
@@ -21,7 +21,7 @@ class TaskUpdateSerializer(serializers.ModelSerializer):
 
 
     class Meta:
-        model = Task
+        model = Todo
         fields = ('id', 'summary', 'description', 'created', 'updated', 'start_datetime', 'end_datetime')
 
     def __init__(self, *args, **kwargs):
@@ -30,6 +30,6 @@ class TaskUpdateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['user'] = self.user
-        task = Task.objects.create(**validated_data)
+        task = Todo.objects.create(**validated_data)
 
         return task

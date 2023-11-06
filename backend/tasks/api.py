@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from tasks.utils import get_service
-from tasks.models import Task
+from tasks.models import Todo
 from tasks.serializers import TaskUpdateSerializer
 
 
@@ -30,10 +30,10 @@ class GoogleCalendarEventViewset(viewsets.ViewSet):
         events = service.events().list(calendarId='primary', fields=self.event_fields).execute()
         for event in events.get('items', []):
             try:
-                task = Task.objects.get(google_calendar_id=event['id'])
+                task = Todo.objects.get(google_calendar_id=event['id'])
                 serializer = TaskUpdateSerializer(instance=task, data=event)
                 return self._validate_serializer(serializer)
-            except Task.DoesNotExist:
+            except Todo.DoesNotExist:
                 serializer = TaskUpdateSerializer(data=event, user=request.user)
                 return self._validate_serializer(serializer)
                 

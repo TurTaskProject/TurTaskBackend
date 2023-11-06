@@ -14,23 +14,18 @@ class Tag(models.Model):
     name = models.CharField(max_length=255)
 
 
-class Task(models.Model):
+class Todo(models.Model):
     """
-    Represents a task, such as Habit, Daily, Todo, or Reward.
-
-    :param type: The type of the tasks
+    Represents a Abstract of task, such as Habit, Daily, Todo, or Reward.
+    
+    :param user: The user who owns the task.
     :param title: Title of the task.
     :param notes: Optional additional notes for the task.
     :param tags: Associated tags for the task.
     :param completed: A boolean field indicating whether the task is completed.
-    :param exp: The experience values user will get from the task.
-    :param priority: The priority of the task (1, 2, .., 4), using Eisenhower Matrix Idea.
     :param importance: The importance of the task (range: 1 to 5)
     :param difficulty: The difficulty of the task (range: 1 to 5).
-    :param attribute: The attribute linked to the task
-    :param user: The user who owns the task.
     :param challenge: Associated challenge (optional).
-    :param reminders: A Many-to-Many relationship with Reminder.
     :param fromSystem: A boolean field indicating if the task is from System.
     :param creation_date: Creation date of the task.
     :param last_update: Last updated date of the task.
@@ -38,63 +33,44 @@ class Task(models.Model):
     :param start_event: Start event of the task.
     :param end_event: End event(Due Date) of the task.
     """
-    TASK_TYPES = [
-        ('daily', 'Daily'),
-        ('habit', 'Habit'),
-        ('todo', 'Todo'),
-        ('Long Term Goal', 'Long Term Goal'),
-    ]
+    class Difficulty(models.IntegerChoices):
+        EASY = 1, 'Easy'
+        NORMAL = 2, 'Normal'
+        HARD = 3, 'Hard'
+        VERY_HARD = 4, 'Very Hard'
+        DEVIL = 5, 'Devil'
 
-    DIFFICULTY_CHOICES = [
-        (1, 'Easy'),
-        (2, 'Normal'),
-        (3, 'Hard'),
-        (4, 'Very Hard'),
-        (5, 'Devil'),
-    ]
-
-    ATTRIBUTE = [
-        ('str', 'Strength'),
-        ('int', 'Intelligence'),
-        ('end', 'Endurance'),
-        ('per', 'Perception'),
-        ('luck', 'Luck'),
-    ]
-
-    EISENHOWER_MATRIX = [
-        (1, 'Important & Urgent'),
-        (2, 'Important & Not Urgent'),
-        (3, 'Not Important & Urgent'),
-        (4, 'Not Important & Not Urgent'),
-    ]
-
-    type = models.CharField(max_length=15, choices=TASK_TYPES, default='habit')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.TextField()
     notes = models.TextField(default='')
     tags = models.ManyToManyField(Tag, blank=True)
-    completed = models.BooleanField(default=False)
-    exp = models.FloatField(default=0)
-    priority = models.PositiveSmallIntegerField(choices=EISENHOWER_MATRIX, default=4)
     importance = models.PositiveSmallIntegerField(choices=[(i, str(i)) for i in range(1, 6)], default=1)
-    difficulty = models.PositiveSmallIntegerField(choices=DIFFICULTY_CHOICES, default=1)
-    attribute = models.CharField(max_length=15, choices=ATTRIBUTE, default='str')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    difficulty = models.PositiveSmallIntegerField(choices=Difficulty.choices, default=Difficulty.EASY)
     challenge = models.BooleanField(default=False)
     fromSystem = models.BooleanField(default=False)
     creation_date = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
-    google_calendar_id = models.CharField(blank=True, null=True, max_length=255)
+    google_calendar_id = models.CharField(max_length=255, null=True, blank=True)
     start_event = models.DateTimeField(null=True)
     end_event = models.DateTimeField(null=True)
 
-    def calculate_eisenhower_matrix_category(self):
-        """
-        Classify the task into one of the four categories in the Eisenhower Matrix.
+    class Meta:
+        abstract = True
 
-        :return: The category of the task (1, 2, 3, or 4).
-        """
+
+class Todo(Todo):
+    
+    class EisenhowerMatrix(models.IntegerChoices):
+        IMPORTANT_URGENT = 1, 'Important & Urgent'
+        IMPORTANT_NOT_URGENT = 2, 'Important & Not Urgent'
+        NOT_IMPORTANT_URGENT = 3, 'Not Important & Urgent'
+        NOT_IMPORTANT_NOT_URGENT = 4, 'Not Important & Not Urgent'
+
+    priority = models.PositiveSmallIntegerField(choices=EisenhowerMatrix.choices, default=EisenhowerMatrix.NOT_IMPORTANT_NOT_URGENT)
+
+    def calculate_eisenhower_matrix_category(self):
         if self.end_event:
-            time_until_due = (self.end_event - datetime.now(timezone.utc)).days
+            time_until_due = (self.end_event - timezone.now()).days
         else:
             time_until_due = float('inf')
 
@@ -102,22 +78,17 @@ class Task(models.Model):
         importance_threshold = 3
 
         if time_until_due <= urgency_threshold and self.importance >= importance_threshold:
-            return 1
+            return Todo.EisenhowerMatrix.IMPORTANT_URGENT
         elif time_until_due > urgency_threshold and self.importance >= importance_threshold:
-            return 2
+            return Todo.EisenhowerMatrix.IMPORTANT_NOT_URGENT
         elif time_until_due <= urgency_threshold and self.importance < importance_threshold:
-            return 3
+            return Todo.EisenhowerMatrix.NOT_IMPORTANT_URGENT
         else:
-            return 4
+            return Todo.EisenhowerMatrix.NOT_IMPORTANT_NOT_URGENT
 
     def save(self, *args, **kwargs):
         self.priority = self.calculate_eisenhower_matrix_category()
-        super(Task, self).save(*args, **kwargs)
-
-    class Meta:
-        verbose_name = 'Task'
-        verbose_name_plural = 'Tasks'
-
+        super(Todo, self).save(*args, **kwargs)
 
 
 class Subtask(models.Model):
@@ -127,9 +98,9 @@ class Subtask(models.Model):
     :param completed: A boolean field indicating whether the subtask is completed.
     :param parent_task: The parent task of the subtask.
     """
+    parent_task = models.ForeignKey(Todo, on_delete=models.CASCADE)
     description = models.TextField()
     completed = models.BooleanField(default=False)
-    parent_task = models.ForeignKey(Task, on_delete=models.CASCADE)
 
 
 class UserNotification(models.Model):
