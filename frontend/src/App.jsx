@@ -7,7 +7,7 @@ import AuthenticantionPage from './components/authentication/AuthenticationPage'
 import SignUpPage from './components/authentication/SignUpPage';
 import NavBar from './components/Nav/Navbar';
 import Home from './components/Home';
-import UncontrolledBoard from './components/kanbanBoard/kanbanBoard';
+import KanbanBoard from './components/kanbanBoard/kanbanBoard';
 
 
 const App = () => {
@@ -23,7 +23,7 @@ const App = () => {
                     </Routes>
         </div>
         <IconSideNav />
-        <UncontrolledBoard/>
+        <KanbanBoard/>
         </BrowserRouter>
     );
 }
