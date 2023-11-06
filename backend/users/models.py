@@ -1,4 +1,5 @@
 import random
+import math
 
 from django.db import models
 from django.utils import timezone
@@ -29,6 +30,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # Fields for authentication
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name']
+
+    def save(self, *args, **kwargs):
+        UserStats.objects.get_or_create(user=self)
+        super(CustomUser, self).save(*args, **kwargs)
 
     def __str__(self):
         # String representation of the user
@@ -62,3 +67,6 @@ class UserStats(models.Model):
     luck = models.IntegerField(default=random_luck,  validators=[MinValueValidator(1),
                                                        MaxValueValidator(50)],)
     
+    @property
+    def level(self):
+        return (math.pow(self.experience, 2) // 225) + 1

@@ -110,6 +110,17 @@ class Task(models.Model):
         else:
             return 4
 
+    def get_exp(self):
+        return self.user.level * (0.2*self.difficulty) * (0.3*self.user.userstats.luck)
+
+    def get_reward(self):
+        pass
+
+    def get_penalty(self):
+        pass
+
+
+
     def save(self, *args, **kwargs):
         self.priority = self.calculate_eisenhower_matrix_category()
         super(Task, self).save(*args, **kwargs)
