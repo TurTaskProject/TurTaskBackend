@@ -12,7 +12,7 @@ const Calendar = () => {
         events={[
           { title: 'Event 1', date: '2023-11-10' },
           { title: 'Event 2', date: '2023-11-15' },
-          // Add more events as needed
+          { title: 'Event 2', date: '2023-11-15' },
         ]}
         headerToolbar={{
           start: 'prev,next',
