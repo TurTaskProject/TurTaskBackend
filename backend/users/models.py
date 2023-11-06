@@ -31,10 +31,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name']
 
-    def save(self, *args, **kwargs):
-        UserStats.objects.get_or_create(user=self)
-        super(CustomUser, self).save(*args, **kwargs)
-
     def __str__(self):
         # String representation of the user
         return self.username
