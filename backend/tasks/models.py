@@ -1,9 +1,5 @@
-from datetime import datetime
-
 from django.db import models
 from django.conf import settings
-from django.core import validators
-from django.utils import timezone
 
 class Tag(models.Model):
     """
@@ -14,7 +10,7 @@ class Tag(models.Model):
     name = models.CharField(max_length=255)
 
 
-class Todo(models.Model):
+class Task(models.Model):
     """
     Represents a Abstract of task, such as Habit, Daily, Todo, or Reward.
     
@@ -58,7 +54,7 @@ class Todo(models.Model):
         abstract = True
 
 
-class Todo(Todo):
+class Todo(Task):
     
     class EisenhowerMatrix(models.IntegerChoices):
         IMPORTANT_URGENT = 1, 'Important & Urgent'
@@ -71,6 +67,11 @@ class Todo(Todo):
     def __str__(self):
         return self.title
 
+class RecurrenceTask(Task):
+    recurrence_rule = models.TextField()
+
+    def __str__(self) -> str:
+        return f"{self.title} ({self.recurrence_rule})"
 
 class Subtask(models.Model):
     """
