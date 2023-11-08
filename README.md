@@ -7,3 +7,5 @@
 TurTask is a task and project management tool that incorporates gamification elements.
 
 [Wiki Page](https://github.com/TurTaskProject/TurTaskWeb/wiki)
+
+[Project Board](https://github.com/orgs/TurTaskProject/projects/1)
