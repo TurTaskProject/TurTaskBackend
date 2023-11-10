@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@asseinfo/react-kanban':
+    specifier: ^2.2.0
+    version: 2.2.0(react-dom@18.2.0)(react@18.2.0)
   '@emotion/react':
     specifier: ^11.11.1
     version: 11.11.1(@types/react@18.2.33)(react@18.2.0)
@@ -38,6 +41,12 @@ dependencies:
   '@react-oauth/google':
     specifier: ^0.11.1
     version: 0.11.1(react-dom@18.2.0)(react@18.2.0)
+  '@syncfusion/ej2-base':
+    specifier: ^23.1.41
+    version: 23.1.41
+  '@syncfusion/ej2-kanban':
+    specifier: ^23.1.36
+    version: 23.1.36
   axios:
     specifier: ^1.5.1
     version: 1.5.1
@@ -59,6 +68,9 @@ dependencies:
   react:
     specifier: ^18.2.0
     version: 18.2.0
+  react-beautiful-dnd:
+    specifier: ^13.1.1
+    version: 13.1.1(react-dom@18.2.0)(react@18.2.0)
   react-bootstrap:
     specifier: ^2.9.1
     version: 2.9.1(@types/react@18.2.33)(react-dom@18.2.0)(react@18.2.0)
@@ -132,6 +144,19 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.20
     dev: true
+
+  /@asseinfo/react-kanban@2.2.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-/gCigrNXRHeP9VCo8RipTOrA0vAPRIOThJhR4ibVxe6BLkaWFUEuJ1RMT4fODpRRsE3XsdrfVGKkfpRBKgvxXg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0
+      react-dom: ^16.8.0 || ^17.0.0
+    dependencies:
+      react: 18.2.0
+      react-beautiful-dnd: 13.1.1(react-dom@18.2.0)(react@18.2.0)
+      react-dom: 18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - react-native
+    dev: false
 
   /@babel/code-frame@7.22.13:
     resolution: {integrity: sha512-XktuhWlJ5g+3TJXc5upd9Ks1HutSArik6jf2eAjYFyIOf4ej3RN+184cZbzDvbPnuTJIUhPKKJE3cIsYTiAT3w==}
@@ -1098,6 +1123,7 @@ packages:
       tslib: 2.6.2
     dev: false
 
+<<<<<<< HEAD
   /@tailwindcss/typography@0.5.10(tailwindcss@3.3.5):
     resolution: {integrity: sha512-Pe8BuPJQJd3FfRnm6H0ulKIGoMEQS+Vq01R6M5aCrFB/ccR/shT+0kXLjouGC1gFLm9hopTFN+DMP0pfwRWzPw==}
     peerDependencies:
@@ -1109,6 +1135,112 @@ packages:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.3.5
     dev: true
+=======
+  /@syncfusion/ej2-base@23.1.41:
+    resolution: {integrity: sha512-ROtvuLIVkKl4eL+ubQjQQLleRMY98nYlxlBaFw4axtiDLoBbzOYtiFXmdP/KE+uNrMquZAwl+aduPX0loG3EAw==}
+    hasBin: true
+    dependencies:
+      '@syncfusion/ej2-icons': 23.1.36
+    dev: false
+
+  /@syncfusion/ej2-buttons@23.1.43:
+    resolution: {integrity: sha512-Jg1cC/2o6ds+xDwQSlAF7cEYP4O4C9wojKFllcVvZTwTKWVxZ2KfYeAFM1kV1GR/WuJd+TmvNhwkvmkWz8UgQw==}
+    dependencies:
+      '@syncfusion/ej2-base': 23.1.41
+    dev: false
+
+  /@syncfusion/ej2-data@23.1.43:
+    resolution: {integrity: sha512-kiuyuKsVogLvIP72Bd2IwETk9mOpZrbtfbOx5/y7Q1A05FQkaxlJqKFoOjkzbfMtKV5iDjAxz/Q3VHqq+hZoYA==}
+    dependencies:
+      '@syncfusion/ej2-base': 23.1.41
+    dev: false
+
+  /@syncfusion/ej2-dropdowns@23.1.43:
+    resolution: {integrity: sha512-75tWTEoEJU/fJ8V3CvwOeQ7svZoyftlVp7DO3oSl6nR4LuyG0Uf7BP+bSMvKVXuEyulyZmHo1/xeqjYoVp4M7g==}
+    dependencies:
+      '@syncfusion/ej2-base': 23.1.41
+      '@syncfusion/ej2-data': 23.1.43
+      '@syncfusion/ej2-inputs': 23.1.43
+      '@syncfusion/ej2-lists': 23.1.43
+      '@syncfusion/ej2-navigations': 23.1.43
+      '@syncfusion/ej2-notifications': 23.1.40
+      '@syncfusion/ej2-popups': 23.1.43
+    dev: false
+
+  /@syncfusion/ej2-icons@23.1.36:
+    resolution: {integrity: sha512-Q7S50bOzXL9X46doNIGSGr61RCY/1RW9iz1U7yyARr2XBQhWnijk+t/FVBk1piR0nioRXbKQcPZOLiEo6zf1xw==}
+    dev: false
+
+  /@syncfusion/ej2-inputs@23.1.43:
+    resolution: {integrity: sha512-G4HhneF2HXe6Tcig5pDlTaEgR46vQJgshcEym6WEVm0G39xiUSR5NIvyvS54IldGRyWwoyWEucbpM1kWGJC+7g==}
+    dependencies:
+      '@syncfusion/ej2-base': 23.1.41
+      '@syncfusion/ej2-buttons': 23.1.43
+      '@syncfusion/ej2-popups': 23.1.43
+      '@syncfusion/ej2-splitbuttons': 23.1.43
+    dev: false
+
+  /@syncfusion/ej2-kanban@23.1.36:
+    resolution: {integrity: sha512-qkp7ZS+o40I9oWj/lDJ4D20ygsOuDmjJ1CEkpz2xQgzXuHcA+/89OGeKS8WGFtK2uPSl+U2ub2PdopXF4OqL+w==}
+    dependencies:
+      '@syncfusion/ej2-base': 23.1.41
+      '@syncfusion/ej2-buttons': 23.1.43
+      '@syncfusion/ej2-data': 23.1.43
+      '@syncfusion/ej2-dropdowns': 23.1.43
+      '@syncfusion/ej2-inputs': 23.1.43
+      '@syncfusion/ej2-layouts': 23.1.36
+      '@syncfusion/ej2-navigations': 23.1.43
+      '@syncfusion/ej2-notifications': 23.1.40
+      '@syncfusion/ej2-popups': 23.1.43
+    dev: false
+
+  /@syncfusion/ej2-layouts@23.1.36:
+    resolution: {integrity: sha512-vS1KpUxLcrFNjRgkaotWWMmja9x1XjY06r70P/1JbxT66oJZwv5YRfBBqT1rFeYEWUGm0ciMEMehyTsPE3Pefw==}
+    dependencies:
+      '@syncfusion/ej2-base': 23.1.41
+    dev: false
+
+  /@syncfusion/ej2-lists@23.1.43:
+    resolution: {integrity: sha512-AoEpXn7F8AmXq74PmGCqQjURHnriyhimVreenDWrB1HlMUPcAw7Lkep4gYQdJXYyfWlT+GE+lr6lfS7hgAFT+A==}
+    dependencies:
+      '@syncfusion/ej2-base': 23.1.41
+      '@syncfusion/ej2-buttons': 23.1.43
+      '@syncfusion/ej2-data': 23.1.43
+    dev: false
+
+  /@syncfusion/ej2-navigations@23.1.43:
+    resolution: {integrity: sha512-3eiMnciQx8X5FSQd4CONd5yZfTvphcgH3U+tQNFecntCh/3hfoYoj0yGkayakIR0DP08YE32y3/8yztwK+GwUQ==}
+    dependencies:
+      '@syncfusion/ej2-base': 23.1.41
+      '@syncfusion/ej2-buttons': 23.1.43
+      '@syncfusion/ej2-data': 23.1.43
+      '@syncfusion/ej2-inputs': 23.1.43
+      '@syncfusion/ej2-lists': 23.1.43
+      '@syncfusion/ej2-popups': 23.1.43
+    dev: false
+
+  /@syncfusion/ej2-notifications@23.1.40:
+    resolution: {integrity: sha512-xB0U/THNVQN09AK+5DV6f9e7YbvWi5UqhdObCdpZarAMOFUEZBtAIVQRxc1LrINRmRapGU7NMFQj1F1xU7DVyw==}
+    dependencies:
+      '@syncfusion/ej2-base': 23.1.41
+      '@syncfusion/ej2-buttons': 23.1.43
+      '@syncfusion/ej2-popups': 23.1.43
+    dev: false
+
+  /@syncfusion/ej2-popups@23.1.43:
+    resolution: {integrity: sha512-I3CT7LmJHJ4r+4kRrVMgOTUrV7xpVHkjk67ApbJFucpN++Qo18b9Qy/QetRera5mS26ZVG78T3TST3g9dvO5Zw==}
+    dependencies:
+      '@syncfusion/ej2-base': 23.1.41
+      '@syncfusion/ej2-buttons': 23.1.43
+    dev: false
+
+  /@syncfusion/ej2-splitbuttons@23.1.43:
+    resolution: {integrity: sha512-NbT5XMCU87QPRr4svcEn/zEwIFAmwZiAYYLz2WjiuKVOnFw6htAKT81FF7X4CLl4HN0o1S7w09N9r5HQxv3mgQ==}
+    dependencies:
+      '@syncfusion/ej2-base': 23.1.41
+      '@syncfusion/ej2-popups': 23.1.43
+    dev: false
+>>>>>>> 66f1b7dccc36c99d9cffb093d540378e717c2c89
 
   /@types/babel__core@7.20.3:
     resolution: {integrity: sha512-54fjTSeSHwfan8AyHWrKbfBWiEUrNTZsUwPTDSNaaP1QDQIZbeNUg3a59E9D+375MzUw/x1vx2/0F5LBz+AeYA==}
@@ -1139,6 +1271,13 @@ packages:
       '@babel/types': 7.23.0
     dev: true
 
+  /@types/hoist-non-react-statics@3.3.4:
+    resolution: {integrity: sha512-ZchYkbieA+7tnxwX/SCBySx9WwvWR8TaP5tb2jRAzwvLb/rWchGw3v0w3pqUbUvj0GCwW2Xz/AVPSk6kUGctXQ==}
+    dependencies:
+      '@types/react': 18.2.33
+      hoist-non-react-statics: 3.3.2
+    dev: false
+
   /@types/parse-json@4.0.1:
     resolution: {integrity: sha512-3YmXzzPAdOTVljVMkTMBdBEvlOLg2cDQaDhnnhT3nT9uDbnJzjWhKlzb+desT12Y7tGqaN6d+AbozcKzyL36Ng==}
     dev: false
@@ -1151,6 +1290,15 @@ packages:
     dependencies:
       '@types/react': 18.2.33
     dev: true
+
+  /@types/react-redux@7.1.28:
+    resolution: {integrity: sha512-EQr7cChVzVUuqbA+J8ArWK1H0hLAHKOs21SIMrskKZ3nHNeE+LFYA+IsoZGhVOT8Ktjn3M20v4rnZKN3fLbypw==}
+    dependencies:
+      '@types/hoist-non-react-statics': 3.3.4
+      '@types/react': 18.2.33
+      hoist-non-react-statics: 3.3.2
+      redux: 4.2.1
+    dev: false
 
   /@types/react-transition-group@4.4.8:
     resolution: {integrity: sha512-QmQ22q+Pb+HQSn04NL3HtrqHwYMf4h3QKArOy5F8U5nEVMaihBs3SR10WiOM1iwPz5jIo8x/u11al+iEGZZrvg==}
@@ -1534,8 +1682,19 @@ packages:
       which: 2.0.2
     dev: true
 
+<<<<<<< HEAD
   /css-selector-tokenizer@0.8.0:
     resolution: {integrity: sha512-Jd6Ig3/pe62/qe5SBPTN8h8LeUg/pT4lLgtavPf7updwwHpvFzxvOQBHYj2LZDMjUnBzgvIUSjRcf6oT5HzHFg==}
+=======
+  /css-box-model@1.2.1:
+    resolution: {integrity: sha512-a7Vr4Q/kd/aw96bnJG332W9V9LkJO69JRcaCYDUqjp6/z0w6VcZjgAcTbgFxEPfBgdnAwlh3iwu+hLopa+flJw==}
+    dependencies:
+      tiny-invariant: 1.3.1
+    dev: false
+
+  /css-vendor@2.0.8:
+    resolution: {integrity: sha512-x9Aq0XTInxrkuFeHKbYC7zWY8ai7qJ04Kxd9MnvbC1uO5DagxoHQjm4JvG+vCdXOoFtCjbL2XSZfxmoYa9uQVQ==}
+>>>>>>> 66f1b7dccc36c99d9cffb093d540378e717c2c89
     dependencies:
       cssesc: 3.0.0
       fastparse: 1.1.2
@@ -2540,6 +2699,10 @@ packages:
       yallist: 3.1.1
     dev: true
 
+  /memoize-one@5.2.1:
+    resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
+    dev: false
+
   /merge2@1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
@@ -2876,6 +3039,29 @@ packages:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
     dev: true
 
+  /raf-schd@4.0.3:
+    resolution: {integrity: sha512-tQkJl2GRWh83ui2DiPTJz9wEiMN20syf+5oKfB03yYP7ioZcJwsIK8FjrtLwH1m7C7e+Tt2yYBlrOpdT+dyeIQ==}
+    dev: false
+
+  /react-beautiful-dnd@13.1.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-0Lvs4tq2VcrEjEgDXHjT98r+63drkKEgqyxdA7qD3mvKwga6a5SscbdLPO2IExotU1jW8L0Ksdl0Cj2AF67nPQ==}
+    peerDependencies:
+      react: ^16.8.5 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.5 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@babel/runtime': 7.23.2
+      css-box-model: 1.2.1
+      memoize-one: 5.2.1
+      raf-schd: 4.0.3
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-redux: 7.2.9(react-dom@18.2.0)(react@18.2.0)
+      redux: 4.2.1
+      use-memo-one: 1.1.3(react@18.2.0)
+    transitivePeerDependencies:
+      - react-native
+    dev: false
+
   /react-bootstrap@2.9.1(@types/react@18.2.33)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-ezgmh/ARCYp18LbZEqPp0ppvy+ytCmycDORqc8vXSKYV3cer4VH7OReV8uMOoKXmYzivJTxgzGHalGrHamryHA==}
     peerDependencies:
@@ -2924,12 +3110,38 @@ packages:
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
+  /react-is@17.0.2:
+    resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
+    dev: false
+
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: false
 
   /react-lifecycles-compat@3.0.4:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
+    dev: false
+
+  /react-redux@7.2.9(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Gx4L3uM182jEEayZfRbI/G11ZpYdNAnBs70lFVMNdHJI76XYtR+7m0MN+eAs7UHBPhWXcnFPaS+9owSCJQHNpQ==}
+    peerDependencies:
+      react: ^16.8.3 || ^17 || ^18
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.23.2
+      '@types/react-redux': 7.1.28
+      hoist-non-react-statics: 3.3.2
+      loose-envify: 1.4.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-is: 17.0.2
     dev: false
 
   /react-refresh@0.14.0:
@@ -2993,6 +3205,12 @@ packages:
     dependencies:
       picomatch: 2.3.1
     dev: true
+
+  /redux@4.2.1:
+    resolution: {integrity: sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w==}
+    dependencies:
+      '@babel/runtime': 7.23.2
+    dev: false
 
   /reflect.getprototypeof@1.0.4:
     resolution: {integrity: sha512-ECkTw8TmJwW60lOTR+ZkODISW6RQ8+2CL3COqtiJKLd6MmB45hN51HprHFziKLGkAuTGQhBb91V8cy+KHlaCjw==}
@@ -3278,6 +3496,17 @@ packages:
       any-promise: 1.3.0
     dev: true
 
+<<<<<<< HEAD
+=======
+  /tiny-invariant@1.3.1:
+    resolution: {integrity: sha512-AD5ih2NlSssTCwsMznbvwMZpJ1cbhkGd2uueNxzv2jDlEeZdU04JQfRnggJQ8DrcVBGjAsCKwFBbDlVNtEMlzw==}
+    dev: false
+
+  /tiny-warning@1.0.3:
+    resolution: {integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==}
+    dev: false
+
+>>>>>>> 66f1b7dccc36c99d9cffb093d540378e717c2c89
   /to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
     engines: {node: '>=4'}
@@ -3392,6 +3621,14 @@ packages:
     dependencies:
       punycode: 2.3.0
     dev: true
+
+  /use-memo-one@1.1.3(react@18.2.0):
+    resolution: {integrity: sha512-g66/K7ZQGYrI6dy8GLpVcMsBp4s17xNkYJVSMvTEevGy3nDxHOfE6z8BVE22+5G5x7t3+bhzrlTDB7ObrEE0cQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
