@@ -25,8 +25,10 @@ const App = () => {
                     <Route path="/calendar" element={<Calendar />} />
                 </Routes>
             </div>
-            <IconSideNav /> {<KanbanBoard />}
-            
+            <div>
+                <IconSideNav /> {<KanbanBoard />}
+            </div>
+
         </BrowserRouter>
     );
 }

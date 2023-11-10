@@ -2,7 +2,7 @@ import PlusIcon from "../icons/plusIcon"
 import { useMemo, useState } from "react";
 import ColumnContainer from "./columnContainer";
 import {
-  DndContext,   
+  DndContext,
   DragOverlay,
   PointerSensor,
   useSensor,
