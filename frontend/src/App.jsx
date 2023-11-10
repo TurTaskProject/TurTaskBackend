@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import TestAuth from './components/testAuth';
 import LoginPage from './components/authentication/LoginPage';
@@ -8,21 +8,29 @@ import NavBar from './components/nav/Navbar';
 import Home from './components/Home';
 import ProfileUpdate from './components/ProfileUpdatePage';
 import Calendar from './components/calendar/calendar';
+import KanbanBoard from './components/kanbanBoard/kanbanBoard';
+import IconSideNav from './components/IconSideNav'; // Import IconSideNav
 
 const App = () => {
     return (
         <BrowserRouter>
-        <div className="App">
-                    <NavBar/>
+        <div className='display: flex'>
+                <IconSideNav />
+                <div className='flex-1'>
+                <NavBar />
+                <div className='flex items-center justify-center'>
                     <Routes>
-                        <Route path="/" element={<Home/>}/>
-                        <Route path="/login" element={<LoginPage/>}/>
-                        <Route path="/signup" element={<SignUpPage/>}/>
-                        <Route path="/testAuth" element={<TestAuth/>}/>
-                        <Route path="/update_profile" element={<ProfileUpdate/>}/>
-                        <Route path="/calendar" element={<Calendar/>}/>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/tasks" element={<KanbanBoard />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/signup" element={<SignUpPage />} />
+                        <Route path="/testAuth" element={<TestAuth />} />
+                        <Route path="/update_profile" element={<ProfileUpdate />} />
+                        <Route path="/calendar" element={<Calendar />} />
                     </Routes>
-        </div>
+                    </div>
+                </div>
+            </div>
         </BrowserRouter>
     );
 }

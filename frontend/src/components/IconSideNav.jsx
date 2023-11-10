@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { SiFramer, SiTailwindcss, SiReact, SiJavascript, SiCss3 } from "react-icons/si";
+import { Link, useNavigate } from "react-router-dom";
 import homeLogo from "../assets/home.png";
 import calendarLogo from "../assets/calendar.png";
 import planLogo from "../assets/planning.png";
@@ -8,18 +8,17 @@ import pieLogo from "../assets/pie-chart.png";
 import plusLogo from "../assets/plus.png";
 
 const menuItems = [
-  { id: 0, icon: <homeLogo />, logo: homeLogo },
-  { id: 1, icon: <calendarLogo />, logo: calendarLogo },
-  { id: 2, icon: <planLogo />, logo: planLogo },
-  { id: 3, icon: <pieLogo />, logo: pieLogo },
-  { id: 4, icon: <plusLogo />, logo: plusLogo },
+  { id: 0, path: "/", icon: <homeLogo />, logo: homeLogo },
+  { id: 1, path: "/tasks", icon: <planLogo />, logo: planLogo },
+  { id: 2, path: "/calendar", icon: <calendarLogo />, logo: calendarLogo },
+  { id: 3, path: "/pie", icon: <pieLogo />, logo: pieLogo },
+  { id: 4, path: "/plus", icon: <plusLogo />, logo: plusLogo },
 ];
 
 const IconSideNav = () => {
   return (
     <div className="bg-slate-900 text-slate-100 flex">
       <SideNav />
-      <div className="w-full"></div>
     </div>
   );
 };
@@ -28,7 +27,7 @@ const SideNav = () => {
   const [selected, setSelected] = useState(0);
 
   return (
-    <nav className="h-[500px] w-fit bg-slate-950 p-4 flex flex-col items-center gap-2">
+    <nav className="bg-slate-950 p-4 flex flex-col items-center gap-2 h-screen">
       {menuItems.map((item) => (
         <NavItem
           key={item.id}
@@ -37,17 +36,23 @@ const SideNav = () => {
           id={item.id}
           setSelected={setSelected}
           logo={item.logo}
+          path={item.path}
         />
       ))}
     </nav>
   );
 };
 
-const NavItem = ({ icon, selected, id, setSelected, logo }) => {
+const NavItem = ({ icon, selected, id, setSelected, logo, path }) => {
+  const navigate = useNavigate();
+
   return (
     <motion.button
       className="p-3 text-xl bg-slate-800 hover-bg-slate-700 rounded-md transition-colors relative"
-      onClick={() => setSelected(id)}
+      onClick={() => {
+        setSelected(id);
+        navigate(path);
+      }}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
