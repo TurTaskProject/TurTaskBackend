@@ -14,21 +14,23 @@ import IconSideNav from './components/IconSideNav'; // Import IconSideNav
 const App = () => {
     return (
         <BrowserRouter>
-            <div className="App">
+        <div className='display: flex'>
+                <IconSideNav />
+                <div className='flex-1'>
                 <NavBar />
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/signup" element={<SignUpPage />} />
-                    <Route path="/testAuth" element={<TestAuth />} />
-                    <Route path="/update_profile" element={<ProfileUpdate />} />
-                    <Route path="/calendar" element={<Calendar />} />
-                </Routes>
+                <div className='flex items-center justify-center'>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/tasks" element={<KanbanBoard />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/signup" element={<SignUpPage />} />
+                        <Route path="/testAuth" element={<TestAuth />} />
+                        <Route path="/update_profile" element={<ProfileUpdate />} />
+                        <Route path="/calendar" element={<Calendar />} />
+                    </Routes>
+                    </div>
+                </div>
             </div>
-            <div>
-                <IconSideNav /> {<KanbanBoard />}
-            </div>
-
         </BrowserRouter>
     );
 }

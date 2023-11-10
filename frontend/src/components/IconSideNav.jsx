@@ -18,7 +18,6 @@ const IconSideNav = () => {
   return (
     <div className="bg-slate-900 text-slate-100 flex">
       <SideNav />
-      <div className="w-full"></div>
     </div>
   );
 };
@@ -27,7 +26,7 @@ const SideNav = () => {
   const [selected, setSelected] = useState(0);
 
   return (
-    <nav className="h-[500px] w-fit bg-slate-950 p-4 flex flex-col items-center gap-2">
+    <nav className="bg-slate-950 p-4 flex flex-col items-center gap-2 h-screen">
       {menuItems.map((item) => (
         <NavItem
           key={item.id}
