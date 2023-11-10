@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { SiFramer, SiTailwindcss, SiReact, SiJavascript, SiCss3 } from "react-icons/si";
 import homeLogo from "../assets/home.png";
 import calendarLogo from "../assets/calendar.png";
 import planLogo from "../assets/planning.png";

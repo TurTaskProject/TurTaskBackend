@@ -1,13 +1,9 @@
-import PlusIcon from "../icons/PlusIcon";
+import PlusIcon from "../icons/plusIcon"
 import { useMemo, useState } from "react";
-import { Column, Id, Task } from "../types";
 import ColumnContainer from "./columnContainer";
 import {
-  DndContext,
-  DragEndEvent,
-  DragOverEvent,
+  DndContext,   
   DragOverlay,
-  DragStartEvent,
   PointerSensor,
   useSensor,
   useSensors,
