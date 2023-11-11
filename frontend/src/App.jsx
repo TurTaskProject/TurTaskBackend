@@ -9,7 +9,8 @@ import Home from './components/Home';
 import ProfileUpdate from './components/ProfileUpdatePage';
 import Calendar from './components/calendar/calendar';
 import KanbanBoard from './components/kanbanBoard/kanbanBoard';
-import IconSideNav from './components/IconSideNav'; // Import IconSideNav
+import IconSideNav from './components/IconSideNav';
+import Eisenhower from './components/EisenhowerMatrix/Eisenhower';
 
 const App = () => {
     return (
@@ -27,6 +28,7 @@ const App = () => {
                         <Route path="/testAuth" element={<TestAuth />} />
                         <Route path="/update_profile" element={<ProfileUpdate />} />
                         <Route path="/calendar" element={<Calendar />} />
+                        <Route path="/priority" element={<Eisenhower/>} />
                     </Routes>
                     </div>
                 </div>
