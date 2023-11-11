@@ -2,12 +2,12 @@ import React from 'react';
 
 function EachBlog({ name, colorCode }) {
   return (
-    <div className="grid grid-rows-2 gap-4 text-left p-4 rounded-lg bg-white">
-      <div className="text-xl font-bold" style={{ color: colorCode }}>
+    <div className={`grid grid-rows-2 gap-4 text-left p-4 rounded-lg bg-white border border-gray-300 shadow-md`}>
+      <div className={`text-xl font-bold`} style={{ color: colorCode }}>
         {name}
       </div>
-      <div>
-        content
+      <div className='h-36'>
+        Content goes here
       </div>
     </div>
   );
@@ -15,9 +15,9 @@ function EachBlog({ name, colorCode }) {
 
 function Eisenhower() {
   return (
-    <div className='bg-slate-200 text-left p-1 m-auto'>
-      <h1 className="text-xl font-bold">The Eisenhower Matrix</h1>
-      <div className='p-4 m-auto grid grid-rows-2 grid-cols-2 gap-4'>
+    <div className='bg-slate-100 text-left p-4 m-auto'>
+      <h1 className="text-3xl font-bold mb-4">The Eisenhower Matrix</h1>
+      <div className='grid grid-rows-2 grid-cols-2 gap-2'>
         <EachBlog name="Urgent & Important" colorCode="#FF5733" />
         <EachBlog name="Urgent & Not important" colorCode="#FDDD5C" />
         <EachBlog name="Not urgent & Important" colorCode="#189AB4" />
