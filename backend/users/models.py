@@ -1,7 +1,11 @@
+import random
+import math
+
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from .managers import CustomAccountManager
 
@@ -32,15 +36,33 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.username
 
 
-# class UserStats(models.Model):
-#     """
-#     Represents User Profiles and Attributes.
-#     Fields:
-#     - health: health points of the user.
-#     - gold: gold points of the user.
-#     - experience: experience points of the user.
-#     """
-#     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-#     health = models.IntegerField(default=100)
-#     gold = models.IntegerField(default=0)
-#     experience = models.FloatField(default=0)
+def random_luck():
+    return random.randint(1, 50)
+
+class UserStats(models.Model):
+    """
+    Represents User Profiles and Attributes.
+    Fields:
+    - health: health points of the user.
+    - gold: gold points of the user.
+    - experience: experience points of the user.
+    """
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    health = models.IntegerField(default=100)
+    gold = models.FloatField(default=0.0)
+    experience = models.FloatField(default=0)
+    strength = models.IntegerField(default=1,
+                                   validators=[MinValueValidator(1), 
+                                               MaxValueValidator(100)])
+    intelligence = models.IntegerField(default=1, validators=[MinValueValidator(1),
+                                                              MaxValueValidator(100)])
+    endurance = models.IntegerField(default=1, validators=[MinValueValidator(1),
+                                                           MaxValueValidator(100)])
+    perception = models.IntegerField(default=1,  validators=[MinValueValidator(1),
+                                                             MaxValueValidator(100)])
+    luck = models.IntegerField(default=random_luck,  validators=[MinValueValidator(1),
+                                                       MaxValueValidator(50)],)
+    
+    @property
+    def level(self):
+        return (math.pow(self.experience, 2) // 225) + 1
