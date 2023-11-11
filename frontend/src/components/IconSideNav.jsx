@@ -11,8 +11,8 @@ const menuItems = [
   { id: 0, path: "/", icon: <homeLogo />, logo: homeLogo },
   { id: 1, path: "/tasks", icon: <planLogo />, logo: planLogo },
   { id: 2, path: "/calendar", icon: <calendarLogo />, logo: calendarLogo },
-  { id: 3, path: "/pie", icon: <pieLogo />, logo: pieLogo },
-  { id: 4, path: "/plus", icon: <plusLogo />, logo: plusLogo },
+  { id: 3, path: "/analytic", icon: <pieLogo />, logo: pieLogo },
+  { id: 4, path: "/priority", icon: <plusLogo />, logo: plusLogo },
 ];
 
 const IconSideNav = () => {
