@@ -1,47 +1,27 @@
 import React from 'react';
 
-// Styles for row headers
-const rowHeaderStyle = "bg-pink-300 text-pink-700 p-4 rounded-lg font-semibold text-lg shadow-md";
-
-// Styles for column headers
-const columnHeaderStyle = "bg-blue-300 text-blue-700 p-4 rounded-lg font-semibold text-lg shadow-md";
-
-// Styles for content cells in green
-const greenContextStyle = "bg-green-300 text-green-700 p-4 rounded-lg text-lg shadow-md";
-
-// Styles for content cells in yellow
-const yellowContextStyle = "bg-yellow-300 text-yellow-700 p-4 rounded-lg text-lg shadow-md";
+function EachBlog({ name, colorCode }) {
+  return (
+    <div className="grid grid-rows-2 gap-4 text-left p-4 rounded-lg bg-white">
+      <div className="text-xl font-bold" style={{ color: colorCode }}>
+        {name}
+      </div>
+      <div>
+        content
+      </div>
+    </div>
+  );
+}
 
 function Eisenhower() {
   return (
-    <div className="grid grid-rows-3 grid-flow-col gap-3 m-auto w-1/2 h-auto p-5 bg-slate-500 rounded-lg shadow-md">
-      <div className="bg-indigo-300 text-indigo-700 p-4 rounded-lg font-semibold text-2xl shadow-lg">
-        Eisenhower Matrix
-      </div>
-      {/* Row Headers */}
-      <div className={rowHeaderStyle}>Important</div>
-      <div className={rowHeaderStyle}>Not Important</div>
-
-      {/* Column Headers */}
-      <div className={columnHeaderStyle}>Urgent</div>
-
-      {/* Content Cells */}
-      <div className={greenContextStyle}>
-        Urgent & Important
-      </div>
-      <div className={yellowContextStyle}>
-        Urgent & Not Important
-      </div>
-
-      {/* Column Headers */}
-      <div className={columnHeaderStyle}>Not Urgent</div>
-
-      {/* Content Cells */}
-      <div className={yellowContextStyle}>
-        Not Urgent & Important
-      </div>
-      <div className={greenContextStyle}>
-        Not Urgent & Not Important
+    <div className='bg-slate-200 text-left p-1 m-auto'>
+      <h1 className="text-xl font-bold">The Eisenhower Matrix</h1>
+      <div className='p-4 m-auto grid grid-rows-2 grid-cols-2 gap-4'>
+        <EachBlog name="Urgent & Important" colorCode="#FF5733" />
+        <EachBlog name="Urgent & Not important" colorCode="#FDDD5C" />
+        <EachBlog name="Not urgent & Important" colorCode="#189AB4" />
+        <EachBlog name="Not urgent & Not important" colorCode="#94FA92" />
       </div>
     </div>
   );
