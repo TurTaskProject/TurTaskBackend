@@ -58,7 +58,7 @@ function TaskCard({ task, deleteTask, updateTask }) {
         <textarea
           className="
         h-[90%]
-        w-full resize-none border-none rounded bg-transparent text-white focus:outline-none
+        w-full resize-none border-none rounded bg-transparent text-black focus:outline-none
         "
           value={task.content}
           autoFocus
