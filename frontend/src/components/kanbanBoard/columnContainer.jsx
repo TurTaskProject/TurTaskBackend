@@ -108,13 +108,11 @@ function ColumnContainer({
         text-sm
         rounded-full
         "
-          >
-            0
-          </div>
+          ></div>
           {!editMode && column.title}
           {editMode && (
             <input
-              className="bg-black focus:border-rose-500 border rounded outline-none px-2"
+              className="bg-white focus:border-rose-500 border rounded outline-none px-2"
               value={column.title}
               onChange={(e) => updateColumn(column.id, e.target.value)}
               autoFocus

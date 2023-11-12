@@ -1,4 +1,4 @@
-import PlusIcon from "../icons/plusIcon"
+import PlusIcon from "../icons/plusIcon";
 import { useMemo, useState } from "react";
 import ColumnContainer from "./columnContainer";
 import {
@@ -120,6 +120,7 @@ function KanbanBoard() {
         m-auto
         flex
         w-full
+        h-full
         min-h-screen
         items-center
         overflow-x-auto
@@ -149,6 +150,7 @@ function KanbanBoard() {
               ))}
             </SortableContext>
           </div>
+        {/* create new column */}
           <button
             onClick={() => {
               createNewColumn();
@@ -223,8 +225,7 @@ function KanbanBoard() {
       if (task.id !== id) return task;
       return { ...task, content };
     });
-      if (content === "") return deleteTask(id
-      );
+    if (content === "") return deleteTask(id);
     setTasks(newTasks);
   }
 
