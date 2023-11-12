@@ -120,6 +120,7 @@ function KanbanBoard() {
         m-auto
         flex
         w-full
+        min-h-screen
         items-center
         overflow-x-auto
         overflow-y-hidden
@@ -222,7 +223,8 @@ function KanbanBoard() {
       if (task.id !== id) return task;
       return { ...task, content };
     });
-
+      if (content === "") return deleteTask(id
+      );
     setTasks(newTasks);
   }
 

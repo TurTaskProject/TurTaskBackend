@@ -47,17 +47,14 @@ function ColumnContainer({
         ref={setNodeRef}
         style={style}
         className="
-      bg-columnBackgroundColor
-      opacity-40
-      border-2
-      border-pink-500
-      w-[350px]
-      h-[500px]
-      max-h-[500px]
-      rounded-md
-      flex
-      flex-col
-      "
+          bg-columnBackgroundColor
+          w-[350px]
+          h-[500px]
+          max-h-[500px]
+          rounded-md
+          flex
+          flex-col
+        "
       ></div>
     );
   }
@@ -155,7 +152,7 @@ function ColumnContainer({
             <TaskCard
               key={task.id}
               task={task}
-              deleteTask={deleteTask}
+              deleteTask={deleteTask} // Pass deleteTask to TaskCard
               updateTask={updateTask}
             />
           ))}
