@@ -120,8 +120,6 @@ function KanbanBoard() {
         m-auto
         flex
         w-full
-        h-full
-        min-h-screen
         items-center
         overflow-x-auto
         overflow-y-hidden
