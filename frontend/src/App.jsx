@@ -1,10 +1,10 @@
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 import TestAuth from "./components/testAuth";
 import LoginPage from "./components/authentication/LoginPage";
 import SignUpPage from "./components/authentication/SignUpPage";
-import NavBar from "./components/nav/Navbar";
+import NavBar from "./components/Nav/Navbar";
 import Home from "./components/Home";
 import ProfileUpdate from "./components/ProfileUpdatePage";
 import Calendar from "./components/calendar/calendar";
@@ -13,16 +13,16 @@ import IconSideNav from "./components/IconSideNav";
 import Eisenhower from "./components/eisenhowerMatrix/Eisenhower";
 
 const App = () => {
-  const currentPath = window.location.pathname;
+  const location = useLocation();
   const prevention = ["/login", "/signup"];
+  const isLoginPageOrSignUpPage = prevention.some(_ => location.pathname.includes(_));
 
   return (
-    <BrowserRouter>
-      <div className="display: flex">
-        {!prevention.some(_ => currentPath.includes(_)) && <IconSideNav />}
-        <div className="flex-1">
+      <div className={isLoginPageOrSignUpPage ? "" : "display: flex"}>
+        {!isLoginPageOrSignUpPage && <IconSideNav />}
+        <div className={isLoginPageOrSignUpPage ? "" : "flex-1"}>
           <NavBar />
-          <div className="flex items-center justify-center">
+          <div className={isLoginPageOrSignUpPage ? "" : "flex items-center justify-center"}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/tasks" element={<KanbanBoard />} />
@@ -30,15 +30,12 @@ const App = () => {
               <Route path="/update_profile" element={<ProfileUpdate />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/priority" element={<Eisenhower />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
             </Routes>
           </div>
         </div>
       </div>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-      </Routes>
-    </BrowserRouter>
   );
 };
 
