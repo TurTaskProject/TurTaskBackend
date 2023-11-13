@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-function IsAuthenticated() {
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     const access_token = localStorage.getItem("access_token");
     return !!access_token;
@@ -12,6 +14,8 @@ function IsAuthenticated() {
       setIsAuthenticated(!!newAccessToken);
     };
 
+    handleTokenChange();
+
     window.addEventListener("storage", handleTokenChange);
 
     return () => {
@@ -19,7 +23,17 @@ function IsAuthenticated() {
     };
   }, []);
 
-  return isAuthenticated;
-}
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
-export default IsAuthenticated;
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
