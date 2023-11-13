@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { redirect } from 'react-router-dom';
 
 const axiosInstance = axios.create({
     baseURL: 'http://127.0.0.1:8000/api/',
@@ -16,7 +17,7 @@ axiosInstance.interceptors.response.use(
     error => {
         const originalRequest = error.config;
         const refresh_token = localStorage.getItem('refresh_token');
-
+        
         // Check if the error is due to 401 and a refresh token is available
         if (error.response.status === 401 && error.response.statusText === "Unauthorized" && refresh_token !== "undefined") {
             return axiosInstance

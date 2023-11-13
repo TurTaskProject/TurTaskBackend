@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import IsAuthenticated from "../authentication/IsAuthenticated";
+import IsAuthenticated from "../../hooks/authentication/IsAuthenticated";
 import axiosapi from "../../api/AuthenticationApi";
 
 const settings = {
