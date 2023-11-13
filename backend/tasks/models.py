@@ -73,6 +73,14 @@ class RecurrenceTask(Task):
     def __str__(self) -> str:
         return f"{self.title} ({self.recurrence_rule})"
 
+
+class Habit(Task):
+    streak = models.IntegerField(default=0)
+
+    def __str__(self) -> str:
+        return f"{self.title} ({self.streak})"
+
+
 class Subtask(models.Model):
     """
     Represents a subtask associated with a task.
