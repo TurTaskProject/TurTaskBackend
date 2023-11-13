@@ -1,18 +1,20 @@
 import { useState } from "react";
+import {
+  AiOutlineHome,
+  AiOutlineSchedule,
+  AiOutlineUnorderedList,
+  AiOutlinePieChart,
+  AiOutlinePlus,
+} from "react-icons/ai";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import homeLogo from "../assets/home.png";
-import calendarLogo from "../assets/calendar.png";
-import planLogo from "../assets/planning.png";
-import pieLogo from "../assets/pie-chart.png";
-import plusLogo from "../assets/plus.png";
 
 const menuItems = [
-  { id: 0, path: "/", icon: <homeLogo />, logo: homeLogo },
-  { id: 1, path: "/tasks", icon: <planLogo />, logo: planLogo },
-  { id: 2, path: "/calendar", icon: <calendarLogo />, logo: calendarLogo },
-  { id: 3, path: "/analytic", icon: <pieLogo />, logo: pieLogo },
-  { id: 4, path: "/priority", icon: <plusLogo />, logo: plusLogo },
+  { id: 0, path: "/", icon: <AiOutlineHome /> },
+  { id: 1, path: "/tasks", icon: <AiOutlineUnorderedList /> },
+  { id: 2, path: "/calendar", icon: <AiOutlineSchedule /> },
+  { id: 3, path: "/analytic", icon: <AiOutlinePieChart /> },
+  { id: 4, path: "/priority", icon: <AiOutlinePlus /> },
 ];
 
 const IconSideNav = () => {
@@ -28,14 +30,13 @@ const SideNav = () => {
 
   return (
     <nav className="bg-slate-950 p-4 flex flex-col items-center gap-2 h-screen">
-      {menuItems.map((item) => (
+      {menuItems.map(item => (
         <NavItem
           key={item.id}
           icon={item.icon}
           selected={selected === item.id}
           id={item.id}
           setSelected={setSelected}
-          logo={item.logo}
           path={item.path}
         />
       ))}
@@ -54,22 +55,17 @@ const NavItem = ({ icon, selected, id, setSelected, logo, path }) => {
         navigate(path);
       }}
       whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
+      whileTap={{ scale: 0.95 }}>
       <AnimatePresence>
         {selected && (
           <motion.span
             className="absolute inset-0 rounded-md bg-emerald-600 z-0"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            exit={{ scale: 0 }}
-          ></motion.span>
+            exit={{ scale: 0 }}></motion.span>
         )}
       </AnimatePresence>
-      <span className="block relative z-10">
-        {icon}
-        <img src={logo} alt="Logo" className="h-8 w-8 mx-auto my-2" />
-      </span>
+      <span className="block relative z-10">{icon}</span>
     </motion.button>
   );
 };
