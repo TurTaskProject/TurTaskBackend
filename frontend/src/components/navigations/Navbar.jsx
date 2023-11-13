@@ -4,8 +4,8 @@ import IsAuthenticated from "../../hooks/authentication/IsAuthenticated";
 import axiosapi from "../../api/AuthenticationApi";
 
 const settings = {
-  Profile: '/update_profile',
-  Account: '/account',
+  Profile: "/update_profile",
+  Account: "/account",
 };
 
 function NavBar() {
@@ -24,7 +24,7 @@ function NavBar() {
         <a className="btn btn-ghost normal-case text-xl" href="/">
           TurTask
         </a>
-      </div>  
+      </div>
       <div className="flex-none gap-2">
         <div className="form-control">
           <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />

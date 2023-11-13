@@ -5,29 +5,14 @@ import { useMemo, useState } from "react";
 import PlusIcon from "../icons/plusIcon";
 import TaskCard from "./taskCard";
 
-function ColumnContainer({
-  column,
-  deleteColumn,
-  updateColumn,
-  createTask,
-  tasks,
-  deleteTask,
-  updateTask,
-}) {
+function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks, deleteTask, updateTask }) {
   const [editMode, setEditMode] = useState(false);
 
   const tasksIds = useMemo(() => {
-    return tasks.map((task) => task.id);
+    return tasks.map(task => task.id);
   }, [tasks]);
 
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: column.id,
     data: {
       type: "Column",
@@ -57,8 +42,7 @@ function ColumnContainer({
       rounded-md
       flex
       flex-col
-      "
-      ></div>
+      "></div>
     );
   }
 
@@ -74,8 +58,7 @@ function ColumnContainer({
   rounded-md
   flex
   flex-col
-  "
-    >
+  ">
       {/* Column title */}
       <div
         {...attributes}
@@ -97,8 +80,7 @@ function ColumnContainer({
       flex
       items-center
       justify-between
-      "
-      >
+      ">
         <div className="flex gap-2">
           <div
             className="
@@ -110,8 +92,7 @@ function ColumnContainer({
         py-1
         text-sm
         rounded-full
-        "
-          >
+        ">
             0
           </div>
           {!editMode && column.title}
@@ -119,12 +100,12 @@ function ColumnContainer({
             <input
               className="bg-black focus:border-rose-500 border rounded outline-none px-2"
               value={column.title}
-              onChange={(e) => updateColumn(column.id, e.target.value)}
+              onChange={e => updateColumn(column.id, e.target.value)}
               autoFocus
               onBlur={() => {
                 setEditMode(false);
               }}
-              onKeyDown={(e) => {
+              onKeyDown={e => {
                 if (e.key !== "Enter") return;
                 setEditMode(false);
               }}
@@ -142,8 +123,7 @@ function ColumnContainer({
         rounded
         px-1
         py-2
-        "
-        >
+        ">
           <TrashIcon />
         </button>
       </div>
@@ -151,13 +131,8 @@ function ColumnContainer({
       {/* Column task container */}
       <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
         <SortableContext items={tasksIds}>
-          {tasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              deleteTask={deleteTask}
-              updateTask={updateTask}
-            />
+          {tasks.map(task => (
+            <TaskCard key={task.id} task={task} deleteTask={deleteTask} updateTask={updateTask} />
           ))}
         </SortableContext>
       </div>
@@ -166,8 +141,7 @@ function ColumnContainer({
         className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black"
         onClick={() => {
           createTask(column.id);
-        }}
-      >
+        }}>
         <PlusIcon />
         Add task
       </button>

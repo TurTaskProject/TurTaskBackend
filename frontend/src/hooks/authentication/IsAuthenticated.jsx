@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 function IsAuthenticated() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    const access_token = localStorage.getItem('access_token');
+    const access_token = localStorage.getItem("access_token");
     return !!access_token;
   });
 
   useEffect(() => {
     const handleTokenChange = () => {
-      const newAccessToken = localStorage.getItem('access_token');
+      const newAccessToken = localStorage.getItem("access_token");
       setIsAuthenticated(!!newAccessToken);
     };
 
-    window.addEventListener('storage', handleTokenChange);
+    window.addEventListener("storage", handleTokenChange);
 
     return () => {
-      window.removeEventListener('storage', handleTokenChange);
+      window.removeEventListener("storage", handleTokenChange);
     };
   }, []);
 

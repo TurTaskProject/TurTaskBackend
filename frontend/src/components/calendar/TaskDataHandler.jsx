@@ -1,6 +1,6 @@
-import { fetchTodoTasks } from '../../api/TaskApi';
+import { fetchTodoTasks } from "../../api/TaskApi";
 
-let eventGuid = 0
+let eventGuid = 0;
 
 // function getDateAndTime(dateString) {
 //   const dateObject = new Date(dateString);
@@ -18,25 +18,25 @@ let eventGuid = 0
 //   return dateFormatted + timeFormatted;
 // }
 
-const mapResponseToEvents = (response) => {
-    return response.map(item => ({
-        id: createEventId(),
-        title: item.title,
-        start: item.start_event,
-        end: item.end_event,
-    }));
-}
+const mapResponseToEvents = response => {
+  return response.map(item => ({
+    id: createEventId(),
+    title: item.title,
+    start: item.start_event,
+    end: item.end_event,
+  }));
+};
 
 export async function getEvents() {
-    try {
-        const response = await fetchTodoTasks();
-        return mapResponseToEvents(response);
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
+  try {
+    const response = await fetchTodoTasks();
+    return mapResponseToEvents(response);
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
 export function createEventId() {
-    return String(eventGuid++);
+  return String(eventGuid++);
 }

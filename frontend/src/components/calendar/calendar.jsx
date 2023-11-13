@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { formatDate } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -79,7 +79,7 @@ export default class Calendar extends React.Component {
     });
   };
 
-  handleDateSelect = (selectInfo) => {
+  handleDateSelect = selectInfo => {
     let title = prompt("Please enter a new title for your event");
     let calendarApi = selectInfo.view.calendar;
 
@@ -96,13 +96,13 @@ export default class Calendar extends React.Component {
     }
   };
 
-  handleEventClick = (clickInfo) => {
+  handleEventClick = clickInfo => {
     if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       clickInfo.event.remove();
     }
   };
 
-  handleEvents = (events) => {
+  handleEvents = events => {
     this.setState({
       currentEvents: events,
     });
