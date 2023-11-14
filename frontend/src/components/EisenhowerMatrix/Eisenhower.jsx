@@ -15,7 +15,7 @@ function EachBlog({ name, colorCode }) {
 
 function Eisenhower() {
   return (
-    <div className='bg-slate-100 text-left p-4 m-auto'>
+    <div className='bg-slate-100 text-left p-4 m-auto w-full'>
       <h1 className="text-3xl font-bold mb-4">The Eisenhower Matrix</h1>
       <div className='grid grid-rows-2 grid-cols-2 gap-2'>
         <EachBlog name="Urgent & Important" colorCode="#FF5733" />
