@@ -14,6 +14,10 @@ class TodoViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        queryset = Todo.objects.filter(user=self.request.user)
+        return queryset
+
     def get_serializer_class(self):
         # Can't add ManytoMany at creation time (Tags)
         if self.action == 'create':
