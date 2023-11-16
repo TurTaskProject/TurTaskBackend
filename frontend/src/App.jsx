@@ -6,12 +6,13 @@ import LoginPage from "./components/authentication/LoginPage";
 import SignUpPage from "./components/authentication/SignUpPage";
 import NavBar from "./components/navigations/Navbar";
 import Home from "./components/Home";
-import ProfileUpdate from "./components/ProfileUpdatePage";
 import Calendar from "./components/calendar/calendar";
 import KanbanBoard from "./components/kanbanBoard/kanbanBoard";
 import IconSideNav from "./components/navigations/IconSideNav";
 import Eisenhower from "./components/eisenhowerMatrix/Eisenhower";
 import PrivateRoute from "./PrivateRoute";
+import ProfileUpdatePage from "./components/profilePage";
+
 
 const App = () => {
   const location = useLocation();
@@ -30,8 +31,8 @@ const App = () => {
               <Route exact path="/tasks" element={<KanbanBoard />} />
             </Route>
             <Route path="/testAuth" element={<TestAuth />} />
-            <Route exact path="/update_profile" element={<PrivateRoute />}>
-              <Route exact path="/update_profile" element={<ProfileUpdate />} />
+            <Route exact path="/profile" element={<PrivateRoute />}>
+              <Route exact path="/profile" element={<ProfileUpdatePage />} />
             </Route>
             <Route exact path="/calendar" element={<PrivateRoute />}>
               <Route exact path="/calendar" element={<Calendar />} />

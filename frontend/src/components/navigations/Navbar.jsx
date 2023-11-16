@@ -4,8 +4,8 @@ import axiosapi from "../../api/AuthenticationApi";
 import { useAuth } from "../../hooks/authentication/IsAuthenticated"; 
 
 const settings = {
-  Profile: "/update_profile",
-  Account: "/account",
+  Profile: '/profile',
+  Account: '/account',
 };
 
 function NavBar() {
