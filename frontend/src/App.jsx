@@ -10,7 +10,9 @@ import Calendar from "./components/calendar/calendar";
 import KanbanBoard from "./components/kanbanBoard/kanbanBoard";
 import IconSideNav from "./components/navigations/IconSideNav";
 import Eisenhower from "./components/eisenhowerMatrix/Eisenhower";
+import PrivateRoute from "./PrivateRoute";
 import ProfileUpdatePage from "./components/profilePage";
+
 
 const App = () => {
   const location = useLocation();
@@ -18,24 +20,32 @@ const App = () => {
   const isLoginPageOrSignUpPage = prevention.some(_ => location.pathname.includes(_));
 
   return (
-      <div className={isLoginPageOrSignUpPage ? "" : "display: flex"}>
-        {!isLoginPageOrSignUpPage && <IconSideNav />}
-        <div className={isLoginPageOrSignUpPage ? "" : "flex-1"}>
-          <NavBar />
-          <div className={isLoginPageOrSignUpPage ? "" : "flex items-center justify-center"}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/tasks" element={<KanbanBoard />} />
-              <Route path="/testAuth" element={<TestAuth />} />
-              <Route path="/profile" element={<ProfileUpdatePage />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/priority" element={<Eisenhower />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignUpPage />} />
-            </Routes>
-          </div>
+    <div className={isLoginPageOrSignUpPage ? "" : "display: flex"}>
+      {!isLoginPageOrSignUpPage && <IconSideNav />}
+      <div className={isLoginPageOrSignUpPage ? "" : "flex-1 ml-[76px]"}>
+        <NavBar />
+        <div className={isLoginPageOrSignUpPage ? "" : "flex items-center justify-center"}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route exact path="/tasks" element={<PrivateRoute />}>
+              <Route exact path="/tasks" element={<KanbanBoard />} />
+            </Route>
+            <Route path="/testAuth" element={<TestAuth />} />
+            <Route exact path="/profile" element={<PrivateRoute />}>
+              <Route exact path="/profile" element={<ProfileUpdatePage />} />
+            </Route>
+            <Route exact path="/calendar" element={<PrivateRoute />}>
+              <Route exact path="/calendar" element={<Calendar />} />
+            </Route>
+            <Route exact path="/priority" element={<PrivateRoute />}>
+              <Route exact path="/priority" element={<Eisenhower />} />
+            </Route>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+          </Routes>
         </div>
       </div>
+    </div>
   );
 };
 

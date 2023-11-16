@@ -4,7 +4,7 @@ import ProfileUpdateComponent from "./ProfileUpdateComponent";
 function ProfileUpdatePage() {
   return (
     <div>
-      <div className="stats shadow">
+      <div className="stats shadow mt-3">
         <div className="stat">
           <div className="stat-title truncate">Username</div>
           <div className="stat-value truncate">Sirin</div>

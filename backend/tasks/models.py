@@ -68,10 +68,18 @@ class Todo(Task):
         return self.title
 
 class RecurrenceTask(Task):
-    recurrence_rule = models.TextField()
+    recurrence_rule = models.CharField()
 
     def __str__(self) -> str:
         return f"{self.title} ({self.recurrence_rule})"
+
+
+class Habit(Task):
+    streak = models.IntegerField(default=0)
+
+    def __str__(self) -> str:
+        return f"{self.title} ({self.streak})"
+
 
 class Subtask(models.Model):
     """

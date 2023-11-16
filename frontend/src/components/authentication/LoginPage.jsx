@@ -5,8 +5,12 @@ import { useGoogleLogin } from "@react-oauth/google";
 import refreshAccessToken from "./refreshAcesstoken";
 import axiosapi from "../../api/AuthenticationApi";
 
+import { useAuth } from "../../hooks/authentication/IsAuthenticated"; 
+
 function LoginPage() {
   const Navigate = useNavigate();
+
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   useEffect(() => {
     if (!refreshAccessToken()) {
@@ -39,11 +43,13 @@ function LoginPage() {
         localStorage.setItem("access_token", res.data.access);
         localStorage.setItem("refresh_token", res.data.refresh);
         axiosapi.axiosInstance.defaults.headers["Authorization"] = "Bearer " + res.data.access;
+        setIsAuthenticated(true);
         Navigate("/");
       })
       .catch(err => {
         console.log("Login failed");
         console.log(err);
+        setIsAuthenticated(false);
       });
   };
 
@@ -58,10 +64,12 @@ function LoginPage() {
 
           localStorage.setItem("access_token", access_token);
           localStorage.setItem("refresh_token", refresh_token);
+          setIsAuthenticated(true);
           Navigate("/");
         }
       } catch (error) {
         console.error("Error with the POST request:", error);
+        setIsAuthenticated(false);
       }
     },
     onError: errorResponse => console.log(errorResponse),
