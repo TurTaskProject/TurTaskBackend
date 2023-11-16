@@ -24,7 +24,7 @@ const SideNav = () => {
   const [selected, setSelected] = useState(0);
 
   return (
-    <nav className="bg-slate-950 p-4 flex flex-col items-center gap-2 h-screen">
+    <nav className="bg-slate-950 p-4 flex flex-col items-center gap-2 h-full fixed top-0 left-0">
       {menuItems.map(item => (
         <NavItem
           key={item.id}

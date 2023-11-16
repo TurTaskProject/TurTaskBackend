@@ -22,7 +22,7 @@ const App = () => {
   return (
     <div className={isLoginPageOrSignUpPage ? "" : "display: flex"}>
       {!isLoginPageOrSignUpPage && <IconSideNav />}
-      <div className={isLoginPageOrSignUpPage ? "" : "flex-1"}>
+      <div className={isLoginPageOrSignUpPage ? "" : "flex-1 ml-[76px]"}>
         <NavBar />
         <div className={isLoginPageOrSignUpPage ? "" : "flex items-center justify-center"}>
           <Routes>
