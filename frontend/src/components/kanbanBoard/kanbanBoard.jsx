@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import ColumnContainer from "./columnContainer";
+import ColumnContainerCard from "./columnContainerWrapper";
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
@@ -124,7 +124,7 @@ function KanbanBoard() {
           <div className="flex gap-4">
             <SortableContext items={columnsId}>
               {columns.map(col => (
-                <ColumnContainer
+                <ColumnContainerCard
                   key={col.id}
                   column={col}
                   deleteColumn={deleteColumn}
@@ -164,7 +164,7 @@ function KanbanBoard() {
         {createPortal(
           <DragOverlay>
             {activeColumn && (
-              <ColumnContainer
+              <ColumnContainerCard
                 column={activeColumn}
                 deleteColumn={deleteColumn}
                 updateColumn={updateColumn}

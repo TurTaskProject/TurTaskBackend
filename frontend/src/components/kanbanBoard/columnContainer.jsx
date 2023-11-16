@@ -1,6 +1,6 @@
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import { BsFillTrashFill } from "react-icons/bs"
-import { AiOutlinePlusCircle } from "react-icons/ai"
+import { BsFillTrashFill } from "react-icons/bs";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 import { CSS } from "@dnd-kit/utilities";
 import { useMemo, useState } from "react";
 import TaskCard from "./taskCard";
@@ -32,13 +32,11 @@ function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks
         ref={setNodeRef}
         style={style}
         className="
-      bg-columnBackgroundColor
       opacity-40
       border-2
-      border-pink-500
+      border-blue-500
       w-[350px]
-      h-[500px]
-      max-h-[500px]
+      max-h-[400px]
       rounded-md
       flex
       flex-col
@@ -51,10 +49,9 @@ function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks
       ref={setNodeRef}
       style={style}
       className="
-  bg-columnBackgroundColor
-  w-[350px]
-  h-[500px]
-  max-h-[500px]
+  bg-[#f1f2f4]
+  w-[280px]
+  max-h-[400px]
   rounded-md
   flex
   flex-col
@@ -82,23 +79,10 @@ function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks
       justify-between
       ">
         <div className="flex gap-2">
-          <div
-            className="
-        flex
-        justify-center
-        items-center
-        bg-columnBackgroundColor
-        px-2
-        py-1
-        text-sm
-        rounded-full
-        ">
-            0
-          </div>
           {!editMode && column.title}
           {editMode && (
             <input
-              className="bg-black focus:border-rose-500 border rounded outline-none px-2"
+              className="bg-gray-200 focus:border-blue-500 border rounded-md outline-none px-2"
               value={column.title}
               onChange={e => updateColumn(column.id, e.target.value)}
               autoFocus
@@ -138,7 +122,7 @@ function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks
       </div>
       {/* Column footer */}
       <button
-        className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black"
+        className="flex gap-2 items-center rounded-md p-2 my-2 hover:bg-zinc-200 active:bg-zinc-400"
         onClick={() => {
           createTask(column.id);
         }}>
