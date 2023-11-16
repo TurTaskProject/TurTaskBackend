@@ -4,7 +4,7 @@ import IsAuthenticated from "../authentication/IsAuthenticated";
 import axiosapi from "../../api/AuthenticationApi";
 
 const settings = {
-  Profile: '/update_profile',
+  Profile: '/profile',
   Account: '/account',
 };
 

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { ApiUpdateUserProfile } from '../api/UserProfileApi';
 
-function ProfileUpdate() {
+function ProfileUpdateComponent() {
   const [file, setFile] = useState(null);
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
@@ -104,4 +104,4 @@ function ProfileUpdate() {
   );
 }
 
-export default ProfileUpdate;
+export default ProfileUpdateComponent;
