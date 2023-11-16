@@ -1,10 +1,11 @@
-import PlusIcon from "../icons/plusIcon";
 import { useMemo, useState } from "react";
 import ColumnContainer from "./columnContainer";
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import TaskCard from "./taskCard";
+import { AiOutlinePlusCircle } from "react-icons/ai"
+
 
 const defaultCols = [
   {
@@ -155,7 +156,7 @@ function KanbanBoard() {
       flex
       gap-2
       ">
-            <PlusIcon />
+            <AiOutlinePlusCircle />
             Add Column
           </button>
         </div>

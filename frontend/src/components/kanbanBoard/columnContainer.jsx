@@ -1,8 +1,8 @@
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import TrashIcon from "../icons/trashIcon";
+import { BsFillTrashFill } from "react-icons/bs"
+import { AiOutlinePlusCircle } from "react-icons/ai"
 import { CSS } from "@dnd-kit/utilities";
 import { useMemo, useState } from "react";
-import PlusIcon from "../icons/plusIcon";
 import TaskCard from "./taskCard";
 
 function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks, deleteTask, updateTask }) {
@@ -124,7 +124,7 @@ function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks
         px-1
         py-2
         ">
-          <TrashIcon />
+          <BsFillTrashFill />
         </button>
       </div>
 
@@ -142,7 +142,7 @@ function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks
         onClick={() => {
           createTask(column.id);
         }}>
-        <PlusIcon />
+        <AiOutlinePlusCircle />
         Add task
       </button>
     </div>
