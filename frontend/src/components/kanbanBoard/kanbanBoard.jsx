@@ -119,7 +119,7 @@ function KanbanBoard() {
         overflow-y-hidden
     ">
       <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
-        <div className="m-auto flex gap-4">
+        <div className="ml-2 flex gap-4">
           <div className="flex gap-4">
             <SortableContext items={columnsId}>
               {columns.map(col => (
@@ -142,8 +142,8 @@ function KanbanBoard() {
             }}
             className="
                       h-[60px]
-                      w-[350px]
-                      min-w-[350px]
+                      w-[268px]
+                      max-w-[268px]
                       cursor-pointer
                       rounded-xl
                       bg-[#f1f2f4]
@@ -155,15 +155,15 @@ function KanbanBoard() {
                       my-2
                       bg-opacity-60
                       ">
-                        <div className="my-1">
-            <AiOutlinePlusCircle />
+            <div className="my-1">
+              <AiOutlinePlusCircle />
             </div>
             Add Column
           </button>
         </div>
 
         {createPortal(
-          <DragOverlay>
+          <DragOverlay className="bg-white" dropAnimation={null} zIndex={20}>
             {activeColumn && (
               <ColumnContainerCard
                 column={activeColumn}
