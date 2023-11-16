@@ -64,16 +64,10 @@ function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks
           setEditMode(true);
         }}
         className="
-      bg-mainBackgroundColor
+      ml-3
       text-md
-      h-[60px]
       cursor-grab
-      rounded-md
-      rounded-b-none
-      p-3
       font-bold
-      border-columnBackgroundColor
-      border-4
       flex
       items-center
       justify-between
@@ -113,7 +107,7 @@ function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks
       </div>
 
       {/* Column task container */}
-      <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
+      <div className="flex flex-grow flex-col gap-2 p-1 overflow-x-hidden overflow-y-auto">
         <SortableContext items={tasksIds}>
           {tasks.map(task => (
             <TaskCard key={task.id} task={task} deleteTask={deleteTask} updateTask={updateTask} />

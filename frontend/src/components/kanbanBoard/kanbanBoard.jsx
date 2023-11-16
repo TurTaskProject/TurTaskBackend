@@ -4,8 +4,7 @@ import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from "@
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import TaskCard from "./taskCard";
-import { AiOutlinePlusCircle } from "react-icons/ai"
-
+import { AiOutlinePlusCircle } from "react-icons/ai";
 
 const defaultCols = [
   {
@@ -142,21 +141,23 @@ function KanbanBoard() {
               createNewColumn();
             }}
             className="
-      h-[60px]
-      w-[350px]
-      min-w-[350px]
-      cursor-pointer
-      rounded-lg
-      bg-mainBackgroundColor
-      border-2
-      border-columnBackgroundColor
-      p-4
-      ring-rose-500
-      hover:ring-2
-      flex
-      gap-2
-      ">
+                      h-[60px]
+                      w-[350px]
+                      min-w-[350px]
+                      cursor-pointer
+                      rounded-xl
+                      bg-[#f1f2f4]
+                      border-2
+                      p-4
+                      hover:bg-gray-200
+                      flex
+                      gap-2
+                      my-2
+                      bg-opacity-60
+                      ">
+                        <div className="my-1">
             <AiOutlinePlusCircle />
+            </div>
             Add Column
           </button>
         </div>
