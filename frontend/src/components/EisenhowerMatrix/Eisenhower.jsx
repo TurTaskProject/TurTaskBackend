@@ -1,22 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiAlertCircle, FiClock, FiXCircle, FiCheckCircle } from "react-icons/fi";
 
 function EachBlog({ name, colorCode, contentList, icon }) {
+  const [tasks, setTasks] = useState(contentList);
+
+  const handleCheckboxChange = index => {
+    const updatedTasks = [...tasks];
+    updatedTasks[index].checked = !updatedTasks[index].checked;
+    setTasks(updatedTasks);
+  };
+
   return (
-    <div
-      className={`h-full text-left p-4 rounded-lg bg-white border border-gray-300 overflow-y-auto`}>
-        <div className="flex" style={{ color: colorCode }}>
-          <span className="mx-2 mt-1">{icon}</span>
-          <span>{name}</span>
+    <div className={`h-full text-left p-4 rounded-lg bg-white border border-gray-300 overflow-y-auto`}>
+      <div className="flex" style={{ color: colorCode }}>
+        <span className="mx-2 mt-1">{icon}</span>
+        <span>{name}</span>
       </div>
       <hr className="my-3 h-0.5 border-t-0 bg-gray-300 opacity-100 dark:opacity-50" />
       <div className="space-y-2">
-        {contentList.length === 0 ? (
+        {tasks.length === 0 ? (
           <p className="text-gray-500 text-center">No tasks</p>
         ) : (
-          contentList.map((item, index) => (
+          tasks.map((item, index) => (
             <div key={index} className="flex items-start">
-              <input type="checkbox" checked={item.checked} className="checkbox mt-1 mr-2" />
+              <input
+                type="checkbox"
+                checked={item.checked}
+                className="checkbox mt-1 mr-2"
+                onChange={() => handleCheckboxChange(index)}
+              />
               <label className="cursor-pointer">{item.text}</label>
             </div>
           ))
