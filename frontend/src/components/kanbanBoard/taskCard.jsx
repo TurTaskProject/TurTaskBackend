@@ -43,7 +43,6 @@ function TaskCard({ task, deleteTask, updateTask }) {
         ref={setNodeRef}
         {...attributes}
         {...listeners}
-        onClick={() => document.getElementById("task_detail_modal").showModal()}
         style={style}
         className="justify-center items-center flex text-left rounded-xl cursor-grab relative hover:border-2 hover:border-blue-400 shadow bg-white"
         onMouseEnter={() => {

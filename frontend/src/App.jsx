@@ -7,7 +7,7 @@ import SignUpPage from "./components/authentication/SignUpPage";
 import NavBar from "./components/navigations/Navbar";
 import Home from "./components/Home";
 import Calendar from "./components/calendar/calendar";
-import KanbanBoard from "./components/kanbanBoard/kanbanBoard";
+import KanbanPage from "./components/kanbanBoard/kanbanPage";
 import IconSideNav from "./components/navigations/IconSideNav";
 import Eisenhower from "./components/eisenhowerMatrix/Eisenhower";
 import PrivateRoute from "./PrivateRoute";
@@ -22,13 +22,13 @@ const App = () => {
   return (
     <div className={isLoginPageOrSignUpPage ? "" : "display: flex"}>
       {!isLoginPageOrSignUpPage && <IconSideNav />}
-      <div className={isLoginPageOrSignUpPage ? "" : "flex-1 ml-[76px]"}>
+      <div className={isLoginPageOrSignUpPage ? "" : "flex-1 ml-[76px] overflow-hidden"}>
         <NavBar />
-        <div className={isLoginPageOrSignUpPage ? "" : "flex items-center justify-center"}>
+        <div className={isLoginPageOrSignUpPage ? "" : "overflow-x-auto"}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route exact path="/tasks" element={<PrivateRoute />}>
-              <Route exact path="/tasks" element={<KanbanBoard />} />
+              <Route exact path="/tasks" element={<KanbanPage />} />
             </Route>
             <Route path="/testAuth" element={<TestAuth />} />
             <Route exact path="/profile" element={<PrivateRoute />}>
