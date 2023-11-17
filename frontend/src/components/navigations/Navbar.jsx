@@ -1,20 +1,21 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import IsAuthenticated from "../authentication/IsAuthenticated";
 import axiosapi from "../../api/AuthenticationApi";
+import { useAuth } from "../../hooks/authentication/IsAuthenticated"; 
 
 const settings = {
-  Profile: '/update_profile',
+  Profile: '/profile',
   Account: '/account',
 };
 
 function NavBar() {
   const Navigate = useNavigate();
 
-  const isAuthenticated = IsAuthenticated();
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   const logout = () => {
     axiosapi.apiUserLogout();
+    setIsAuthenticated(false);
     Navigate("/");
   };
 
@@ -24,7 +25,7 @@ function NavBar() {
         <a className="btn btn-ghost normal-case text-xl" href="/">
           TurTask
         </a>
-      </div>  
+      </div>
       <div className="flex-none gap-2">
         <div className="form-control">
           <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
