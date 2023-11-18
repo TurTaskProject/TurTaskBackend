@@ -1,33 +1,18 @@
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import TrashIcon from "../icons/trashIcon";
+import { BsFillTrashFill } from "react-icons/bs";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 import { CSS } from "@dnd-kit/utilities";
 import { useMemo, useState } from "react";
-import PlusIcon from "../icons/plusIcon";
 import TaskCard from "./taskCard";
 
-function ColumnContainer({
-  column,
-  deleteColumn,
-  updateColumn,
-  createTask,
-  tasks,
-  deleteTask,
-  updateTask,
-}) {
+function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks, deleteTask, updateTask }) {
   const [editMode, setEditMode] = useState(false);
 
   const tasksIds = useMemo(() => {
-    return tasks.map((task) => task.id);
+    return tasks.map(task => task.id);
   }, [tasks]);
 
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: column.id,
     data: {
       type: "Column",
@@ -47,15 +32,15 @@ function ColumnContainer({
         ref={setNodeRef}
         style={style}
         className="
-          bg-columnBackgroundColor
-          w-[350px]
-          h-[500px]
-          max-h-[500px]
-          rounded-md
-          flex
-          flex-col
-        "
-      ></div>
+      opacity-40
+      border-2
+      border-blue-500
+      w-[350px]
+      max-h-[400px]
+      rounded-md
+      flex
+      flex-col
+      "></div>
     );
   }
 
@@ -64,15 +49,13 @@ function ColumnContainer({
       ref={setNodeRef}
       style={style}
       className="
-  bg-columnBackgroundColor
-  w-[350px]
-  h-[500px]
-  max-h-[500px]
+  bg-[#f1f2f4]
+  w-[280px]
+  max-h-[400px]
   rounded-md
   flex
   flex-col
-  "
-    >
+  ">
       {/* Column title */}
       <div
         {...attributes}
@@ -81,45 +64,26 @@ function ColumnContainer({
           setEditMode(true);
         }}
         className="
-      bg-mainBackgroundColor
+      ml-3
       text-md
-      h-[60px]
       cursor-grab
-      rounded-md
-      rounded-b-none
-      p-3
       font-bold
-      border-columnBackgroundColor
-      border-4
       flex
       items-center
       justify-between
-      "
-      >
+      ">
         <div className="flex gap-2">
-          <div
-            className="
-        flex
-        justify-center
-        items-center
-        bg-columnBackgroundColor
-        px-2
-        py-1
-        text-sm
-        rounded-full
-        "
-          ></div>
           {!editMode && column.title}
           {editMode && (
             <input
-              className="bg-white focus:border-rose-500 border rounded outline-none px-2"
+              className="bg-gray-200 focus:border-blue-500 border rounded-md outline-none px-2"
               value={column.title}
-              onChange={(e) => updateColumn(column.id, e.target.value)}
+              onChange={e => updateColumn(column.id, e.target.value)}
               autoFocus
               onBlur={() => {
                 setEditMode(false);
               }}
-              onKeyDown={(e) => {
+              onKeyDown={e => {
                 if (e.key !== "Enter") return;
                 setEditMode(false);
               }}
@@ -137,33 +101,26 @@ function ColumnContainer({
         rounded
         px-1
         py-2
-        "
-        >
-          <TrashIcon />
+        ">
+          <BsFillTrashFill />
         </button>
       </div>
 
       {/* Column task container */}
-      <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
+      <div className="flex flex-grow flex-col gap-2 p-1 overflow-x-hidden overflow-y-auto">
         <SortableContext items={tasksIds}>
-          {tasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              deleteTask={deleteTask} // Pass deleteTask to TaskCard
-              updateTask={updateTask}
-            />
+          {tasks.map(task => (
+            <TaskCard key={task.id} task={task} deleteTask={deleteTask} updateTask={updateTask} />
           ))}
         </SortableContext>
       </div>
       {/* Column footer */}
       <button
-        className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-white"
+        className="flex gap-2 items-center rounded-md p-2 my-2 hover:bg-zinc-200 active:bg-zinc-400"
         onClick={() => {
           createTask(column.id);
-        }}
-      >
-        <PlusIcon />
+        }}>
+        <AiOutlinePlusCircle />
         Add task
       </button>
     </div>

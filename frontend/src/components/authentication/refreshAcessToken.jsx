@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from "axios";
 
 async function refreshAccessToken() {
-  const refresh_token = localStorage.getItem('refresh_token');
-  const access_token = localStorage.getItem('access_token');
+  const refresh_token = localStorage.getItem("refresh_token");
+  const access_token = localStorage.getItem("access_token");
 
   if (access_token) {
     return true;
@@ -12,7 +12,7 @@ async function refreshAccessToken() {
     return false;
   }
 
-  const refreshUrl = 'http://127.0.0.1:8000/api/token/refresh/';
+  const refreshUrl = "http://127.0.0.1:8000/api/token/refresh/";
 
   try {
     const response = await axios.post(refreshUrl, { refresh: refresh_token });
@@ -22,8 +22,8 @@ async function refreshAccessToken() {
       const newAccessToken = response.data.access;
       const newRefreshToken = response.data.refresh;
 
-      localStorage.setItem('access_token', newAccessToken);
-      localStorage.setItem('refresh_token', newRefreshToken);
+      localStorage.setItem("access_token", newAccessToken);
+      localStorage.setItem("refresh_token", newRefreshToken);
 
       return true;
     } else {

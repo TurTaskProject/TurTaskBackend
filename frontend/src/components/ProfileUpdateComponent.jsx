@@ -1,12 +1,12 @@
-import React, { useState, useRef } from 'react';
-import { ApiUpdateUserProfile } from '../api/UserProfileApi';
+import React, { useState, useRef } from "react";
+import { ApiUpdateUserProfile } from "../api/UserProfileApi";
 
-function ProfileUpdate() {
+function ProfileUpdateComponent() {
   const [file, setFile] = useState(null);
-  const [username, setUsername] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [about, setAbout] = useState('');
-  const defaultImage = 'https://i1.sndcdn.com/artworks-cTz48e4f1lxn5Ozp-L3hopw-t500x500.jpg';
+  const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [about, setAbout] = useState("");
+  const defaultImage = "https://i1.sndcdn.com/artworks-cTz48e4f1lxn5Ozp-L3hopw-t500x500.jpg";
   const fileInputRef = useRef(null);
 
   const handleImageUpload = () => {
@@ -15,7 +15,7 @@ function ProfileUpdate() {
     }
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
@@ -24,9 +24,9 @@ function ProfileUpdate() {
 
   const handleSave = () => {
     const formData = new FormData();
-    formData.append('profile_pic', file);
-    formData.append('first_name', username);
-    formData.append('about', about);
+    formData.append("profile_pic", file);
+    formData.append("first_name", username);
+    formData.append("about", about);
 
     ApiUpdateUserProfile(formData);
   };
@@ -45,10 +45,7 @@ function ProfileUpdate() {
             ref={fileInputRef}
           />
         </label>
-        <div
-          className="avatar w-32 h-32 cursor-pointer hover:blur"
-          onClick={handleImageUpload}
-        >
+        <div className="avatar w-32 h-32 cursor-pointer hover:blur" onClick={handleImageUpload}>
           {file ? (
             <img src={URL.createObjectURL(file)} alt="Profile" className="rounded-full" />
           ) : (
@@ -69,7 +66,7 @@ function ProfileUpdate() {
           placeholder="Enter your username"
           className="input w-full"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={e => setUsername(e.target.value)}
         />
       </div>
 
@@ -81,7 +78,7 @@ function ProfileUpdate() {
           placeholder="Enter your full name"
           className="input w-full"
           value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
+          onChange={e => setFullName(e.target.value)}
         />
       </div>
 
@@ -92,7 +89,7 @@ function ProfileUpdate() {
           placeholder="Tell us about yourself"
           className="textarea w-full h-32"
           value={about}
-          onChange={(e) => setAbout(e.target.value)}
+          onChange={e => setAbout(e.target.value)}
         />
       </div>
 
@@ -104,4 +101,4 @@ function ProfileUpdate() {
   );
 }
 
-export default ProfileUpdate;
+export default ProfileUpdateComponent;

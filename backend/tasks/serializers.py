@@ -41,7 +41,7 @@ class RecurrenceTaskUpdateSerializer(serializers.ModelSerializer):
     description = serializers.CharField(source="notes", required=False)
     created = serializers.DateTimeField(source="creation_date")
     updated = serializers.DateTimeField(source="last_update")
-    recurrence = serializers.DateTimeField(source="recurrence_rule")
+    recurrence = serializers.CharField(source="recurrence_rule")
     start_datetime = serializers.DateTimeField(source="start_event", required=False)
     end_datetime = serializers.DateTimeField(source="end_event", required=False)
 

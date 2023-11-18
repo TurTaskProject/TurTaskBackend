@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { formatDate } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { getEvents, createEventId } from "./TaskDataHandler";
-import './index.css'
 
 export default class Calendar extends React.Component {
   state = {
@@ -15,9 +14,9 @@ export default class Calendar extends React.Component {
 
   render() {
     return (
-      <div className="demo-app">
+      <div className="flex font-sans w-full h-screen">
         {this.renderSidebar()}
-        <div className="demo-app-main">
+        <div className="flex-grow p-16 overflow-y-auto h-full max-h-screen">
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             headerToolbar={{
@@ -31,16 +30,11 @@ export default class Calendar extends React.Component {
             selectMirror={true}
             dayMaxEvents={true}
             weekends={this.state.weekendsVisible}
-            initialEvents={getEvents} // alternatively, use the `events` setting to fetch from a feed
+            initialEvents={getEvents}
             select={this.handleDateSelect}
-            eventContent={renderEventContent} // custom render function
+            eventContent={renderEventContent}
             eventClick={this.handleEventClick}
-            eventsSet={this.handleEvents} // called after events are initialized/added/changed/removed
-            /* you can update a remote database when these fire:
-            eventAdd={function(){}}
-            eventChange={function(){}}
-            eventRemove={function(){}}
-            */
+            eventsSet={this.handleEvents}
           />
         </div>
       </div>
@@ -49,23 +43,30 @@ export default class Calendar extends React.Component {
 
   renderSidebar() {
     return (
-      <div className="demo-app-sidebar">
-        <div className="demo-app-sidebar-section">
-          <h2>Instructions</h2>
-          <ul>
+      <div className="w-72 bg-blue-100 border-r border-blue-200 p-8 flex-shrink-0">
+        <div className="mb-8">
+          <h2 className="text-xl font-bold">Instructions</h2>
+          <ul className="list-disc pl-4">
             <li>Select dates and you will be prompted to create a new event</li>
             <li>Drag, drop, and resize events</li>
             <li>Click an event to delete it</li>
           </ul>
         </div>
-        <div className="demo-app-sidebar-section">
-          <label>
-            <input type="checkbox" checked={this.state.weekendsVisible} onChange={this.handleWeekendsToggle}></input>
-            toggle weekends
+
+        <div className="mb-8">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={this.state.weekendsVisible}
+              onChange={this.handleWeekendsToggle}
+              className="mr-2"
+            />
+            Toggle weekends
           </label>
         </div>
-        <div className="demo-app-sidebar-section">
-          <h2>All Events ({this.state.currentEvents.length})</h2>
+
+        <div>
+          <h2 className="text-xl font-bold">All Events ({this.state.currentEvents.length})</h2>
           <ul>{this.state.currentEvents.map(renderSidebarEvent)}</ul>
         </div>
       </div>

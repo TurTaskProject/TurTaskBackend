@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 
-const ApiUpdateUserProfile = async (formData) => {
+const ApiUpdateUserProfile = async formData => {
   try {
-    const response = await axios.post('http://127.0.1:8000/api/user/update/', formData, {
+    const response = await axios.post("http://127.0.1:8000/api/user/update/", formData, {
       headers: {
-        'Authorization': "Bearer " + localStorage.getItem('access_token'),
-        'Content-Type': 'multipart/form-data',
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+        "Content-Type": "multipart/form-data",
       },
     });
 
@@ -13,7 +13,7 @@ const ApiUpdateUserProfile = async (formData) => {
 
     return response.data;
   } catch (error) {
-    console.error('Error updating user profile:', error);
+    console.error("Error updating user profile:", error);
     throw error;
   }
 };
