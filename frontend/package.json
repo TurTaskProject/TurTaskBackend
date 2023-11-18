@@ -33,6 +33,7 @@
     "framer-motion": "^10.16.4",
     "gapi-script": "^1.2.0",
     "jwt-decode": "^4.0.0",
+    "particles.js": "^2.0.0",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-bootstrap": "^2.9.1",

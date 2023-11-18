@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-
 import refreshAccessToken from "./refreshAcesstoken";
 import axiosapi from "../../api/AuthenticationApi";
-
 import { useAuth } from "../../hooks/authentication/IsAuthenticated"; 
 
 function LoginPage() {
   const Navigate = useNavigate();
-
   const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   useEffect(() => {
@@ -74,15 +71,23 @@ function LoginPage() {
     },
     onError: errorResponse => console.log(errorResponse),
   });
+  useEffect(() => {
+    // Load particles.js configuration
+    particlesJS.load('particles-js', 'src/assets/particles.json', function() {
+      console.log('callback - particles.js config loaded');
+    });
+  }, []);
+
 
   return (
-    <div data-theme="night" className="min-h-screen flex">
+    <div data-theme="night" className="h-screen flex"> 
+    <div id="particles-js" className="absolute inset-0 "></div>
       {/* Left Section (Login Box) */}
       <div className="w-1/2 flex items-center justify-center">
         <div className="w-96 bg-neutral rounded-lg p-8 shadow-md space-y-4">
           <h2 className="text-2xl font-semibold text-left">Log in to your account</h2>
           {/* Email Input */}
-          <div className="form-control">
+          <div className="form-control ">
             <label className="label" htmlFor="email">
               <p className="text-bold">
                 Email<span className="text-red-500 text-bold">*</span>
@@ -93,6 +98,7 @@ function LoginPage() {
               type="email"
               id="email"
               placeholder="Enter your email"
+              
               onChange={handleEmailChange}
             />
           </div>
@@ -112,12 +118,12 @@ function LoginPage() {
             />
           </div>
           {/* Login Button */}
-          <button className="btn btn-primary w-full" onClick={handleSubmit}>
+          <button className="btn btn-primary w-full " onClick={handleSubmit}>
             Login
           </button>
           <div className="divider">OR</div>
           {/* Login with Google Button */}
-          <button className="btn btn-outline btn-secondary w-full" onClick={() => googleLoginImplicit()}>
+          <button className="btn btn-outline btn-secondary w-full " onClick={() => googleLoginImplicit()}>
             Login with Google
           </button>
           {/* Forgot Password Link */}
@@ -129,19 +135,6 @@ function LoginPage() {
         </div>
       </div>
 
-      {/* Right Section (Blurred Image Background) */}
-      <div className="w-1/2 relative">
-        <div
-          className="w-full h-full bg-cover bg-center"
-          style={{
-            backgroundImage: 'url("https://th.bing.com/th/id/OIG.9byG0pWUCcbGL7Kly9tA?pid=ImgGn&w=1024&h=1024&rs=1")',
-            filter: "blur(2px) brightness(.5)",
-          }}></div>
-
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-2xl font-semibold">
-          Text Overlay
-        </div>
-      </div>
     </div>
   );
 }
