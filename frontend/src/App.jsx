@@ -12,7 +12,6 @@ import IconSideNav from "./components/navigations/IconSideNav";
 import Eisenhower from "./components/eisenhowerMatrix/Eisenhower";
 import PrivateRoute from "./PrivateRoute";
 import ProfileUpdatePage from "./components/profilePage";
-import Signup from "./components/signup/Signup";
 
 
 const App = () => {
@@ -44,7 +43,6 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
           </Routes>
-          <Signup/>
         </div>
       </div>
     </div>
