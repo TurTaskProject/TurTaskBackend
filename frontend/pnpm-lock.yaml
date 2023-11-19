@@ -38,6 +38,9 @@ dependencies:
   '@fullcalendar/timegrid':
     specifier: ^6.1.9
     version: 6.1.9(@fullcalendar/core@6.1.9)
+  '@heroicons/react':
+    specifier: 1.0.6
+    version: 1.0.6(react@18.2.0)
   '@mui/icons-material':
     specifier: ^5.14.16
     version: 5.14.18(@mui/material@5.14.18)(@types/react@18.2.37)(react@18.2.0)
@@ -914,6 +917,14 @@ packages:
       tailwindcss: ^3.0
     dependencies:
       tailwindcss: 3.3.5
+    dev: false
+
+  /@heroicons/react@1.0.6(react@18.2.0):
+    resolution: {integrity: sha512-JJCXydOFWMDpCP4q13iEplA503MQO3xLoZiKum+955ZCtHINWnx26CUxVxxFQu/uLb4LW3ge15ZpzIkXKkJ8oQ==}
+    peerDependencies:
+      react: '>= 16'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@humanwhocodes/config-array@0.11.13:
