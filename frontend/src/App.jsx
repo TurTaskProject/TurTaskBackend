@@ -12,6 +12,7 @@ import IconSideNav from "./components/navigations/IconSideNav";
 import Eisenhower from "./components/eisenhowerMatrix/Eisenhower";
 import PrivateRoute from "./PrivateRoute";
 import ProfileUpdatePage from "./components/profilePage";
+import Dashboard from "./components/dashboard";
 
 
 const App = () => {
@@ -26,7 +27,7 @@ const App = () => {
         <NavBar />
         <div className={isLoginPageOrSignUpPage ? "" : "overflow-x-auto"}>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Dashboard />} />
             <Route exact path="/tasks" element={<PrivateRoute />}>
               <Route exact path="/tasks" element={<KanbanPage />} />
             </Route>
