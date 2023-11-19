@@ -74,6 +74,9 @@ function LoginPage() {
     },
     onError: (errorResponse) => console.log(errorResponse),
   });
+  {
+    /* Particles Loader*/
+  }
   const particlesInit = useCallback(async (engine) => {
     console.log(engine);
     await loadFull(engine);
