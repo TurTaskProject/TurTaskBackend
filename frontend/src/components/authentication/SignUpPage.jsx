@@ -192,26 +192,14 @@ export default function SignUp() {
             />
           </div>
           <br></br>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="allowExtraEmails"
-              name="allowExtraEmails"
-              className="h-4 w-4 text-green-500 focus:ring-green-400 border-gray-300 rounded"
-            />
-            <label htmlFor="allowExtraEmails" className="ml-2 text-sm ">
-              I want to receive inspiration, marketing promotions, and updates
-              via email.
-            </label>
-          </div>
 
           {/* Login Button */}
           <button className="btn btn-success w-full " onClick={handleSubmit}>
             Signup
           </button>
           {/* Already have an account? */}
-          <div className="text-blue-500 text-sm">
-            <a href="login" className="text-left">
+          <div className="text-blue-500 flex justify-center text-sm">
+            <a href="login">
               Already have an account?
             </a>
           </div>
