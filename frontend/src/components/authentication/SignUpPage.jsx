@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosapi from "../../api/AuthenticationApi";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Typography from "@mui/material/Typography";
 import { useCallback } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
@@ -108,13 +102,13 @@ export default function SignUp() {
             },
             particles: {
               color: {
-                value: "#008000",
+                value: "#023020",
               },
               links: {
-                color: "#00ff00",
+                color: "#228B22",
                 distance: 150,
                 enable: true,
-                opacity: 0.1,
+                opacity: 0.5,
                 width: 1,
               },
               move: {
@@ -141,7 +135,7 @@ export default function SignUp() {
                 type: "circle",
               },
               size: {
-                value: { min: 4, max: 5 },
+                value: { min: 6, max: 8 },
               },
             },
             detectRetina: true,
@@ -152,55 +146,75 @@ export default function SignUp() {
         <div className="w-96 bg-neutral rounded-lg p-8 shadow-md space-y-4 z-10">
           {/* Register Form */}
           <h2 className="text-3xl font-bold text-center">Signup</h2>
-          <form noValidate onSubmit={handleSubmit}>
-            <TextField
-              required
-              fullWidth
+          {/* Email Input */}
+          <div className="form-control ">
+            <label className="label" htmlFor="email">
+              <p className="text-bold">
+                Email<span className="text-red-500 text-bold">*</span>
+              </p>
+            </label>
+            <input
+              className="input"
+              type="email"
               id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              placeholder="Enter your email"
               onChange={handleChange}
             />
-            <TextField
-              autoComplete="username"
-              name="Username"
-              required
-              fullWidth
+          </div>
+          {/* Username Input */}
+          <div className="form-control">
+            <label className="label" htmlFor="Username">
+              <p className="text-bold">
+                Username<span className="text-red-500 text-bold">*</span>
+              </p>
+            </label>
+            <input
+              className="input"
+              type="text"
               id="Username"
-              label="Username"
-              autoFocus
+              placeholder="Enter your username"
               onChange={handleChange}
             />
-            <TextField
-              required
-              fullWidth
-              name="password"
-              label="Password"
+          </div>
+          {/* Password Input */}
+          <div className="form-control">
+            <label className="label" htmlFor="password">
+              <p className="text-bold">
+                Password<span className="text-red-500 text-bold">*</span>
+              </p>
+            </label>
+            <input
+              className="input"
               type="password"
               id="password"
-              autoComplete="new-password"
+              placeholder="Enter your password"
               onChange={handleChange}
             />
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive inspiration, marketing promotions and updates via email."
+          </div>
+          <br></br>
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="allowExtraEmails"
+              name="allowExtraEmails"
+              className="h-4 w-4 text-green-500 focus:ring-green-400 border-gray-300 rounded"
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            {/* Already have an account? */}
-            <div className="text-blue-500 text-sm">
-              <a href="login" className="text-left">
-                Already have an account?
-              </a>
-            </div>
-          </form>
+            <label htmlFor="allowExtraEmails" className="ml-2 text-sm ">
+              I want to receive inspiration, marketing promotions, and updates
+              via email.
+            </label>
+          </div>
+
+          {/* Login Button */}
+          <button className="btn btn-success w-full " onClick={handleSubmit}>
+            Signup
+          </button>
+          {/* Already have an account? */}
+          <div className="text-blue-500 text-sm">
+            <a href="login" className="text-left">
+              Already have an account?
+            </a>
+          </div>
           <Copyright />
         </div>
       </div>
