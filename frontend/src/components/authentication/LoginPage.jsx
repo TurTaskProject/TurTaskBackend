@@ -124,7 +124,7 @@ function LoginPage() {
                 value: "#008000",
               },
               links: {
-                color: "#ffffff",
+                color: "#00ff00",
                 distance: 150,
                 enable: true,
                 opacity: 0.1,
@@ -164,7 +164,7 @@ function LoginPage() {
       {/* Login Box */}
       <div className="w-1/4 flex items-center justify-center">
         <div className="w-96 bg-neutral rounded-lg p-8 shadow-md space-y-4 z-10">
-          <h2 className="text-4xl font-semibold text-center">Login</h2>
+          <h2 className="text-3xl font-bold text-center">Login</h2>
           {/* Email Input */}
           <div className="form-control ">
             <label className="label" htmlFor="email">
@@ -196,7 +196,7 @@ function LoginPage() {
             />
           </div>
           {/* Login Button */}
-          <button className="btn btn-primary w-full " onClick={handleSubmit}>
+          <button className="btn btn-success w-full " onClick={handleSubmit}>
             Login
           </button>
           <div className="divider">OR</div>
