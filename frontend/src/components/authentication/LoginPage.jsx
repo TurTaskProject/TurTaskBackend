@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
+import { useCallback } from "react";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
 import refreshAccessToken from "./refreshAcesstoken";
 import axiosapi from "../../api/AuthenticationApi";
-import { useAuth } from "../../hooks/authentication/IsAuthenticated"; 
+import { useAuth } from "../../hooks/authentication/IsAuthenticated";
 
 function LoginPage() {
   const Navigate = useNavigate();
@@ -18,15 +21,14 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleEmailChange = event => {
+  const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
 
-  const handlePasswordChange = event => {
+  const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
-
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     // Send a POST request to the authentication API
@@ -35,15 +37,16 @@ function LoginPage() {
         email: email,
         password: password,
       })
-      .then(res => {
+      .then((res) => {
         // On successful login, store tokens and set the authorization header
         localStorage.setItem("access_token", res.data.access);
         localStorage.setItem("refresh_token", res.data.refresh);
-        axiosapi.axiosInstance.defaults.headers["Authorization"] = "Bearer " + res.data.access;
+        axiosapi.axiosInstance.defaults.headers["Authorization"] =
+          "Bearer " + res.data.access;
         setIsAuthenticated(true);
         Navigate("/");
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("Login failed");
         console.log(err);
         setIsAuthenticated(false);
@@ -53,7 +56,7 @@ function LoginPage() {
   const googleLoginImplicit = useGoogleLogin({
     flow: "auth-code",
     redirect_uri: "postmessage",
-    onSuccess: async response => {
+    onSuccess: async (response) => {
       try {
         const loginResponse = await axiosapi.googleLogin(response.code);
         if (loginResponse && loginResponse.data) {
@@ -69,23 +72,99 @@ function LoginPage() {
         setIsAuthenticated(false);
       }
     },
-    onError: errorResponse => console.log(errorResponse),
+    onError: (errorResponse) => console.log(errorResponse),
   });
-  useEffect(() => {
-    // Load particles.js configuration
-    particlesJS.load('particles-js', 'src/assets/particles.json', function() {
-      console.log('callback - particles.js config loaded');
-    });
+  const particlesInit = useCallback(async (engine) => {
+    console.log(engine);
+    await loadFull(engine);
   }, []);
 
+  const particlesLoaded = useCallback(async (container) => {
+    console.log(container);
+  }, []);
 
   return (
-    <div data-theme="night" className="h-screen flex"> 
-    <div id="particles-js" className="absolute inset-0 "></div>
-      {/* Left Section (Login Box) */}
-      <div className="w-1/2 flex items-center justify-center">
-        <div className="w-96 bg-neutral rounded-lg p-8 shadow-md space-y-4">
-          <h2 className="text-2xl font-semibold text-left">Log in to your account</h2>
+    <div
+      data-theme="night"
+      className="h-screen flex items-center justify-center"
+    >
+      {/* Particles Container */}
+      <div style={{ width: "0%", height: "100vh" }}>
+        <Particles
+          id="particles"
+          init={particlesInit}
+          loaded={particlesLoaded}
+          className="-z-10"
+          options={{
+            fpsLimit: 240,
+            interactivity: {
+              events: {
+                onClick: {
+                  enable: true,
+                  mode: "push",
+                },
+                onHover: {
+                  enable: true,
+                  mode: "repulse",
+                },
+                resize: true,
+              },
+              modes: {
+                push: {
+                  quantity: 4,
+                },
+                repulse: {
+                  distance: 200,
+                  duration: 0.4,
+                },
+              },
+            },
+            particles: {
+              color: {
+                value: "#008000",
+              },
+              links: {
+                color: "#ffffff",
+                distance: 150,
+                enable: true,
+                opacity: 0.1,
+                width: 1,
+              },
+              move: {
+                direction: "none",
+                enable: true,
+                outModes: {
+                  default: "bounce",
+                },
+                random: false,
+                speed: 4,
+                straight: false,
+              },
+              number: {
+                density: {
+                  enable: true,
+                  area: 800,
+                },
+                value: 50,
+              },
+              opacity: {
+                value: 0.5,
+              },
+              shape: {
+                type: "circle",
+              },
+              size: {
+                value: { min: 4, max: 5 },
+              },
+            },
+            detectRetina: true,
+          }}
+        />
+      </div>
+      {/* Login Box */}
+      <div className="w-1/4 flex items-center justify-center">
+        <div className="w-96 bg-neutral rounded-lg p-8 shadow-md space-y-4 z-10">
+          <h2 className="text-4xl font-semibold text-center">Login</h2>
           {/* Email Input */}
           <div className="form-control ">
             <label className="label" htmlFor="email">
@@ -98,7 +177,6 @@ function LoginPage() {
               type="email"
               id="email"
               placeholder="Enter your email"
-              
               onChange={handleEmailChange}
             />
           </div>
@@ -123,7 +201,10 @@ function LoginPage() {
           </button>
           <div className="divider">OR</div>
           {/* Login with Google Button */}
-          <button className="btn btn-outline btn-secondary w-full " onClick={() => googleLoginImplicit()}>
+          <button
+            className="btn btn-outline btn-secondary w-full "
+            onClick={() => googleLoginImplicit()}
+          >
             Login with Google
           </button>
           {/* Forgot Password Link */}
@@ -134,7 +215,6 @@ function LoginPage() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }
