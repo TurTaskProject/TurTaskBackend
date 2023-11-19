@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 
-from boards.models import ListBoard
+from boards.models import ListBoard, Board
 
 class Tag(models.Model):
     """
@@ -56,6 +56,7 @@ class Todo(Task):
         NOT_IMPORTANT_URGENT = 3, 'Not Important & Urgent'
         NOT_IMPORTANT_NOT_URGENT = 4, 'Not Important & Not Urgent'
 
+    list_board = models.ForeignKey(ListBoard, on_delete=models.CASCADE, null=True)
     is_active = models.BooleanField(default=True)
     is_full_day_event = models.BooleanField(default=False)
     start_event = models.DateTimeField(null=True)
@@ -68,14 +69,14 @@ class Todo(Task):
         return self.title
 
 class RecurrenceTask(Task):
-    list_board = models.ForeignKey(ListBoard, on_delete=models.CASCADE)
-    rrule = models.CharField(max_length=255)
+    list_board = models.ForeignKey(ListBoard, on_delete=models.CASCADE, null=True)
+    rrule = models.CharField(max_length=255, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_full_day_event = models.BooleanField(default=False)
     start_event = models.DateTimeField(null=True)
     end_event = models.DateTimeField(null=True)
     completed = models.BooleanField(default=False)
-    parent_task = models.ForeignKey("self", null=True)
+    parent_task = models.ForeignKey("self", on_delete=models.CASCADE, null=True)
 
     def __str__(self) -> str:
         return f"{self.title} ({self.recurrence_rule})"
@@ -119,7 +120,7 @@ class RecurrencePattern(models.Model):
         DECEMBER = 12, 'December'
 
     recurrence_task = models.ForeignKey(RecurrenceTask, on_delete=models.CASCADE)
-    recurring_type = models.IntergerField(choices=RecurringType.choices)
+    recurring_type = models.IntegerField(choices=RecurringType.choices)
     max_occurrences = models.IntegerField(default=0)
     day_of_week = models.IntegerField(choices=DayOfWeek.choices)
     week_of_month = models.IntegerField(choices=WeekOfMonth.choices)
