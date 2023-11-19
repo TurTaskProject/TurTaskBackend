@@ -56,7 +56,7 @@ class Todo(Task):
         NOT_IMPORTANT_URGENT = 3, 'Not Important & Urgent'
         NOT_IMPORTANT_NOT_URGENT = 4, 'Not Important & Not Urgent'
 
-    list_board = models.ForeignKey(ListBoard, on_delete=models.CASCADE, null=True)
+    list_board = models.ForeignKey(ListBoard, on_delete=models.CASCADE, null=True, default=1)
     is_active = models.BooleanField(default=True)
     is_full_day_event = models.BooleanField(default=False)
     start_event = models.DateTimeField(null=True)
@@ -69,7 +69,7 @@ class Todo(Task):
         return self.title
 
 class RecurrenceTask(Task):
-    list_board = models.ForeignKey(ListBoard, on_delete=models.CASCADE, null=True)
+    list_board = models.ForeignKey(ListBoard, on_delete=models.CASCADE, null=True, default=1)
     rrule = models.CharField(max_length=255, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_full_day_event = models.BooleanField(default=False)
