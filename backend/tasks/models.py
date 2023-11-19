@@ -18,7 +18,6 @@ class Task(models.Model):
     :param title: Title of the task.
     :param notes: Optional additional notes for the task.
     :param tags: Associated tags for the task.
-    :param completed: A boolean field indicating whether the task is completed.
     :param importance: The importance of the task (range: 1 to 5)
     :param difficulty: The difficulty of the task (range: 1 to 5).
     :param challenge: Associated challenge (optional).
@@ -62,12 +61,14 @@ class Todo(Task):
         NOT_IMPORTANT_URGENT = 3, 'Not Important & Urgent'
         NOT_IMPORTANT_NOT_URGENT = 4, 'Not Important & Not Urgent'
 
+    completed = models.BooleanField(default=False)
     priority = models.PositiveSmallIntegerField(choices=EisenhowerMatrix.choices, default=EisenhowerMatrix.NOT_IMPORTANT_NOT_URGENT)
 
     def __str__(self):
         return self.title
 
 class RecurrenceTask(Task):
+    completed = models.BooleanField(default=False)
     recurrence_rule = models.CharField()
 
     def __str__(self) -> str:
