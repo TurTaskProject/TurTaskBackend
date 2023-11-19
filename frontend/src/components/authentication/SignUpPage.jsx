@@ -4,6 +4,9 @@ import axiosapi from "../../api/AuthenticationApi";
 import { useCallback } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
+import { FcGoogle } from "react-icons/fc";
+import { useGoogleLogin } from "@react-oauth/google";
+
 
 function Copyright(props) {
   return (
@@ -63,6 +66,28 @@ export default function SignUp() {
   const particlesLoaded = useCallback(async (container) => {
     console.log(container);
   }, []);
+
+  const googleLoginImplicit = useGoogleLogin({
+    flow: "auth-code",
+    redirect_uri: "postmessage",
+    onSuccess: async (response) => {
+      try {
+        const loginResponse = await axiosapi.googleLogin(response.code);
+        if (loginResponse && loginResponse.data) {
+          const { access_token, refresh_token } = loginResponse.data;
+
+          localStorage.setItem("access_token", access_token);
+          localStorage.setItem("refresh_token", refresh_token);
+          setIsAuthenticated(true);
+          Navigate("/");
+        }
+      } catch (error) {
+        console.error("Error with the POST request:", error);
+        setIsAuthenticated(false);
+      }
+    },
+    onError: (errorResponse) => console.log(errorResponse),
+  });
 
   return (
     <div
@@ -196,6 +221,14 @@ export default function SignUp() {
           {/* Login Button */}
           <button className="btn btn-success w-full " onClick={handleSubmit}>
             Signup
+          </button>
+          <div className="divider">OR</div>
+          {/* Login with Google Button */}
+          <button
+            className="btn btn-outline btn-secondary w-full "
+            onClick={() => googleLoginImplicit()}
+          >
+            <FcGoogle className="rounded-full bg-white"/>Login with Google
           </button>
           {/* Already have an account? */}
           <div className="text-blue-500 flex justify-center text-sm">

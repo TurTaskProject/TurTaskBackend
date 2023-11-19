@@ -7,6 +7,8 @@ import { loadFull } from "tsparticles";
 import refreshAccessToken from "./refreshAcesstoken";
 import axiosapi from "../../api/AuthenticationApi";
 import { useAuth } from "../../hooks/authentication/IsAuthenticated";
+import { FcGoogle } from "react-icons/fc";
+
 
 function LoginPage() {
   const Navigate = useNavigate();
@@ -208,7 +210,7 @@ function LoginPage() {
             className="btn btn-outline btn-secondary w-full "
             onClick={() => googleLoginImplicit()}
           >
-            Login with Google
+            <FcGoogle className="rounded-full bg-white"/>Login with Google
           </button>
           {/* Forgot Password Link */}
           <div className="justify-left">
