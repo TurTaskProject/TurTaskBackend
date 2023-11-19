@@ -1,22 +1,21 @@
-"use client";
+import {
+  Card,
+  Grid,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Text,
+  Title,
+} from "@tremor/react";
+import KpiCard from "./kpiCard";
 
-      import {
-        Card,
-        Grid,
-        Tab,
-        TabGroup,
-        TabList,
-        TabPanel,
-        TabPanels,
-        Text,
-        Title,
-      } from "@tremor/react";
-      
-export default function DashboardExample() {
+export default function Dashboard() {
   return (
     <main className="p-12">
       <Title>Dashboard</Title>
-      <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
+      <Text>All of your progress will be shown right here.</Text>
 
       <TabGroup className="mt-6">
         <TabList>
@@ -26,10 +25,7 @@ export default function DashboardExample() {
         <TabPanels>
           <TabPanel>
             <Grid numItemsMd={2} numItemsLg={3} className="gap-6 mt-6">
-              <Card>
-                {/* Placeholder to set height */}
-                <div className="h-28" />
-              </Card>
+              <KpiCard />
               <Card>
                 {/* Placeholder to set height */}
                 <div className="h-28" />
