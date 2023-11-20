@@ -45,6 +45,12 @@ class ListBoard(models.Model):
     name = models.CharField(max_length=255)
     position = models.IntegerField()
 
+    def save(self, *args, **kwargs):
+        super(ListBoard, self).save(*args, **kwargs)
+        kanban_order, created = KanbanTaskOrder.objects.get_or_create(list_board=self)
+        if not created:
+            return
+    
     def __str__(self) -> str:
         return f"{self.name}"
 
