@@ -1,35 +1,28 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosapi from "../../api/AuthenticationApi";
+import { useCallback } from "react";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
+import { FcGoogle } from "react-icons/fc";
+import { useGoogleLogin } from "@react-oauth/google";
 
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Copyright(props) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+    <div className="text-center text-sm text-gray-500" {...props}>
       {"Copyright © "}
-      <Link color="inherit" href="https://github.com/TurTaskProject/TurTaskWeb">
+      <a
+        href="https://github.com/TurTaskProject/TurTaskWeb"
+        className="text-blue-500 hover:underline"
+      >
         TurTask
-      </Link>{" "}
+      </a>{" "}
       {new Date().getFullYear()}
       {"."}
-    </Typography>
+    </div>
   );
 }
-
-const defaultTheme = createTheme();
 
 export default function SignUp() {
   const Navigate = useNavigate();
@@ -42,7 +35,7 @@ export default function SignUp() {
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
@@ -58,86 +51,194 @@ export default function SignUp() {
     Navigate("/login");
   };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+  {
+    /* Particles Loader*/
+  }
+  const particlesInit = useCallback(async (engine) => {
+    console.log(engine);
+    await loadFull(engine);
+  }, []);
+
+  const particlesLoaded = useCallback(async (container) => {
+    console.log(container);
+  }, []);
+
+  const googleLoginImplicit = useGoogleLogin({
+    flow: "auth-code",
+    redirect_uri: "postmessage",
+    onSuccess: async (response) => {
+      try {
+        const loginResponse = await axiosapi.googleLogin(response.code);
+        if (loginResponse && loginResponse.data) {
+          const { access_token, refresh_token } = loginResponse.data;
+
+          localStorage.setItem("access_token", access_token);
+          localStorage.setItem("refresh_token", refresh_token);
+          setIsAuthenticated(true);
+          Navigate("/");
+        }
+      } catch (error) {
+        console.error("Error with the POST request:", error);
+        setIsAuthenticated(false);
+      }
+    },
+    onError: (errorResponse) => console.log(errorResponse),
+  });
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}>
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="username"
-                  name="Username"
-                  required
-                  fullWidth
-                  id="Username"
-                  label="Username"
-                  autoFocus
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
-            </Grid>
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        <Copyright sx={{ mt: 5 }} />
-      </Container>
-    </ThemeProvider>
+    <div
+      data-theme="night"
+      className="h-screen flex items-center justify-center"
+    >
+      {/* Particles Container */}
+      <div style={{ width: "0%", height: "100vh" }}>
+        <Particles
+          id="particles"
+          init={particlesInit}
+          loaded={particlesLoaded}
+          className="-z-10"
+          options={{
+            fpsLimit: 240,
+            interactivity: {
+              events: {
+                onClick: {
+                  enable: true,
+                  mode: "push",
+                },
+                onHover: {
+                  enable: true,
+                  mode: "repulse",
+                },
+                resize: true,
+              },
+              modes: {
+                push: {
+                  quantity: 4,
+                },
+                repulse: {
+                  distance: 200,
+                  duration: 0.4,
+                },
+              },
+            },
+            particles: {
+              color: {
+                value: "#023020",
+              },
+              links: {
+                color: "#228B22",
+                distance: 150,
+                enable: true,
+                opacity: 0.5,
+                width: 1,
+              },
+              move: {
+                direction: "none",
+                enable: true,
+                outModes: {
+                  default: "bounce",
+                },
+                random: false,
+                speed: 4,
+                straight: false,
+              },
+              number: {
+                density: {
+                  enable: true,
+                  area: 800,
+                },
+                value: 50,
+              },
+              opacity: {
+                value: 0.5,
+              },
+              shape: {
+                type: "circle",
+              },
+              size: {
+                value: { min: 6, max: 8 },
+              },
+            },
+            detectRetina: true,
+          }}
+        />
+      </div>
+      <div className="w-1/4 h-1 flex items-center justify-center">
+        <div className="w-96 bg-neutral rounded-lg p-8 shadow-md space-y-4 z-10">
+          {/* Register Form */}
+          <h2 className="text-3xl font-bold text-center">Signup</h2>
+          {/* Email Input */}
+          <div className="form-control ">
+            <label className="label" htmlFor="email">
+              <p className="text-bold">
+                Email<span className="text-red-500 text-bold">*</span>
+              </p>
+            </label>
+            <input
+              className="input"
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              onChange={handleChange}
+            />
+          </div>
+          {/* Username Input */}
+          <div className="form-control">
+            <label className="label" htmlFor="Username">
+              <p className="text-bold">
+                Username<span className="text-red-500 text-bold">*</span>
+              </p>
+            </label>
+            <input
+              className="input"
+              type="text"
+              id="Username"
+              placeholder="Enter your username"
+              onChange={handleChange}
+            />
+          </div>
+          {/* Password Input */}
+          <div className="form-control">
+            <label className="label" htmlFor="password">
+              <p className="text-bold">
+                Password<span className="text-red-500 text-bold">*</span>
+              </p>
+            </label>
+            <input
+              className="input"
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              onChange={handleChange}
+            />
+          </div>
+          <br></br>
+
+          {/* Login Button */}
+          <button className="btn btn-success w-full " onClick={handleSubmit}>
+            Signup
+          </button>
+          <div className="divider">OR</div>
+          {/* Login with Google Button */}
+          <button
+            className="btn btn-outline btn-secondary w-full "
+            onClick={() => googleLoginImplicit()}
+          >
+            <FcGoogle className="rounded-full bg-white"/>Login with Google
+          </button>
+          {/* Already have an account? */}
+          <div className="text-blue-500 flex justify-center text-sm">
+            <a href="login">
+              Already have an account?
+            </a>
+          </div>
+          <Copyright />
+        </div>
+      </div>
+    </div>
   );
 }
