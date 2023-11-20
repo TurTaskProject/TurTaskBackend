@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 from boards.models import ListBoard, Board
 
@@ -25,6 +26,7 @@ class Task(models.Model):
     :param challenge: Associated challenge (optional).
     :param fromSystem: A boolean field indicating if the task is from System.
     :param creation_date: Creation date of the task.
+    :param last_update: Last update date of the task.
     """
     class Difficulty(models.IntegerChoices):
         EASY = 1, 'Easy'
@@ -59,6 +61,7 @@ class Todo(Task):
     :param end_event: End date and time of the task.
     :param google_calendar_id: The Google Calendar ID of the task.
     :param completed: A boolean field indicating whether the task is completed.
+    :param completion_date: The date and time when the task is completed.
     :param priority: The priority of the task (range: 1 to 4).
     """
     class EisenhowerMatrix(models.IntegerChoices):
@@ -74,7 +77,16 @@ class Todo(Task):
     end_event = models.DateTimeField(null=True)
     google_calendar_id = models.CharField(max_length=255, null=True, blank=True)
     completed = models.BooleanField(default=False)
+    completion_date = models.DateTimeField(null=True)
     priority = models.PositiveSmallIntegerField(choices=EisenhowerMatrix.choices, default=EisenhowerMatrix.NOT_IMPORTANT_NOT_URGENT)
+
+    def save(self, *args, **kwargs):
+        if self.completed and not self.completion_date:
+            self.completion_date = timezone.now()
+        elif not self.completed:
+            self.completion_date = None
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -90,6 +102,7 @@ class RecurrenceTask(Task):
     :param start_event: Start date and time of the task.
     :param end_event: End date and time of the task.
     :param completed: A boolean field indicating whether the task is completed.
+    :param completion_date: The date and time when the task is completed.
     :param parent_task: The parent task of the subtask.
     """
     list_board = models.ForeignKey(ListBoard, on_delete=models.CASCADE, null=True, default=1)
@@ -99,7 +112,16 @@ class RecurrenceTask(Task):
     start_event = models.DateTimeField(null=True)
     end_event = models.DateTimeField(null=True)
     completed = models.BooleanField(default=False)
+    completion_date = models.DateTimeField(null=True)
     parent_task = models.ForeignKey("self", on_delete=models.CASCADE, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.completed and not self.completion_date:
+            self.completion_date = timezone.now()
+        elif not self.completed:
+            self.completion_date = None
+
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"{self.title} ({self.recurrence_rule})"
