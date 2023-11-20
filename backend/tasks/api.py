@@ -6,8 +6,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from tasks.utils import get_service, generate_recurrence_rule
-from tasks.models import Todo, RecurrenceTask
+from tasks.utils import get_service
+from tasks.models import Todo
 from tasks.serializers import TodoUpdateSerializer
 
 class GoogleCalendarEventViewset(viewsets.ViewSet):
