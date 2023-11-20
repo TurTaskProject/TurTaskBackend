@@ -43,7 +43,8 @@ export default class Calendar extends React.Component {
 
   renderSidebar() {
     return (
-      <div className="w-72 bg-blue-100 border-r border-blue-200 p-8 flex-shrink-0">
+      <div className="w-72 bg-blue-100 border-r border-blue-200 p-8 flex flex-col">
+        {/* Description Zone */}
         <div className="mb-8">
           <h2 className="text-xl font-bold">Instructions</h2>
           <ul className="list-disc pl-4">
@@ -53,6 +54,7 @@ export default class Calendar extends React.Component {
           </ul>
         </div>
 
+        {/* Toggle */}
         <div className="mb-8">
           <label className="flex items-center">
             <input
@@ -65,7 +67,8 @@ export default class Calendar extends React.Component {
           </label>
         </div>
 
-        <div>
+        {/* Show all task */}
+        <div className="overflow-y-auto">
           <h2 className="text-xl font-bold">All Events ({this.state.currentEvents.length})</h2>
           <ul>{this.state.currentEvents.map(renderSidebarEvent)}</ul>
         </div>
