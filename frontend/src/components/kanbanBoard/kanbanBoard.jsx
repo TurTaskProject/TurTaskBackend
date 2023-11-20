@@ -110,12 +110,12 @@ function KanbanBoard() {
   useEffect(() => {
     const fetchBoardData = async () => {
       try {
-        const response = await axiosInstance.get('boards/');
+        const response = await axiosInstance.get("boards/");
         if (response.data && response.data.length > 0) {
           setBoardData(response.data[0]);
         }
       } catch (error) {
-        console.error('Error fetching board data:', error);
+        console.error("Error fetching board data:", error);
       }
     };
     fetchBoardData();
@@ -222,15 +222,15 @@ function KanbanBoard() {
   }
 
   function createNewColumn() {
-    axiosInstance.post('lists/', { name: `Column ${columns.length + 1}`, position: 1, board: boardId })
+    axiosInstance
+      .post("lists/", { name: `Column ${columns.length + 1}`, position: 1, board: boardId.id })
       .then(response => {
         const newColumn = {
           id: response.data.id,
           title: response.data.name,
         };
-  
-        setColumns([...columns, newColumn]);
-  
+
+        setColumns(prevColumns => [...prevColumns, newColumn]);
       })
       .catch(error => {
         console.error("Error creating ListBoard:", error);
@@ -238,20 +238,39 @@ function KanbanBoard() {
   }
 
   function deleteColumn(id) {
-    const filteredColumns = columns.filter(col => col.id !== id);
-    setColumns(filteredColumns);
+    axiosInstance
+      .delete(`lists/${id}/`)
+      .then(response => {
+        setColumns(prevColumns => prevColumns.filter(col => col.id !== id));
+      })
+      .catch(error => {
+        console.error("Error deleting ListBoard:", error);
+      });
 
-    const newTasks = tasks.filter(t => t.columnId !== id);
-    setTasks(newTasks);
+    const tasksToDelete = tasks.filter(t => t.columnId === id);
+
+    tasksToDelete.forEach(task => {
+      axiosInstance
+        .delete(`todo/${task.id}/`)
+        .then(response => {
+          setTasks(prevTasks => prevTasks.filter(t => t.id !== task.id));
+        })
+        .catch(error => {
+          console.error("Error deleting Task:", error);
+        });
+    });
   }
 
   function updateColumn(id, title) {
-    const newColumns = columns.map(col => {
-      if (col.id !== id) return col;
-      return { ...col, title };
-    });
-
-    setColumns(newColumns);
+    // Update the column
+    axiosInstance
+      .patch(`lists/${id}/`, { name: title }) // Adjust the payload based on your API requirements
+      .then(response => {
+        setColumns(prevColumns => prevColumns.map(col => (col.id === id ? { ...col, title } : col)));
+      })
+      .catch(error => {
+        console.error("Error updating ListBoard:", error);
+      });
   }
 
   function onDragStart(event) {
@@ -289,15 +308,6 @@ function KanbanBoard() {
 
         const reorderedColumns = arrayMove(columns, activeColumnIndex, overColumnIndex);
 
-        axiosInstance
-          .put("todo/change_task_list_board/", { columns: reorderedColumns })
-          .then(response => {
-            // Successful handle
-          })
-          .catch(error => {
-            console.error("Error updating column order:", error);
-          });
-
         return reorderedColumns;
       });
     }
@@ -323,19 +333,8 @@ function KanbanBoard() {
         const newColumnId = overId;
         const new_index = event.over?.index;
 
-        if (newColumnId != tasks[activeIndex].columnId) {
         // Update the columnId of the task
         tasks[activeIndex].columnId = newColumnId;
-        
-        axiosInstance
-          .put(`todo/change_task_order/`, { activeId, newColumnId, new_index })
-          .then(response => {
-            // Successful update handle
-          })
-          .catch(error => {
-            console.error("Error updating task columnId and index:", error);
-          });
-        }
 
         // If new_index is not provided, insert the task at the end
         if (new_index !== null && 0 <= new_index && new_index <= tasks.length) {
