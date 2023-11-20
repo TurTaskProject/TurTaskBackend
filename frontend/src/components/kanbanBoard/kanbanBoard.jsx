@@ -136,6 +136,7 @@ function KanbanBoard() {
               ))}
             </SortableContext>
           </div>
+        {/* create new column */}
           <button
             onClick={() => {
               createNewColumn();
@@ -203,7 +204,7 @@ function KanbanBoard() {
       if (task.id !== id) return task;
       return { ...task, content };
     });
-
+    if (content === "") return deleteTask(id);
     setTasks(newTasks);
   }
 

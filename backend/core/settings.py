@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'tasks',
     'users',
     'authentications',
+    'dashboard',
+    'boards',
 
     'corsheaders',
     'drf_spectacular',

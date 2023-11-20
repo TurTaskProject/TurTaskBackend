@@ -1,7 +1,8 @@
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
+from boards.models import ListBoard
 from tasks.models import Todo
 
 
@@ -23,3 +24,16 @@ def update_priority(sender, instance, **kwargs):
         instance.priority = Todo.EisenhowerMatrix.NOT_IMPORTANT_URGENT
     else:
         instance.priority = Todo.EisenhowerMatrix.NOT_IMPORTANT_NOT_URGENT
+
+
+@receiver(post_save, sender=Todo)
+def assign_todo_to_listboard(sender, instance, created, **kwargs):
+    if created:
+        user_board = instance.user.board_set.first()
+
+        if user_board:
+            first_list_board = user_board.listboard_set.order_by('position').first()
+
+            if first_list_board:
+                instance.list_board = first_list_board
+                instance.save()
