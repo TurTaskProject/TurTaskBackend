@@ -14,6 +14,7 @@ import {
 import KpiCard from "./kpiCard";
 import { BarChartGraph } from "./Barchart";
 import DonutChartGraph from "./DonutChart";
+import { AreaChartGraph } from "./Areachart";
 
 
 const valueFormatter = (number) =>
@@ -41,10 +42,12 @@ export default function Dashboard() {
                   <br />
                   <KpiCard />
                   <br />
-                  <KpiCard />
                 </Card>
                 <Card>
                 <BarChartGraph />
+                </Card>
+                <Card>
+                  <AreaChartGraph />
                 </Card>
                 <div className="h-31">
                   <Card className="mx-auto h-full">
