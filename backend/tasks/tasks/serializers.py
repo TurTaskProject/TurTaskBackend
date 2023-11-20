@@ -33,6 +33,14 @@ class ChangeTaskOrderSerializer(serializers.Serializer):
         if not ListBoard.objects.filter(id=list_board_id).exists():
             raise serializers.ValidationError('ListBoard does not exist.')
 
+        existing_tasks = Todo.objects.filter(id__in=todo_order)
+        existing_task_ids = set(task.id for task in existing_tasks)
+
+        non_existing_task_ids = set(todo_order) - existing_task_ids
+
+        if non_existing_task_ids:
+            raise serializers.ValidationError(f'Tasks with IDs {non_existing_task_ids} do not exist.')
+
         return data
 
 class ChangeTaskListBoardSerializer(serializers.Serializer):
