@@ -4,7 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import TaskDetailModal from "./taskDetailModal";
 
-function TaskCard({ task, deleteTask, updateTask }) {
+function TaskCard({ task, deleteTask, updateTask, description, tags, difficulty, challenge, importance}) {
   const [mouseIsOver, setMouseIsOver] = useState(false);
 
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
@@ -14,6 +14,7 @@ function TaskCard({ task, deleteTask, updateTask }) {
       task,
     },
   });
+
 
   const style = {
     transition,
@@ -38,7 +39,14 @@ function TaskCard({ task, deleteTask, updateTask }) {
 
   return (
     <div>
-      <TaskDetailModal />
+      <TaskDetailModal
+        title={task.content}
+        description={task.description}
+        tags={task.tags}
+        difficulty={task.difficulty}
+        challenge={task.challenge}
+        importance={task.importance}
+      />
       <div
         ref={setNodeRef}
         {...attributes}
