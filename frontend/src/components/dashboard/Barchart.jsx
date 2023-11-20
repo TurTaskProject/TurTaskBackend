@@ -2,11 +2,7 @@ import { BarChart, Card, Title } from "@tremor/react";
 import React from "react";
 import axiosInstance from "../../api/configs/AxiosConfig";
 
-const apiGetBarChartData = () => {
-    return axiosInstance.get("dashboard/stats/");
-    }
-console.log(apiGetBarChartData);
-      
+
 const chartdata3 = [
   {
     date: "Jan 23",
