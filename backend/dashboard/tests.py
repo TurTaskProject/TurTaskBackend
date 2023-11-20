@@ -1,10 +1,47 @@
-# # tasks/tests.py
-# from django.test import TestCase
-# from django.utils import timezone
-# from rest_framework.test import APIClient
-# from tasks.models import Todo, RecurrenceTask
-# from tasks.tests.utils import create_test_user
-# from django.urls import reverse
+from django.test import TestCase
+from django.urls import reverse
+from tasks.models import Todo
+from django.utils import timezone
+from datetime import timedelta
+
+from tasks.tests.utils import create_test_user, login_user
+
+class DashboardStatsAndWeeklyViewSetTests(TestCase):
+    def setUp(self):
+        self.user = create_test_user()
+        self.client = login_user(self.user)
+
+    def create_task(self, title, completed=False, completion_date=None, end_event=None):
+        return Todo.objects.create(
+            user=self.user,
+            title=title,
+            completed=completed,
+            completion_date=completion_date,
+            end_event=end_event
+        )
+
+    def test_dashboard_stats_view(self):
+        # Create tasks for testing
+        self.create_task('Task 1', completed=True)
+        self.create_task('Task 2', end_event=timezone.now() - timedelta(days=8))
+        self.create_task('Task 3', end_event=timezone.now())
+        
+        response = self.client.get(reverse('stats-list'))
+        self.assertEqual(response.status_code, 200)
+        
+        self.assertEqual(response.data['completed_this_week'], 1)
+        self.assertEqual(response.data['tasks_assigned_this_week'], 1)
+        self.assertEqual(response.data['tasks_assigned_last_week'], 0)
+
+    def test_dashboard_weekly_view(self):
+        # Create tasks for testing
+        self.create_task('Task 1', completion_date=timezone.now() - timedelta(days=1))
+        self.create_task('Task 2', end_event=timezone.now() - timedelta(days=8))
+        self.create_task('Task 3', end_event=timezone.now())
+        
+        response = self.client.get(reverse('weekly-list'))
+        self.assertEqual(response.status_code, 200)
+
 
 # class DashboardStatsAPITestCase(TestCase):
 #     def setUp(self):

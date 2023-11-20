@@ -9,7 +9,10 @@ from tasks.models import Todo
 
 
 class DashboardStatsViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Todo.objects.all()
 
     def list(self, request, *args, **kwargs):
         user = self.request.user
@@ -78,7 +81,10 @@ class DashboardStatsViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 
 
 class DashboardWeeklyViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Todo.objects.all()
 
     def list(self, request, *args, **kwargs):
         user = self.request.user
