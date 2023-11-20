@@ -5,13 +5,13 @@ import TestAuth from "./components/testAuth";
 import LoginPage from "./components/authentication/LoginPage";
 import SignUpPage from "./components/authentication/SignUpPage";
 import NavBar from "./components/navigations/Navbar";
-import Home from "./components/Home";
 import Calendar from "./components/calendar/calendar";
 import KanbanPage from "./components/kanbanBoard/kanbanPage";
 import IconSideNav from "./components/navigations/IconSideNav";
 import Eisenhower from "./components/eisenhowerMatrix/Eisenhower";
 import PrivateRoute from "./PrivateRoute";
 import ProfileUpdatePage from "./components/profilePage";
+import Dashboard from "./components/dashboard/dashboard";
 
 
 const App = () => {
@@ -26,7 +26,7 @@ const App = () => {
         <NavBar />
         <div className={isLoginPageOrSignUpPage ? "" : "overflow-x-auto"}>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Dashboard />} />
             <Route exact path="/tasks" element={<PrivateRoute />}>
               <Route exact path="/tasks" element={<KanbanPage />} />
             </Route>

@@ -6,9 +6,9 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from tasks.utils import get_service, generate_recurrence_rule
-from tasks.models import Todo, RecurrenceTask
-from tasks.serializers import TodoUpdateSerializer, RecurrenceTaskUpdateSerializer
+from tasks.utils import get_service
+from tasks.models import Todo
+from tasks.serializers import TodoUpdateSerializer
 
 class GoogleCalendarEventViewset(viewsets.ViewSet):
     """Viewset for list or save Google Calendar Events."""
@@ -50,7 +50,11 @@ class GoogleCalendarEventViewset(viewsets.ViewSet):
         return events
 
     def _validate_serializer(self, serializer):
-        """Validate serializer and return response."""
+        """
+        Validate serializer and return response.
+        
+        :param serializer: The serializer to validate.
+        """
         if serializer.is_valid():
             serializer.save()
             return Response("Validate Successfully", status=200)
@@ -61,7 +65,6 @@ class GoogleCalendarEventViewset(viewsets.ViewSet):
         events = self._get_google_events(request)
         
         responses = []
-        recurrence_task_ids = []
         for event in events:
             start_datetime = event.get('start', {}).get('dateTime')
             end_datetime = event.get('end', {}).get('dateTime')
@@ -70,25 +73,6 @@ class GoogleCalendarEventViewset(viewsets.ViewSet):
             event['end_datetime'] = end_datetime
             event.pop('start')
             event.pop('end')
-
-            if (event.get('recurringEventId') in recurrence_task_ids):
-                continue
-
-            if (event.get('recurringEventId') is not None):
-                originalStartTime = event.get('originalStartTime', {}).get('dateTime')
-                rrule_text = generate_recurrence_rule(event['start_datetime'], event['end_datetime'], originalStartTime)
-                event['recurrence'] = rrule_text
-                event.pop('originalStartTime')
-                recurrence_task_ids.append(event['recurringEventId'])
-
-                try:
-                    task = RecurrenceTask.objects.get(google_calendar_id=event['id'])
-                    serializer = RecurrenceTaskUpdateSerializer(instance=task, data=event)
-                except RecurrenceTask.DoesNotExist:
-                    serializer = RecurrenceTaskUpdateSerializer(data=event, user=request.user)
-
-                responses.append(self._validate_serializer(serializer))
-                continue
 
             try:
                 task = Todo.objects.get(google_calendar_id=event['id'])
