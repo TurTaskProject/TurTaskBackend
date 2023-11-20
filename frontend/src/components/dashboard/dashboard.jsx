@@ -43,7 +43,9 @@ export default function Dashboard() {
                   <br />
                   <KpiCard />
                 </Card>
-                {/* Placeholder to set height */}
+                <Card>
+                <BarChartGraph />
+                </Card>
                 <div className="h-31">
                   <Card className="mx-auto h-full">
                     <Title>Tasks</Title>
@@ -57,9 +59,6 @@ export default function Dashboard() {
                     
                   </Card>
                 </div>
-                <Card>
-                <BarChartGraph />
-                </Card>
               </Grid>
             </TabPanel>
           </TabPanels>
