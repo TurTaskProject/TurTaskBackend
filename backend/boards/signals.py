@@ -6,6 +6,7 @@ from users.models import CustomUser
 
 @receiver(post_save, sender=CustomUser)
 def create_default_board(sender, instance, created, **kwargs):
+    """Signal handler to automatically create a default Board for a user upon creation."""
     if created:
         board = Board.objects.create(user=instance, name="My Default Board")
 

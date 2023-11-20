@@ -2,12 +2,13 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
-from boards.models import ListBoard
+from boards.models import ListBoard, Board
 from tasks.models import Todo
 
 
 @receiver(pre_save, sender=Todo)
 def update_priority(sender, instance, **kwargs):
+    """Update the priority of a Todo based on the Eisenhower Matrix"""
     if instance.end_event:
         time_until_due = (instance.end_event - timezone.now()).days
     else:
@@ -28,6 +29,7 @@ def update_priority(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Todo)
 def assign_todo_to_listboard(sender, instance, created, **kwargs):
+    """Signal handler to automatically assign a Todo to the first ListBoard in the user's Board upon creation."""
     if created:
         user_board = instance.user.board_set.first()
 
