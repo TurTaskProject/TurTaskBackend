@@ -54,6 +54,7 @@ export default function SignUp() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    console.log(formData);
   };
   {
     /* Particles Loader*/
@@ -218,7 +219,7 @@ export default function SignUp() {
           </div>
           <br></br>
 
-          {/* Login Button */}
+          {/* Signups Button */}
           <button className="btn btn-success w-full " onClick={handleSubmit}>
             Signup
           </button>
