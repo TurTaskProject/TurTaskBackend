@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from users.models import CustomUser
@@ -18,6 +19,20 @@ class Board(models.Model):
         return f"{self.name}"
 
 
+class KanbanTaskOrder(models.Model):
+    """
+    Model to store the order of Todo tasks in a Kanban board.
+
+    :param list_board: The list board that the order belongs to.
+    :param todo_order: ArrayField to store the order of Todo IDs.
+    """
+    list_board = models.OneToOneField('ListBoard', on_delete=models.CASCADE)
+    todo_order = ArrayField(models.PositiveIntegerField(), blank=True, default=list)
+
+    def __str__(self):
+        return f"Order for {self.list_board}"
+
+
 class ListBoard(models.Model):
     """
     List inside a Kanban board.
@@ -32,3 +47,4 @@ class ListBoard(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name}"
+
