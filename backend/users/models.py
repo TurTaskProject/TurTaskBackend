@@ -10,7 +10,9 @@ from .managers import CustomAccountManager
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    # User fields
+    """
+    User model where email is the unique identifier for authentication.
+    """
     email = models.EmailField(_('email address'), unique=True)
     username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=150, blank=True)

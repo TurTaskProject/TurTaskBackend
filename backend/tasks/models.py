@@ -49,7 +49,18 @@ class Task(models.Model):
 
 
 class Todo(Task):
-    
+    """
+    Represent a Todo task.
+
+    :param list_board: The list board that the task belongs to.
+    :param is_active: A boolean field indicating whether the task is active. (Archive or not)
+    :param is_full_day_event: A boolean field indicating whether the task is a full day event.
+    :param start_event: Start date and time of the task.
+    :param end_event: End date and time of the task.
+    :param google_calendar_id: The Google Calendar ID of the task.
+    :param completed: A boolean field indicating whether the task is completed.
+    :param priority: The priority of the task (range: 1 to 4).
+    """
     class EisenhowerMatrix(models.IntegerChoices):
         IMPORTANT_URGENT = 1, 'Important & Urgent'
         IMPORTANT_NOT_URGENT = 2, 'Important & Not Urgent'
@@ -69,6 +80,18 @@ class Todo(Task):
         return self.title
 
 class RecurrenceTask(Task):
+    """
+    Represent a Recurrence task. (Occure every day, week, month, year)
+
+    :param list_board: The list board that the task belongs to.
+    :param rrule: The recurrence rule of the task.
+    :param is_active: A boolean field indicating whether the task is active. (Archive or not)
+    :param is_full_day_event: A boolean field indicating whether the task is a full day event.
+    :param start_event: Start date and time of the task.
+    :param end_event: End date and time of the task.
+    :param completed: A boolean field indicating whether the task is completed.
+    :param parent_task: The parent task of the subtask.
+    """
     list_board = models.ForeignKey(ListBoard, on_delete=models.CASCADE, null=True, default=1)
     rrule = models.CharField(max_length=255, null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -83,6 +106,15 @@ class RecurrenceTask(Task):
 
 
 class RecurrencePattern(models.Model):
+    """
+    :param recurrence_task: The recurrence task that the pattern belongs to.
+    :param recurring_type: The type of recurrence.
+    :param max_occurrences: The maximum number of occurrences.
+    :param day_of_week: The day of the week that event will occure.
+    :param week_of_month: The week of the month that event will occure.
+    :param day_of_month: The day of the month that event will occure.
+    :param month_of_year: The month of the year that event will occure.
+    """
     class RecurringType(models.IntegerChoices):
         DAILY = 0, 'Daily'
         WEEKLY = 1, 'Weekly'
@@ -129,6 +161,12 @@ class RecurrencePattern(models.Model):
 
 
 class Habit(Task):
+    """
+    Represent a Habit task with streaks.
+
+    :param streak: The streak of the habit.
+    :param current_count: The current count of the habit.
+    """
     streak = models.IntegerField(default=0)
     current_count = models.IntegerField(default=0)
 
