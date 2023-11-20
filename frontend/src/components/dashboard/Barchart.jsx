@@ -1,93 +1,66 @@
-import { BarChart, Card, Title } from "@tremor/react";
+import { BarChart, Title } from "@tremor/react";
 import React from "react";
 import axiosInstance from "../../api/configs/AxiosConfig";
 
-const apiGetBarChartData = () => {
-    return axiosInstance.get("dashboard/stats/");
-    }
-console.log(apiGetBarChartData);
-      
-const chartdata3 = [
-  {
-    date: "Jan 23",
-    "2022": 45,
-    "2023": 78,
-  },
-  {
-    date: "Feb 23",
-    "2022": 52,
-    "2023": 71,
-  },
-  {
-    date: "Mar 23",
-    "2022": 48,
-    "2023": 80,
-  },
-  {
-    date: "Apr 23",
-    "2022": 61,
-    "2023": 65,
-  },
-  {
-    date: "May 23",
-    "2022": 55,
-    "2023": 58,
-  },
-  {
-    date: "Jun 23",
-    "2022": 67,
-    "2023": 62,
-  },
-  {
-    date: "Jul 23",
-    "2022": 60,
-    "2023": 54,
-  },
-  {
-    date: "Aug 23",
-    "2022": 72,
-    "2023": 49,
-  },
-  {
-    date: "Sep 23",
-    "2022": 65,
-    "2023": 52,
-  },
-  {
-    date: "Oct 23",
-    "2022": 68,
-    "2023": null,
-  },
-  {
-    date: "Nov 23",
-    "2022": 74,
-    "2023": null,
-  },
-  {
-    date: "Dec 23",
-    "2022": 71,
-    "2023": null,
-  },
-];
-
+const fetchBarChartData = async () => {
+  let res = await axiosInstance.get("/dashboard/weekly/");
+  console.log(res.data);
+  const barchartData = [
+    {
+      date: "Monday",
+      "This Week": res.data[0]["Completed This Week"],
+      "Last Week": res.data[0]["Completed Last Week"],
+    },
+    {
+      date: "Tuesday",
+      "This Week": res.data[1]["Completed This Week"],
+      "Last Week": res.data[1]["Completed Last Week"],
+    },
+    {
+      date: "Wednesday",
+      "This Week": res.data[2]["Completed This Week"],
+      "Last Week": res.data[2]["Completed Last Week"],
+    },
+    {
+      date: "Thursday",
+      "This Week": res.data[3]["Completed This Week"],
+      "Last Week": res.data[3]["Completed Last Week"],
+    },
+    {
+      date: "Friday",
+      "This Week": res.data[4]["Completed This Week"],
+      "Last Week": res.data[4]["Completed Last Week"],
+    },
+    {
+      date: "Saturday",
+      "This Week": res.data[5]["Completed This Week"],
+      "Last Week": res.data[5]["Completed Last Week"],
+    },
+    {
+      date: "Sunday",
+      "This Week": res.data[6]["Completed This Week"],
+      "Last Week": res.data[6]["Completed Last Week"],
+    },
+  ];
+  return barchartData;
+ 
+};
+const barchartDataArray = await fetchBarChartData();
 export const BarChartGraph = () => {
   const [value, setValue] = React.useState(null);
   return (
     <>
-      <Card>
-        <Title>Closed Pull Requests</Title>
+        <Title>Task completed statistics vs. last week</Title>
         <BarChart
           className="mt-6"
-          data={chartdata3}
+          data={barchartDataArray}
           index="date"
-          categories={["2022", "2023"]}
+          categories={["This Week", "Last Week"]}
           colors={["neutral", "indigo"]}
           yAxisWidth={30}
           onValueChange={(v) => setValue(v)}
           showAnimation
         />
-      </Card>
-      <pre>{JSON.stringify(value)}</pre>
     </>
   );
 };

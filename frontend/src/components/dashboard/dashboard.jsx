@@ -1,20 +1,24 @@
-import { Card, Grid, Tab, TabGroup, TabList, TabPanel, TabPanels, Text, Title, DonutChart } from "@tremor/react";
+import {
+  Card,
+  Grid,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Text,
+  Title,
+  DonutChart,
+  Legend,
+} from "@tremor/react";
 import KpiCard from "./kpiCard";
 import { BarChartGraph } from "./Barchart";
+import DonutChartGraph from "./DonutChart";
+import { AreaChartGraph } from "./Areachart";
 
-const cities = [
-  {
-    name: "New York",
-    sales: 9800,
-  },
-  // ...
-  {
-    name: "Zurich",
-    sales: 1398,
-  },
-];
 
-const valueFormatter = number => `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
+const valueFormatter = (number) =>
+  `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
 
 export default function Dashboard() {
   return (
@@ -34,26 +38,30 @@ export default function Dashboard() {
             <TabPanel>
               <Grid numItemsMd={2} numItemsLg={3} className="gap-6 mt-6">
                 <Card>
-                  <KpiCard />
+                  <Title>Highlights vs. last week</Title>
                   <br />
                   <KpiCard />
+                  <br />
                 </Card>
-                {/* Placeholder to set height */}
+                <Card>
+                <BarChartGraph />
+                </Card>
+                <Card>
+                  <AreaChartGraph />
+                </Card>
                 <div className="h-31">
                   <Card className="mx-auto h-full">
-                    <Title>Sales</Title>
-                    <DonutChart
-                      className="mt-6"
-                      data={cities}
-                      category="sales"
-                      index="name"
-                      colors={["rose", "yellow", "orange", "indigo", "blue", "emerald"]}
-                      onValueChange={v => setValue(v)}
-                      showAnimation
+                    <Title>Tasks</Title>
+                    <DonutChartGraph />
+                    <br/>
+                    <Legend
+                      className="mt-3 mx-auto w-1/2"
+                      categories={["Todo Task", "Recurrence Task"]}
+                      colors={["rose", "yellow"]}
                     />
+                    
                   </Card>
                 </div>
-                <BarChartGraph />
               </Grid>
             </TabPanel>
           </TabPanels>
