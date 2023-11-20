@@ -23,9 +23,9 @@ class ListBoardViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
-        request.data['board'] = request.data.get('board')  # Make sure 'board' is in request data
-        board_user_id = ListBoard.objects.get(id=request.data['board']).board.request.user.id
-        if request.user.id != board_user_id:
+        board_id = request.data.get('board')
+        board = Board.objects.get(id=board_id)
+        if request.user.id != board.user.id:
             return Response({"error": "Cannot create ListBoard for another user's board."}, status=status.HTTP_403_FORBIDDEN)
         return super().create(request, *args, **kwargs)
         

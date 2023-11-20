@@ -20,6 +20,7 @@ class TodoViewSet(viewsets.ModelViewSet):
     queryset = Todo.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
+    model = Todo
 
     def get_queryset(self):
         queryset = Todo.objects.filter(user=self.request.user)
