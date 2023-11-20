@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'users',
     'authentications',
     'dashboard',
+    'boards',
 
     'corsheaders',
     'drf_spectacular',
