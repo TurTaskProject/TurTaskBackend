@@ -1,15 +1,4 @@
-import {
-  Card,
-  Grid,
-  Tab,
-  TabGroup,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Text,
-  Title,
-  DonutChart,
-} from "@tremor/react";
+import { Card, Grid, Tab, TabGroup, TabList, TabPanel, TabPanels, Text, Title, DonutChart } from "@tremor/react";
 import KpiCard from "./kpiCard";
 import { BarChartGraph } from "./Barchart";
 
@@ -25,8 +14,7 @@ const cities = [
   },
 ];
 
-const valueFormatter = (number) =>
-  `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
+const valueFormatter = number => `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
 
 export default function Dashboard() {
   return (
@@ -50,47 +38,23 @@ export default function Dashboard() {
                   <br />
                   <KpiCard />
                 </Card>
-                  {/* Placeholder to set height */}
-                  <div className="h-31">
-                    <Card className="mx-auto h-full">
-                      <Title>Sales</Title>
-                      <DonutChart
-                        className="mt-6"
-                        data={cities}
-                        category="sales"
-                        index="name"
-                        colors={[
-                          "rose",
-                          "yellow",
-                          "orange",
-                          "indigo",
-                          "blue",
-                          "emerald",
-                        ]}
-                        onValueChange={(v) => setValue(v)}
-                        showAnimation
-                      />
-                    </Card>
-                  </div>
-                  <BarChartGraph />
-                      
-                <Card>
-                  {/* Placeholder to set height */}
-                  <div className="h-28" />
-                </Card>
+                {/* Placeholder to set height */}
+                <div className="h-31">
+                  <Card className="mx-auto h-full">
+                    <Title>Sales</Title>
+                    <DonutChart
+                      className="mt-6"
+                      data={cities}
+                      category="sales"
+                      index="name"
+                      colors={["rose", "yellow", "orange", "indigo", "blue", "emerald"]}
+                      onValueChange={v => setValue(v)}
+                      showAnimation
+                    />
+                  </Card>
+                </div>
+                <BarChartGraph />
               </Grid>
-              <div className="mt-6">
-                <Card>
-                  <div className="h-80" />
-                </Card>
-              </div>
-            </TabPanel>
-            <TabPanel>
-              <div className="mt-6">
-                <Card>
-                  <div className="h-96" />
-                </Card>
-              </div>
             </TabPanel>
           </TabPanels>
         </TabGroup>
