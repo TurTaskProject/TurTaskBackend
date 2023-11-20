@@ -7,8 +7,9 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Todo)
 class TodoAdmin(admin.ModelAdmin):
-    list_display = ['title', 'list_board', 'is_active', 'priority']
-    list_filter = ['list_board', 'is_active', 'priority']
+    list_display = ['title', 'list_board', 'is_active', 'priority', 'completed', 'completion_date']
+    list_filter = ['list_board', 'is_active', 'priority', 'completed']
+    exclude = ['completion_date']
 
 @admin.register(RecurrenceTask)
 class RecurrenceTaskAdmin(admin.ModelAdmin):

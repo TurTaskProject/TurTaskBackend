@@ -1,6 +1,11 @@
-from django.urls import path
-from .views import DashboardStatsAPIView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
+from .views import DashboardStatsViewSet, DashboardWeeklyViewSet
+
+router = DefaultRouter()
+router.register(r'dashboard/stats', DashboardStatsViewSet, basename='stats')
+router.register(r'dashboard/weekly', DashboardWeeklyViewSet, basename='weekly')
 urlpatterns = [
-    path('dashboard/stats/', DashboardStatsAPIView.as_view(), name='dashboard-stats'),
+    path('', include(router.urls)),
 ]
