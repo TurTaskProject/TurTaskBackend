@@ -54,7 +54,7 @@ const NavItem = ({ icon, selected, id, setSelected, logo, path }) => {
       <AnimatePresence>
         {selected && (
           <motion.span
-            className="absolute inset-0 rounded-md bg-indigo-600 z-0"
+            className="absolute inset-0 rounded-md bg-emerald-600 z-0"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}></motion.span>
