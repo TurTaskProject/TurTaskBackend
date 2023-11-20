@@ -133,7 +133,7 @@ export default function SignUp() {
                 color: "#228B22",
                 distance: 150,
                 enable: true,
-                opacity: 0.5,
+                opacity: 1,
                 width: 1,
               },
               move: {
@@ -154,7 +154,7 @@ export default function SignUp() {
                 value: 50,
               },
               opacity: {
-                value: 0.5,
+                value: 0.6,
               },
               shape: {
                 type: "circle",

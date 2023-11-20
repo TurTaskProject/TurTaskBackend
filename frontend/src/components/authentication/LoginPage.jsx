@@ -132,7 +132,7 @@ function LoginPage() {
                 color: "#00ff00",
                 distance: 150,
                 enable: true,
-                opacity: 0.1,
+                opacity: 0.5,
                 width: 1,
               },
               move: {
