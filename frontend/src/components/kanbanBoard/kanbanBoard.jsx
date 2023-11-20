@@ -10,6 +10,7 @@ import axiosInstance from "../../api/configs/AxiosConfig";
 function KanbanBoard() {
   const [columns, setColumns] = useState([]);
   const columnsId = useMemo(() => columns.map(col => col.id), [columns]);
+  const [boardId, setBoardData] = useState();
 
   const [tasks, setTasks] = useState([]);
 
@@ -104,6 +105,20 @@ function KanbanBoard() {
       }
     };
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchBoardData = async () => {
+      try {
+        const response = await axiosInstance.get('boards/');
+        if (response.data && response.data.length > 0) {
+          setBoardData(response.data[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching board data:', error);
+      }
+    };
+    fetchBoardData();
   }, []);
 
   return (
@@ -207,12 +222,19 @@ function KanbanBoard() {
   }
 
   function createNewColumn() {
-    const columnToAdd = {
-      id: generateId(),
-      title: `Column ${columns.length + 1}`,
-    };
-
-    setColumns([...columns, columnToAdd]);
+    axiosInstance.post('lists/', { name: `Column ${columns.length + 1}`, position: 1, board: boardId })
+      .then(response => {
+        const newColumn = {
+          id: response.data.id,
+          title: response.data.name,
+        };
+  
+        setColumns([...columns, newColumn]);
+  
+      })
+      .catch(error => {
+        console.error("Error creating ListBoard:", error);
+      });
   }
 
   function deleteColumn(id) {
