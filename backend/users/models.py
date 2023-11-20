@@ -5,16 +5,18 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 from .managers import CustomAccountManager
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    # User fields
+    """
+    User model where email is the unique identifier for authentication.
+    """
     email = models.EmailField(_('email address'), unique=True)
     username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=150, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)
     start_date = models.DateTimeField(default=timezone.now)
     about = models.TextField(_('about'), max_length=500, blank=True)
     profile_pic = models.ImageField(upload_to='profile_pics', null=True, blank=True, default='profile_pics/default.png')
@@ -35,7 +37,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         # String representation of the user
         return self.username
 
-
 def random_luck():
     return random.randint(1, 50)
 
@@ -51,17 +52,6 @@ class UserStats(models.Model):
     health = models.IntegerField(default=100)
     gold = models.FloatField(default=0.0)
     experience = models.FloatField(default=0)
-    strength = models.IntegerField(default=1,
-                                   validators=[MinValueValidator(1), 
-                                               MaxValueValidator(100)])
-    intelligence = models.IntegerField(default=1, validators=[MinValueValidator(1),
-                                                              MaxValueValidator(100)])
-    endurance = models.IntegerField(default=1, validators=[MinValueValidator(1),
-                                                           MaxValueValidator(100)])
-    perception = models.IntegerField(default=1,  validators=[MinValueValidator(1),
-                                                             MaxValueValidator(100)])
-    luck = models.IntegerField(default=random_luck,  validators=[MinValueValidator(1),
-                                                       MaxValueValidator(50)],)
     
     @property
     def level(self):
