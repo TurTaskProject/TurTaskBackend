@@ -37,6 +37,8 @@ export default function Dashboard() {
             <TabPanel>
               <Grid numItemsMd={2} numItemsLg={3} className="gap-6 mt-6">
                 <Card>
+                  <Title>Highlights vs. last week</Title>
+                  <br />
                   <KpiCard />
                   <br />
                   <KpiCard />
@@ -55,7 +57,9 @@ export default function Dashboard() {
                     
                   </Card>
                 </div>
+                <Card>
                 <BarChartGraph />
+                </Card>
               </Grid>
             </TabPanel>
           </TabPanels>

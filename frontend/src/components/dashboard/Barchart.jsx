@@ -2,17 +2,18 @@ import { BarChart, Card, Title } from "@tremor/react";
 import React from "react";
 import axiosInstance from "../../api/configs/AxiosConfig";
 
-
+const fetchBarChartData = async () => {
+}
 const chartdata3 = [
   {
-    date: "Jan 23",
-    "2022": 45,
-    "2023": 78,
+    date: "Monday",
+    "This Week": 45,
+    "Last Week": 78,
   },
   {
-    date: "Feb 23",
-    "2022": 52,
-    "2023": 71,
+    date: "Tuesday",
+    "This Week": 52,
+    "Last Week": 71,
   },
   {
     date: "Mar 23",
@@ -70,20 +71,17 @@ export const BarChartGraph = () => {
   const [value, setValue] = React.useState(null);
   return (
     <>
-      <Card>
-        <Title>Closed Pull Requests</Title>
+        <Title>Task completed statistics vs. last week</Title>
         <BarChart
           className="mt-6"
           data={chartdata3}
           index="date"
-          categories={["2022", "2023"]}
+          categories={["This Week", "Last week"]}
           colors={["neutral", "indigo"]}
           yAxisWidth={30}
           onValueChange={(v) => setValue(v)}
           showAnimation
         />
-      </Card>
-      <pre>{JSON.stringify(value)}</pre>
     </>
   );
 };
