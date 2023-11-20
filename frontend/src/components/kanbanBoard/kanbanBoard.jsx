@@ -328,20 +328,17 @@ function KanbanBoard() {
     if (isActiveATask && isOverAColumn) {
       setTasks(tasks => {
         const activeIndex = tasks.findIndex(t => t.id === activeId);
-        const overIndex = tasks.findIndex(t => t.id === overId);
-
-        const newColumnId = overId;
-        const new_index = event.over?.index;
-
-        // Update the columnId of the task
-        tasks[activeIndex].columnId = newColumnId;
-
-        // If new_index is not provided, insert the task at the end
-        if (new_index !== null && 0 <= new_index && new_index <= tasks.length) {
-          return arrayMove(tasks, activeIndex, new_index);
-        } else {
-          return arrayMove(tasks, activeIndex, tasks.length);
-        }
+  
+        tasks[activeIndex].columnId = overId;
+  
+        axiosInstance.put(`todo/change_task_list_board/`, { todo_id:activeId, new_list_board_id:overId, new_index: 0})
+          .then(response => {
+          })
+          .catch(error => {
+            console.error('Error updating task columnId:', error);
+          });
+  
+        return arrayMove(tasks, activeIndex, activeIndex);
       });
     }
   }
