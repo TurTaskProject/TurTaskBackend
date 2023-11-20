@@ -3,7 +3,7 @@ import { FaTasks, FaRegListAlt } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { TbChecklist } from "react-icons/tb";
 
-function TaskDetailModal({ title, description, tags, difficulty, challenge, importance }) {
+function TaskDetailModal({ title, description, tags, difficulty, challenge, importance, taskId }) {
   const [isChallengeChecked, setChallengeChecked] = useState(challenge);
   const [isImportantChecked, setImportantChecked] = useState(importance);
   const [currentDifficulty, setCurrentDifficulty] = useState(difficulty);
@@ -21,7 +21,7 @@ function TaskDetailModal({ title, description, tags, difficulty, challenge, impo
   };
 
   return (
-    <dialog id="task_detail_modal" className="modal">
+    <dialog id={`task_detail_modal_${taskId}`} className="modal">
       <div className="modal-box w-4/5 max-w-3xl">
         {/* Title */}
         <div className="flex flex-col py-2">

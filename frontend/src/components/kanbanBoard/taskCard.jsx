@@ -4,7 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import TaskDetailModal from "./taskDetailModal";
 
-function TaskCard({ task, deleteTask, updateTask, description, tags, difficulty, challenge, importance}) {
+function TaskCard({ task, deleteTask, updateTask}) {
   const [mouseIsOver, setMouseIsOver] = useState(false);
 
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
@@ -40,6 +40,7 @@ function TaskCard({ task, deleteTask, updateTask, description, tags, difficulty,
   return (
     <div>
       <TaskDetailModal
+        taskId={task.id}
         title={task.content}
         description={task.description}
         tags={task.tags}
@@ -61,7 +62,7 @@ function TaskCard({ task, deleteTask, updateTask, description, tags, difficulty,
         }}>
         <p
           className="p-2.5 my-auto w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap rounded-xl shadow bg-white"
-          onClick={() => document.getElementById("task_detail_modal").showModal()}>
+          onClick={() => document.getElementById(`task_detail_modal_${task.id}`).showModal()}>
           {task.content}
         </p>
 
