@@ -99,9 +99,21 @@ class WeeklyStatsAPIView(APIView):
             last_7_days_stats = self.calculate_stats(user, last_7_days_start, last_7_days_end)
 
             # Calculate the percentage change
-            percent_change = self.calculate_percent_change(
+            percent_change_over_all = self.calculate_percent_change(
                 current_day_stats['overall_completion_rate'],
                 last_7_days_stats['overall_completion_rate']
+            )
+
+            # Calculate percentage change for completed_todo_count
+            percent_change_todo = self.calculate_percent_change(
+                current_day_stats['completed_todo_count'],
+                last_7_days_stats['completed_todo_count']
+            )
+
+            # Calculate percentage change for completed_recurrence_task_count
+            percent_change_recurrence = self.calculate_percent_change(
+                current_day_stats['completed_recurrence_task_count'],
+                last_7_days_stats['completed_recurrence_task_count']
             )
 
             # Append the daily statistics to the list
@@ -109,7 +121,9 @@ class WeeklyStatsAPIView(APIView):
                 'day_of_week': current_day_start.strftime('%A'),
                 'current_day_stats': current_day_stats,
                 'last_7_days_stats': last_7_days_stats,
-                'percent_change': percent_change,
+                'percent_change_over_all': percent_change_over_all,
+                'percent_change_todo': percent_change_todo,
+                'percent_change_recurrence': percent_change_recurrence,
             })
 
         response_data = {

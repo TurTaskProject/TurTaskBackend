@@ -5,10 +5,11 @@ from django.utils import timezone
 from rest_framework.test import APIClient
 from tasks.models import Todo, RecurrenceTask
 
+
 class DashboardStatsAPITestCase(TestCase):
     def setUp(self):
         # Create a test user
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.user = User.objects.create_user(first_name='test', email='user@mail.co.th', username='testuser', password='testpassword')
 
         # Create test tasks
         self.todo = Todo.objects.create(user=self.user, title='Test Todo', created_at=timezone.now())
