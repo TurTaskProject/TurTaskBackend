@@ -5,8 +5,10 @@ import axiosInstance from "../../api/configs/AxiosConfig";
 
 const fetchKpiCardData = async () => {
   let res = await axiosInstance.get("/dashboard/stats/");
-  let completedThisWeek = res.data["completed_this_week"];
-  let completedLastWeek = res.data["completed_last_week"];
+  // let completedThisWeek = res.data["completed_this_week"];
+  // let completedLastWeek = res.data["completed_last_week"];
+  let completedThisWeek = 4;
+  let completedLastWeek = 23;
   let percentage = (completedThisWeek / completedLastWeek)*100;
   let incOrdec = undefined;
   if (completedThisWeek <= completedLastWeek) {
@@ -29,7 +31,7 @@ export default function KpiCard() {
         <div>
           <Metric>{completedThisWeek}</Metric>
         </div>
-        <BadgeDelta deltaType={incOrdec}>{percentage}%</BadgeDelta>
+        <BadgeDelta deltaType={incOrdec}>{percentage.toFixed(0)}%</BadgeDelta>
       </Flex>
       <Flex className="mt-4">
         <Text className="truncate">vs. {completedLastWeek} (last week)</Text>
