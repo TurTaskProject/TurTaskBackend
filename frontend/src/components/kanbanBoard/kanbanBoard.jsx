@@ -197,19 +197,47 @@ function KanbanBoard() {
     </div>
   );
 
-  function createTask(columnId) {
-    const newTask = {
-      id: generateId(),
-      columnId,
-      content: `Task ${tasks.length + 1}`,
+  function createTask(columnId, setTasks) {
+    const newTaskData = {
+      title: `Task ${tasks.length + 1}`,
+      importance: 1,
+      difficulty: 1,
+      challenge: false,
+      fromSystem: false,
+      is_active: false,
+      is_full_day_event: false,
+      completed: false,
+      priority: 1,
+      list_board: columnId,
     };
 
-    setTasks([...tasks, newTask]);
-  }
+    axiosInstance
+      .post("todo/", newTaskData)
+      .then(response => {
+        const newTask = {
+          id: response.data.id,
+          columnId,
+          content: response.data.title,
+        };
+
+      })
+      .catch(error => {
+        console.error("Error creating task:", error);
+      });
+      setTasks(tasks => [...tasks, newTask]);
+    }
 
   function deleteTask(id) {
     const newTasks = tasks.filter(task => task.id !== id);
-    setTasks(newTasks);
+    axiosInstance
+      .delete(`todo/${id}/`)
+      .then(response => {
+        setTasks(newTasks);
+      })
+      .catch(error => {
+        console.error("Error deleting Task:", error);
+      });
+      setTasks(newTasks);
   }
 
   function updateTask(id, content) {
@@ -328,16 +356,16 @@ function KanbanBoard() {
     if (isActiveATask && isOverAColumn) {
       setTasks(tasks => {
         const activeIndex = tasks.findIndex(t => t.id === activeId);
-  
+
         tasks[activeIndex].columnId = overId;
-  
-        axiosInstance.put(`todo/change_task_list_board/`, { todo_id:activeId, new_list_board_id:overId, new_index: 0})
-          .then(response => {
-          })
+
+        axiosInstance
+          .put(`todo/change_task_list_board/`, { todo_id: activeId, new_list_board_id: overId, new_index: 0 })
+          .then(response => {})
           .catch(error => {
-            console.error('Error updating task columnId:', error);
+            console.error("Error updating task columnId:", error);
           });
-  
+
         return arrayMove(tasks, activeIndex, activeIndex);
       });
     }

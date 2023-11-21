@@ -35,7 +35,7 @@ class TodoViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         try:
             new_task_data = request.data
-            new_task_data['user'] = self.request.user
+            new_task_data['user'] = self.request.user.id
             serializer = self.get_serializer(data=new_task_data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)

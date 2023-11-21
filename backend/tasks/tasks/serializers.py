@@ -14,7 +14,7 @@ class TaskSerializer(serializers.ModelSerializer):
 class TaskCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Todo
-        exclude = ('tags',)
+        exclude = ('tags', 'google_calendar_id', 'creation_date', 'last_update',)
 
 class ChangeTaskOrderSerializer(serializers.Serializer):
     list_board_id = serializers.IntegerField(
