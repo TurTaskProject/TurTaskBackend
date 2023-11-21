@@ -8,14 +8,13 @@ import {
   TabPanels,
   Text,
   Title,
-  DonutChart,
   Legend,
 } from "@tremor/react";
 import KpiCard from "./kpiCard";
 import { BarChartGraph } from "./Barchart";
 import DonutChartGraph from "./DonutChart";
 import { AreaChartGraph } from "./Areachart";
-
+import ProgressCircleChart from "./ProgressCircle";
 
 const valueFormatter = (number) =>
   `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
@@ -31,10 +30,11 @@ export default function Dashboard() {
       <div>
         <TabGroup className="mt-6">
           <TabList>
+            <Tab>Weekly</Tab>
             <Tab>Overview</Tab>
-            <Tab>Detail</Tab>
           </TabList>
           <TabPanels>
+            {/*Weekly Tab*/}
             <TabPanel>
               <Grid numItemsMd={2} numItemsLg={3} className="gap-6 mt-6">
                 <Card>
@@ -42,27 +42,36 @@ export default function Dashboard() {
                   <br />
                   <KpiCard />
                   <br />
+                  <Title>Last week progress rate</Title>
+                  <br />
+                  <ProgressCircleChart />
+                  <Legend
+                    className="mt-3 mx-auto w-1/2"
+                    categories={["Completed Tasks", "Assigned Tasks"]}
+                    colors={["indigo"]}
+                  ></Legend>
                 </Card>
                 <Card>
-                <BarChartGraph />
+                  <BarChartGraph />
                 </Card>
                 <Card>
                   <AreaChartGraph />
                 </Card>
-                <div className="h-31">
+              </Grid>
+            </TabPanel>
+            <TabPanel>
+            <div className="h-31">
                   <Card className="mx-auto h-full">
                     <Title>Tasks</Title>
                     <DonutChartGraph />
-                    <br/>
+                    <br />
                     <Legend
                       className="mt-3 mx-auto w-1/2"
                       categories={["Todo Task", "Recurrence Task"]}
                       colors={["rose", "yellow"]}
                     />
-                    
                   </Card>
                 </div>
-              </Grid>
             </TabPanel>
           </TabPanels>
         </TabGroup>
