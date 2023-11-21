@@ -4,16 +4,24 @@ import { readTodoTasks } from "../../api/TaskApi";
 import axiosInstance from "../../api/configs/AxiosConfig";
 
 function EachBlog({ name, colorCode, contentList, icon }) {
-  const handleCheckboxChange = async (index) => {
-    const updatedTasks = [...contentList];
-    const taskId = updatedTasks[index].id;
+  const [tasks, setTasks] = useState(contentList);
 
+  const handleCheckboxChange = async index => {
     try {
-      await axiosInstance.patch(`todo/${taskId}/`, { completed: true });
+      setTasks(contentList)
 
-      updatedTasks[index].completed = true;
+      const updatedTasks = [...tasks];
+      const taskId = updatedTasks[index].id;
+
+      const response = await axiosInstance.patch(`todo/${taskId}/`, {
+        completed: !updatedTasks[index].completed,
+      });
+
+      updatedTasks[index].completed = response.data.completed;
+
+      setTasks(updatedTasks);
     } catch (error) {
-      console.error('Error updating task:', error);
+      console.error("Error updating task:", error);
     }
   };
 
@@ -34,9 +42,7 @@ function EachBlog({ name, colorCode, contentList, icon }) {
                 className="checkbox mt-1 mr-2"
                 onChange={() => handleCheckboxChange(index)}
               />
-              <label
-                className={`cursor-pointer ${item.completed ? 'line-through text-gray-500' : ''}`}
-              >
+              <label className={`cursor-pointer ${item.completed ? "line-through text-gray-500" : ""}`}>
                 {item.title}
               </label>
             </div>
@@ -55,7 +61,7 @@ function Eisenhower() {
   useEffect(() => {
     readTodoTasks()
       .then(data => {
-        console.log(data)
+        console.log(data);
         const contentList_ui = data.filter(task => task.priority === 1);
         const contentList_uni = data.filter(task => task.priority === 2);
         const contentList_nui = data.filter(task => task.priority === 3);
@@ -72,7 +78,7 @@ function Eisenhower() {
   }, []);
 
   return (
-    <div className="bg-slate-100 text-left p-4 w-full">
+    <div className="bg-slate-100 text-left p-4 w-full h-max">
       <div className="grid grid-rows-2 grid-cols-2 gap-2">
         <EachBlog
           name="Urgent & Important"
