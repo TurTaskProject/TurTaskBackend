@@ -42,6 +42,7 @@ export default {
             strong: "#111827", // gray-900
             inverted: "#ffffff", // white
           },
+
         },
       },
       boxShadow:{
