@@ -3,10 +3,10 @@ import { FaTasks, FaRegListAlt } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { TbChecklist } from "react-icons/tb";
 
-function TaskDetailModal() {
-  const [difficulty, setDifficulty] = useState(50);
-  const [isChallengeChecked, setChallengeChecked] = useState(true);
-  const [isImportantChecked, setImportantChecked] = useState(true);
+function TaskDetailModal({ title, description, tags, difficulty, challenge, importance, taskId }) {
+  const [isChallengeChecked, setChallengeChecked] = useState(challenge);
+  const [isImportantChecked, setImportantChecked] = useState(importance);
+  const [currentDifficulty, setCurrentDifficulty] = useState(difficulty);
 
   const handleChallengeChange = () => {
     setChallengeChecked(!isChallengeChecked);
@@ -15,20 +15,23 @@ function TaskDetailModal() {
   const handleImportantChange = () => {
     setImportantChecked(!isImportantChecked);
   };
-  const handleDifficultyChange = event => {
-    setDifficulty(parseInt(event.target.value, 10));
+
+  const handleDifficultyChange = (event) => {
+    setCurrentDifficulty(parseInt(event.target.value, 10));
   };
 
   return (
-    <dialog id="task_detail_modal" className="modal">
+    <dialog id={`task_detail_modal_${taskId}`} className="modal">
       <div className="modal-box w-4/5 max-w-3xl">
         {/* Title */}
         <div className="flex flex-col py-2">
           <div className="flex flex-col">
             <h3 className="font-bold text-lg">
-              <span className="flex gap-2">{<FaTasks className="my-2" />}Title</span>
+              <span className="flex gap-2">
+                {<FaTasks className="my-2" />}{title}
+              </span>
             </h3>
-            <p className="text-xs">Todo List</p>
+            <p className="text-xs">{title}</p>
           </div>
         </div>
 
@@ -42,25 +45,13 @@ function TaskDetailModal() {
               <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                 <li>
                   <a>
-                    <input type="checkbox" checked="checked" className="checkbox checkbox-sm" />
-                    Item 2
-                  </a>
-                </li>
-                <li>
-                  <a>
-                    <input type="checkbox" checked="checked" className="checkbox checkbox-sm" />
-                    Item 2
-                  </a>
-                </li>
-                <li>
-                  <a>
-                    <input type="checkbox" checked="checked" className="checkbox checkbox-sm" />
+                    <input type="checkbox" checked="checked" className="checkbox checkbox-sm"/>
                     Item 2
                   </a>
                 </li>
               </ul>
             </div>
-          </div>
+            </div>
           <div className="flex flex-nowrap overflow-x-auto"></div>
         </div>
 
@@ -72,10 +63,12 @@ function TaskDetailModal() {
               Description
             </span>
           </h2>
-          <textarea className="textarea w-full" disabled></textarea>
+          <textarea className="textarea w-full" disabled>
+            {description}
+          </textarea>
         </div>
 
-        {/* Difficulty, Challenge and Importance */}
+        {/* Difficulty, Challenge, and Importance */}
         <div className="flex flex-row space-x-3 my-4">
           <div className="flex-1 card shadow border-2 p-2">
             <input
@@ -83,7 +76,7 @@ function TaskDetailModal() {
               id="difficultySelector"
               min={0}
               max="100"
-              value={difficulty}
+              value={currentDifficulty}
               className="range"
               step="25"
               onChange={handleDifficultyChange}

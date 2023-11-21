@@ -29,6 +29,8 @@ const KanbanPage = () => {
         </div>
       </div>
       <KanbanBoard />
+      <div className="flex justify-center border-2 ">
+      </div>
     </div>
   );
 };
