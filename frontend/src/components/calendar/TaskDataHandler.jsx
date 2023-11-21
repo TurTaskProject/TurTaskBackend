@@ -4,7 +4,7 @@ let eventGuid = 0;
 
 const mapResponseToEvents = response => {
   return response.map(item => ({
-    id: createEventId(),
+    id: item.id,
     title: item.title,
     start: item.start_event,
     end: item.end_event,

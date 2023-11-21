@@ -5,6 +5,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { getEvents, createEventId } from "./TaskDataHandler";
+import axiosInstance from "../../api/configs/AxiosConfig";
 
 export default class Calendar extends React.Component {
   state = {
@@ -101,7 +102,14 @@ export default class Calendar extends React.Component {
 
   handleEventClick = clickInfo => {
     if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
+      axiosInstance
+      .delete(`todo/${clickInfo.event.id}/`)
+      .then(response => {
+        clickInfo.event.remove();
+      })
+      .catch(error => {
+        console.error("Error deleting Task:", error);
+      });
     }
   };
 
