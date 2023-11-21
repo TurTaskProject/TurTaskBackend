@@ -9,22 +9,38 @@ import {
   Text,
   Title,
   Legend,
+  DateRangePicker,
 } from "@tremor/react";
 import KpiCard from "./kpiCard";
 import { BarChartGraph } from "./Barchart";
 import DonutChartGraph from "./DonutChart";
 import { AreaChartGraph } from "./Areachart";
 import ProgressCircleChart from "./ProgressCircle";
+import { useState } from "react";
 
 const valueFormatter = (number) =>
   `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
 
 export default function Dashboard() {
+  const [value, setValue] = useState({
+    from: new Date(2021, 0, 1),
+    to: new Date(2023, 0, 7),
+  });
+  console.log(value);
   return (
     <div className="flex flex-col p-12">
       <div>
         <Title>Dashboard</Title>
         <Text>All of your progress will be shown right here.</Text>
+        <br />
+        <Text className="mr-3">Select Date Range:</Text>
+        <DateRangePicker
+          value={value}
+          onChange={setValue}
+          className="inline-block"
+          maxDate={new Date()}
+        >
+        </DateRangePicker>
       </div>
 
       <div>
@@ -60,18 +76,18 @@ export default function Dashboard() {
               </Grid>
             </TabPanel>
             <TabPanel>
-            <div className="h-31">
-                  <Card className="mx-auto h-full">
-                    <Title>Tasks</Title>
-                    <DonutChartGraph />
-                    <br />
-                    <Legend
-                      className="mt-3 mx-auto w-1/2"
-                      categories={["Todo Task", "Recurrence Task"]}
-                      colors={["rose", "yellow"]}
-                    />
-                  </Card>
-                </div>
+              <div className="h-31">
+                <Card className="mx-auto h-full">
+                  <Title>Tasks</Title>
+                  <DonutChartGraph />
+                  <br />
+                  <Legend
+                    className="mt-3 mx-auto w-1/2"
+                    categories={["Todo Task", "Recurrence Task"]}
+                    colors={["rose", "yellow"]}
+                  />
+                </Card>
+              </div>
             </TabPanel>
           </TabPanels>
         </TabGroup>
