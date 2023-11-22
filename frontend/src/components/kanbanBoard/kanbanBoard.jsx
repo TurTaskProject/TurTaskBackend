@@ -5,11 +5,11 @@ import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import TaskCard from "./taskCard";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import axiosInstance from "../../api/configs/AxiosConfig";
+import axiosInstance from "src/api/AxiosConfig";
 
 function KanbanBoard() {
   const [columns, setColumns] = useState([]);
-  const columnsId = useMemo(() => columns.map(col => col.id), [columns]);
+  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [boardId, setBoardData] = useState();
 
   const [tasks, setTasks] = useState([]);
@@ -66,7 +66,7 @@ function KanbanBoard() {
         const tasksResponse = await axiosInstance.get("/todo");
 
         // Transform
-        const transformedTasks = tasksResponse.data.map(task => ({
+        const transformedTasks = tasksResponse.data.map((task) => ({
           id: task.id,
           columnId: task.list_board,
           content: task.title,
@@ -95,7 +95,7 @@ function KanbanBoard() {
         const columnsResponse = await axiosInstance.get("/lists");
 
         // Transform
-        const transformedColumns = columnsResponse.data.map(column => ({
+        const transformedColumns = columnsResponse.data.map((column) => ({
           id: column.id,
           title: column.name,
         }));
@@ -135,7 +135,7 @@ function KanbanBoard() {
         <div className="ml-2 flex gap-4">
           <div className="flex gap-4">
             <SortableContext items={columnsId}>
-              {columns.map(col => (
+              {columns.map((col) => (
                 <ColumnContainerCard
                   key={col.id}
                   column={col}
@@ -144,7 +144,7 @@ function KanbanBoard() {
                   createTask={createTask}
                   deleteTask={deleteTask}
                   updateTask={updateTask}
-                  tasks={tasks.filter(task => task.columnId === col.id)}
+                  tasks={tasks.filter((task) => task.columnId === col.id)}
                 />
               ))}
             </SortableContext>
@@ -186,7 +186,7 @@ function KanbanBoard() {
                 createTask={createTask}
                 deleteTask={deleteTask}
                 updateTask={updateTask}
-                tasks={tasks.filter(task => task.columnId === activeColumn.id)}
+                tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
               />
             )}
             {activeTask && <TaskCard task={activeTask} deleteTask={deleteTask} updateTask={updateTask} />}
@@ -213,35 +213,34 @@ function KanbanBoard() {
 
     axiosInstance
       .post("todo/", newTaskData)
-      .then(response => {
+      .then((response) => {
         const newTask = {
           id: response.data.id,
           columnId,
           content: response.data.title,
         };
-
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error creating task:", error);
       });
-      setTasks(tasks => [...tasks, newTask]);
-    }
+    setTasks((tasks) => [...tasks, newTask]);
+  }
 
   function deleteTask(id) {
-    const newTasks = tasks.filter(task => task.id !== id);
+    const newTasks = tasks.filter((task) => task.id !== id);
     axiosInstance
       .delete(`todo/${id}/`)
-      .then(response => {
+      .then((response) => {
         setTasks(newTasks);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error deleting Task:", error);
       });
-      setTasks(newTasks);
+    setTasks(newTasks);
   }
 
   function updateTask(id, content) {
-    const newTasks = tasks.map(task => {
+    const newTasks = tasks.map((task) => {
       if (task.id !== id) return task;
       return { ...task, content };
     });
@@ -252,15 +251,15 @@ function KanbanBoard() {
   function createNewColumn() {
     axiosInstance
       .post("lists/", { name: `Column ${columns.length + 1}`, position: 1, board: boardId.id })
-      .then(response => {
+      .then((response) => {
         const newColumn = {
           id: response.data.id,
           title: response.data.name,
         };
 
-        setColumns(prevColumns => [...prevColumns, newColumn]);
+        setColumns((prevColumns) => [...prevColumns, newColumn]);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error creating ListBoard:", error);
       });
   }
@@ -268,22 +267,22 @@ function KanbanBoard() {
   function deleteColumn(id) {
     axiosInstance
       .delete(`lists/${id}/`)
-      .then(response => {
-        setColumns(prevColumns => prevColumns.filter(col => col.id !== id));
+      .then((response) => {
+        setColumns((prevColumns) => prevColumns.filter((col) => col.id !== id));
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error deleting ListBoard:", error);
       });
 
-    const tasksToDelete = tasks.filter(t => t.columnId === id);
+    const tasksToDelete = tasks.filter((t) => t.columnId === id);
 
-    tasksToDelete.forEach(task => {
+    tasksToDelete.forEach((task) => {
       axiosInstance
         .delete(`todo/${task.id}/`)
-        .then(response => {
-          setTasks(prevTasks => prevTasks.filter(t => t.id !== task.id));
+        .then((response) => {
+          setTasks((prevTasks) => prevTasks.filter((t) => t.id !== task.id));
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error deleting Task:", error);
         });
     });
@@ -293,10 +292,10 @@ function KanbanBoard() {
     // Update the column
     axiosInstance
       .patch(`lists/${id}/`, { name: title }) // Adjust the payload based on your API requirements
-      .then(response => {
-        setColumns(prevColumns => prevColumns.map(col => (col.id === id ? { ...col, title } : col)));
+      .then((response) => {
+        setColumns((prevColumns) => prevColumns.map((col) => (col.id === id ? { ...col, title } : col)));
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error updating ListBoard:", error);
       });
   }
@@ -330,9 +329,9 @@ function KanbanBoard() {
 
     // Reorder columns if the dragged item is a column
     if (isActiveAColumn && isOverAColumn) {
-      setColumns(columns => {
-        const activeColumnIndex = columns.findIndex(col => col.id === activeId);
-        const overColumnIndex = columns.findIndex(col => col.id === overId);
+      setColumns((columns) => {
+        const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
+        const overColumnIndex = columns.findIndex((col) => col.id === overId);
 
         const reorderedColumns = arrayMove(columns, activeColumnIndex, overColumnIndex);
 
@@ -342,9 +341,9 @@ function KanbanBoard() {
 
     // Reorder tasks within the same column
     if (isActiveATask && isOverATask) {
-      setTasks(tasks => {
-        const activeIndex = tasks.findIndex(t => t.id === activeId);
-        const overIndex = tasks.findIndex(t => t.id === overId);
+      setTasks((tasks) => {
+        const activeIndex = tasks.findIndex((t) => t.id === activeId);
+        const overIndex = tasks.findIndex((t) => t.id === overId);
 
         const reorderedTasks = arrayMove(tasks, activeIndex, overIndex);
 
@@ -354,15 +353,15 @@ function KanbanBoard() {
 
     // Move tasks between columns and update columnId
     if (isActiveATask && isOverAColumn) {
-      setTasks(tasks => {
-        const activeIndex = tasks.findIndex(t => t.id === activeId);
+      setTasks((tasks) => {
+        const activeIndex = tasks.findIndex((t) => t.id === activeId);
 
         tasks[activeIndex].columnId = overId;
 
         axiosInstance
           .put(`todo/change_task_list_board/`, { todo_id: activeId, new_list_board_id: overId, new_index: 0 })
-          .then(response => {})
-          .catch(error => {
+          .then((response) => {})
+          .catch((error) => {
             console.error("Error updating task columnId:", error);
           });
 
@@ -386,9 +385,9 @@ function KanbanBoard() {
     if (!isActiveATask) return;
 
     if (isActiveATask && isOverATask) {
-      setTasks(tasks => {
-        const activeIndex = tasks.findIndex(t => t.id === activeId);
-        const overIndex = tasks.findIndex(t => t.id === overId);
+      setTasks((tasks) => {
+        const activeIndex = tasks.findIndex((t) => t.id === activeId);
+        const overIndex = tasks.findIndex((t) => t.id === overId);
 
         if (tasks[activeIndex].columnId !== tasks[overIndex].columnId) {
           tasks[activeIndex].columnId = tasks[overIndex].columnId;
@@ -402,8 +401,8 @@ function KanbanBoard() {
     const isOverAColumn = over.data.current?.type === "Column";
 
     if (isActiveATask && isOverAColumn) {
-      setTasks(tasks => {
-        const activeIndex = tasks.findIndex(t => t.id === activeId);
+      setTasks((tasks) => {
+        const activeIndex = tasks.findIndex((t) => t.id === activeId);
 
         tasks[activeIndex].columnId = overId;
         return arrayMove(tasks, activeIndex, activeIndex);

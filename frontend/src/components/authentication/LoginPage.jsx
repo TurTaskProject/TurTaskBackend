@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, redirect } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useCallback } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import refreshAccessToken from "./refreshAcessToken";
 import axiosapi from "../../api/AuthenticationApi";
-import { useAuth } from "../../hooks/authentication/IsAuthenticated";
 import { FcGoogle } from "react-icons/fc";
-
+import { useAuth } from "src/hooks/AuthHooks";
 
 function LoginPage() {
+  const { setIsAuthenticated } = useAuth();
   const Navigate = useNavigate();
-  const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   useEffect(() => {
     if (!refreshAccessToken()) {
@@ -43,15 +42,13 @@ function LoginPage() {
         // On successful login, store tokens and set the authorization header
         localStorage.setItem("access_token", res.data.access);
         localStorage.setItem("refresh_token", res.data.refresh);
-        axiosapi.axiosInstance.defaults.headers["Authorization"] =
-          "Bearer " + res.data.access;
+        axiosapi.axiosInstance.defaults.headers["Authorization"] = "Bearer " + res.data.access;
         setIsAuthenticated(true);
-        Navigate("/");
+        redirect("/");
       })
       .catch((err) => {
         console.log("Login failed");
         console.log(err);
-        setIsAuthenticated(false);
       });
   };
 
@@ -71,7 +68,6 @@ function LoginPage() {
         }
       } catch (error) {
         console.error("Error with the POST request:", error);
-        setIsAuthenticated(false);
       }
     },
     onError: (errorResponse) => console.log(errorResponse),
@@ -89,10 +85,7 @@ function LoginPage() {
   }, []);
 
   return (
-    <div
-      data-theme="night"
-      className="h-screen flex items-center justify-center"
-    >
+    <div data-theme="night" className="h-screen flex items-center justify-center">
       {/* Particles Container */}
       <div style={{ width: "0%", height: "100vh" }}>
         <Particles
@@ -206,11 +199,9 @@ function LoginPage() {
           </button>
           <div className="divider">OR</div>
           {/* Login with Google Button */}
-          <button
-            className="btn btn-outline btn-secondary w-full "
-            onClick={() => googleLoginImplicit()}
-          >
-            <FcGoogle className="rounded-full bg-white"/>Login with Google
+          <button className="btn btn-outline btn-secondary w-full " onClick={() => googleLoginImplicit()}>
+            <FcGoogle className="rounded-full bg-white" />
+            Login with Google
           </button>
           {/* Forgot Password Link */}
           <div className="justify-left">
