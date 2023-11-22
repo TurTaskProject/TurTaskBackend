@@ -4,13 +4,20 @@ import { BarChartGraph } from "./Barchart";
 import DonutChartGraph from "./DonutChart";
 import { AreaChartGraph } from "./Areachart";
 import ProgressCircleChart from "./ProgressCircle";
+import { useState } from "react";
 
 export default function Dashboard() {
+  const [value, setValue] = useState({
+    from: new Date(2021, 0, 1),
+    to: new Date(2023, 0, 7),
+  });
+  console.log(value);
   return (
     <div className="flex flex-col p-12">
       <div>
         <Title>Dashboard</Title>
         <Text>All of your progress will be shown right here.</Text>
+        <br />
       </div>
 
       <div>
