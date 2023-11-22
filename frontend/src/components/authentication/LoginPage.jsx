@@ -42,7 +42,8 @@ function LoginPage() {
         // On successful login, store tokens and set the authorization header
         localStorage.setItem("access_token", res.data.access);
         localStorage.setItem("refresh_token", res.data.refresh);
-        axiosapi.axiosInstance.defaults.headers["Authorization"] = "Bearer " + res.data.access;
+        axiosapi.axiosInstance.defaults.headers["Authorization"] =
+          "Bearer " + res.data.access;
         setIsAuthenticated(true);
         redirect("/");
       })
@@ -85,7 +86,10 @@ function LoginPage() {
   }, []);
 
   return (
-    <div data-theme="night" className="h-screen flex items-center justify-center">
+    <div
+      data-theme="night"
+      className="h-screen flex items-center justify-center"
+    >
       {/* Particles Container */}
       <div style={{ width: "0%", height: "100vh" }}>
         <Particles
@@ -95,6 +99,7 @@ function LoginPage() {
           className="-z-10"
           options={{
             fpsLimit: 240,
+            smooth: true,
             interactivity: {
               events: {
                 onClick: {
@@ -199,7 +204,10 @@ function LoginPage() {
           </button>
           <div className="divider">OR</div>
           {/* Login with Google Button */}
-          <button className="btn btn-outline btn-secondary w-full " onClick={() => googleLoginImplicit()}>
+          <button
+            className="btn btn-outline btn-secondary w-full "
+            onClick={() => googleLoginImplicit()}
+          >
             <FcGoogle className="rounded-full bg-white" />
             Login with Google
           </button>

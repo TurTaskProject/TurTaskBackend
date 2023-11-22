@@ -7,7 +7,6 @@ import { loadFull } from "tsparticles";
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
 
-
 function Copyright(props) {
   return (
     <div className="text-center text-sm text-gray-500" {...props}>
@@ -104,6 +103,7 @@ export default function SignUp() {
           className="-z-10"
           options={{
             fpsLimit: 240,
+            smooth: true,
             interactivity: {
               events: {
                 onClick: {
@@ -229,13 +229,12 @@ export default function SignUp() {
             className="btn btn-outline btn-secondary w-full "
             onClick={() => googleLoginImplicit()}
           >
-            <FcGoogle className="rounded-full bg-white"/>Login with Google
+            <FcGoogle className="rounded-full bg-white" />
+            Login with Google
           </button>
           {/* Already have an account? */}
           <div className="text-blue-500 flex justify-center text-sm">
-            <a href="login">
-              Already have an account?
-            </a>
+            <a href="login">Already have an account?</a>
           </div>
           <Copyright />
         </div>
