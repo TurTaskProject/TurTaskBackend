@@ -3,13 +3,13 @@ import { BsFillTrashFill } from "react-icons/bs";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { CSS } from "@dnd-kit/utilities";
 import { useMemo, useState } from "react";
-import TaskCard from "./taskCard";
+import { TaskCard } from "./taskCard";
 
-function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks, deleteTask, updateTask }) {
+export function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks, deleteTask, updateTask }) {
   const [editMode, setEditMode] = useState(false);
 
   const tasksIds = useMemo(() => {
-    return tasks.map(task => task.id);
+    return tasks.map((task) => task.id);
   }, [tasks]);
 
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
@@ -78,12 +78,12 @@ function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks
             <input
               className="bg-gray-200 focus:border-blue-500 border rounded-md outline-none px-2"
               value={column.title}
-              onChange={e => updateColumn(column.id, e.target.value)}
+              onChange={(e) => updateColumn(column.id, e.target.value)}
               autoFocus
               onBlur={() => {
                 setEditMode(false);
               }}
-              onKeyDown={e => {
+              onKeyDown={(e) => {
                 if (e.key !== "Enter") return;
                 setEditMode(false);
               }}
@@ -109,7 +109,7 @@ function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks
       {/* Column task container */}
       <div className="flex flex-grow flex-col gap-2 p-1 overflow-x-hidden overflow-y-auto">
         <SortableContext items={tasksIds}>
-          {tasks.map(task => (
+          {tasks.map((task) => (
             <TaskCard key={task.id} task={task} deleteTask={deleteTask} updateTask={updateTask} />
           ))}
         </SortableContext>
@@ -126,5 +126,3 @@ function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks
     </div>
   );
 }
-
-export default ColumnContainer;

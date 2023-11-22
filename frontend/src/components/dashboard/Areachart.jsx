@@ -1,6 +1,6 @@
 import { AreaChart, Title } from "@tremor/react";
 import { useState, useEffect } from "react";
-import axiosInstance from "src/api/AxiosConfig";
+import { axiosInstance } from "src/api/AxiosConfig";
 
 export const AreaChartGraph = () => {
   const [areaChartDataArray, setAreaChartDataArray] = useState([]);

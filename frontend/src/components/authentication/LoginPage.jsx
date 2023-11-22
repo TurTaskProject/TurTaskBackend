@@ -1,23 +1,15 @@
-import { useEffect, useState } from "react";
 import { useNavigate, redirect } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import refreshAccessToken from "./refreshAcessToken";
-import axiosapi from "../../api/AuthenticationApi";
 import { FcGoogle } from "react-icons/fc";
 import { useAuth } from "src/hooks/AuthHooks";
+import { googleLogin, apiUserLogin } from "src/api/AuthenticationApi";
 
-function LoginPage() {
+export function LoginPage() {
   const { setIsAuthenticated } = useAuth();
   const Navigate = useNavigate();
-
-  useEffect(() => {
-    if (!refreshAccessToken()) {
-      Navigate("/");
-    }
-  }, []);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,16 +25,14 @@ function LoginPage() {
     event.preventDefault();
 
     // Send a POST request to the authentication API
-    axiosapi
-      .apiUserLogin({
-        email: email,
-        password: password,
-      })
+    apiUserLogin({
+      email: email,
+      password: password,
+    })
       .then((res) => {
         // On successful login, store tokens and set the authorization header
         localStorage.setItem("access_token", res.data.access);
         localStorage.setItem("refresh_token", res.data.refresh);
-        axiosapi.axiosInstance.defaults.headers["Authorization"] = "Bearer " + res.data.access;
         setIsAuthenticated(true);
         redirect("/");
       })
@@ -57,7 +47,7 @@ function LoginPage() {
     redirect_uri: "postmessage",
     onSuccess: async (response) => {
       try {
-        const loginResponse = await axiosapi.googleLogin(response.code);
+        const loginResponse = await googleLogin(response.code);
         if (loginResponse && loginResponse.data) {
           const { access_token, refresh_token } = loginResponse.data;
 
@@ -76,12 +66,7 @@ function LoginPage() {
     /* Particles Loader*/
   }
   const particlesInit = useCallback(async (engine) => {
-    console.log(engine);
     await loadFull(engine);
-  }, []);
-
-  const particlesLoaded = useCallback(async (container) => {
-    console.log(container);
   }, []);
 
   return (
@@ -91,7 +76,6 @@ function LoginPage() {
         <Particles
           id="particles"
           init={particlesInit}
-          loaded={particlesLoaded}
           className="-z-10"
           options={{
             fpsLimit: 240,
@@ -214,5 +198,3 @@ function LoginPage() {
     </div>
   );
 }
-
-export default LoginPage;

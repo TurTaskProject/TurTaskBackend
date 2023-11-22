@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import axiosapi from "../../api/AuthenticationApi";
+import { apiUserLogout } from "src/api/AuthenticationApi";
 import { useAuth } from "src/hooks/AuthHooks";
 
 const settings = {
@@ -7,13 +7,12 @@ const settings = {
   Account: "/account",
 };
 
-function NavBar() {
+export function NavBar() {
   const Navigate = useNavigate();
   const { isAuthenticated, setIsAuthenticated } = useAuth();
 
-  console.log(isAuthenticated);
   const logout = () => {
-    axiosapi.apiUserLogout();
+    apiUserLogout();
     setIsAuthenticated(false);
     Navigate("/");
   };
@@ -66,4 +65,3 @@ function NavBar() {
     </div>
   );
 }
-export default NavBar;

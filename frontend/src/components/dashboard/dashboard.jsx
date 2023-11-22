@@ -1,11 +1,11 @@
 import { Card, Grid, Tab, TabGroup, TabList, TabPanel, TabPanels, Text, Title, Legend } from "@tremor/react";
-import KpiCard from "./KpiCard";
+import { KpiCard } from "./KpiCard";
 import { BarChartGraph } from "./Barchart";
-import DonutChartGraph from "./DonutChart";
+import { DonutChartGraph } from "./DonutChart";
 import { AreaChartGraph } from "./Areachart";
-import ProgressCircleChart from "./ProgressCircle";
+import { ProgressCircleChart } from "./ProgressCircle";
 
-export default function Dashboard() {
+export function Dashboard() {
   return (
     <div className="flex flex-col p-12">
       <div>

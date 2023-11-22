@@ -1,21 +1,18 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosapi from "../../api/AuthenticationApi";
 import { useCallback } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
-
+import { useAuth } from "src/hooks/AuthHooks";
+import { createUser, googleLogin } from "src/api/AuthenticationApi";
 
 function Copyright(props) {
   return (
     <div className="text-center text-sm text-gray-500" {...props}>
       {"Copyright © "}
-      <a
-        href="https://github.com/TurTaskProject/TurTaskWeb"
-        className="text-blue-500 hover:underline"
-      >
+      <a href="https://github.com/TurTaskProject/TurTaskWeb" className="text-blue-500 hover:underline">
         TurTask
       </a>{" "}
       {new Date().getFullYear()}
@@ -24,8 +21,9 @@ function Copyright(props) {
   );
 }
 
-export default function SignUp() {
+export function SignUp() {
   const Navigate = useNavigate();
+  const { setIsAuthenticated } = useAuth;
 
   const [formData, setFormData] = useState({
     email: "",
@@ -41,7 +39,7 @@ export default function SignUp() {
     setError(null);
 
     try {
-      axiosapi.createUser(formData);
+      createUser(formData);
     } catch (error) {
       console.error("Error creating user:", error);
       setError("Registration failed. Please try again.");
@@ -54,18 +52,12 @@ export default function SignUp() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log(formData);
   };
   {
     /* Particles Loader*/
   }
   const particlesInit = useCallback(async (engine) => {
-    console.log(engine);
     await loadFull(engine);
-  }, []);
-
-  const particlesLoaded = useCallback(async (container) => {
-    console.log(container);
   }, []);
 
   const googleLoginImplicit = useGoogleLogin({
@@ -73,7 +65,7 @@ export default function SignUp() {
     redirect_uri: "postmessage",
     onSuccess: async (response) => {
       try {
-        const loginResponse = await axiosapi.googleLogin(response.code);
+        const loginResponse = await googleLogin(response.code);
         if (loginResponse && loginResponse.data) {
           const { access_token, refresh_token } = loginResponse.data;
 
@@ -91,16 +83,12 @@ export default function SignUp() {
   });
 
   return (
-    <div
-      data-theme="night"
-      className="h-screen flex items-center justify-center"
-    >
+    <div data-theme="night" className="h-screen flex items-center justify-center">
       {/* Particles Container */}
       <div style={{ width: "0%", height: "100vh" }}>
         <Particles
           id="particles"
           init={particlesInit}
-          loaded={particlesLoaded}
           className="-z-10"
           options={{
             fpsLimit: 240,
@@ -179,13 +167,7 @@ export default function SignUp() {
                 Email<span className="text-red-500 text-bold">*</span>
               </p>
             </label>
-            <input
-              className="input"
-              type="email"
-              id="email"
-              placeholder="Enter your email"
-              onChange={handleChange}
-            />
+            <input className="input" type="email" id="email" placeholder="Enter your email" onChange={handleChange} />
           </div>
           {/* Username Input */}
           <div className="form-control">
@@ -225,17 +207,13 @@ export default function SignUp() {
           </button>
           <div className="divider">OR</div>
           {/* Login with Google Button */}
-          <button
-            className="btn btn-outline btn-secondary w-full "
-            onClick={() => googleLoginImplicit()}
-          >
-            <FcGoogle className="rounded-full bg-white"/>Login with Google
+          <button className="btn btn-outline btn-secondary w-full " onClick={() => googleLoginImplicit()}>
+            <FcGoogle className="rounded-full bg-white" />
+            Login with Google
           </button>
           {/* Already have an account? */}
           <div className="text-blue-500 flex justify-center text-sm">
-            <a href="login">
-              Already have an account?
-            </a>
+            <a href="login">Already have an account?</a>
           </div>
           <Copyright />
         </div>

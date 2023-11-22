@@ -3,7 +3,7 @@ import { redirect } from "react-router-dom";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: baseURL,
   timeout: 5000,
   headers: {
@@ -43,5 +43,3 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-export default axiosInstance;
