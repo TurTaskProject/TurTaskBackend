@@ -1,18 +1,17 @@
-import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import axiosapi from "../../api/AuthenticationApi";
-import { useAuth } from "../../hooks/authentication/IsAuthenticated"; 
+import { useAuth } from "src/hooks/AuthHooks";
 
 const settings = {
-  Profile: '/profile',
-  Account: '/account',
+  Profile: "/profile",
+  Account: "/account",
 };
 
 function NavBar() {
   const Navigate = useNavigate();
-
   const { isAuthenticated, setIsAuthenticated } = useAuth();
 
+  console.log(isAuthenticated);
   const logout = () => {
     axiosapi.apiUserLogout();
     setIsAuthenticated(false);
