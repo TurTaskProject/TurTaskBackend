@@ -1,4 +1,3 @@
-import * as React from "react";
 import ProfileUpdateComponent from "./ProfileUpdateComponent";
 
 function ProfileUpdatePage() {
@@ -47,7 +46,7 @@ function ProfileUpdatePage() {
             </div>
           </div>
           <div className="stat-desc py-2">3213/321312321 points</div>
-          <progress class="progress progress-info w-36" value="10" max="100"></progress>
+          <progress className="progress progress-info w-36" value="10" max="100"></progress>
         </div>
 
         <div className="stat">
@@ -75,10 +74,10 @@ function ProfileUpdatePage() {
       </div>
 
       <div className="card bg-base-100 shadow">
-        <div class="card-body">
-          <h2 class="card-title">About me</h2>
-          <div class="card-actions justify-end"></div>
-          <textarea class="textarea textarea-bordered textarea-lg w-full" disabled>
+        <div className="card-body">
+          <h2 className="card-title">About me</h2>
+          <div className="card-actions justify-end"></div>
+          <textarea className="textarea textarea-bordered textarea-lg w-full" disabled>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum dolores recusandae, officiis consequuntur
             nam, non ab commodi totam mollitia iusto nemo voluptatum error aliquam similique perspiciatis, eligendi
             nulla. Animi, sit?
@@ -89,31 +88,31 @@ function ProfileUpdatePage() {
       <div className="grid grid-cols-2 grid-rows-2 gap-4 my-2">
         <div className="col-span-full">
           <div className="card bg-base-100 shadow">
-            <div class="card-body">
-              <h2 class="card-title">Overall Statistics</h2>
-              <div class="card-actions justify-end"></div>
+            <div className="card-body">
+              <h2 className="card-title">Overall Statistics</h2>
+              <div className="card-actions justify-end"></div>
             </div>
           </div>
         </div>
         <div className="col-start-2 row-start-2">
           <div className="card bg-base-100 shadow">
-            <div class="card-body">
-              <h2 class="card-title">Achievements</h2>
-              <div class="card-actions justify-end"></div>
+            <div className="card-body">
+              <h2 className="card-title">Achievements</h2>
+              <div className="card-actions justify-end"></div>
             </div>
           </div>
         </div>
         <div className="col-start-1 row-start-2">
           <div className="card bg-base-100 shadow">
-            <div class="card-body">
-              <h2 class="card-title">Friends</h2>
-              <div class="card-actions justify-end"></div>
+            <div className="card-body">
+              <h2 className="card-title">Friends</h2>
+              <div className="card-actions justify-end"></div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="fixed bottom-4 right-4">
+      <div className="fixed bottom-4 right-4">
         <ul className="menu menu-horizontal bg-base-200 rounded-box">
           <li>
             <a onClick={() => document.getElementById("my_modal_4").showModal()}>
@@ -136,7 +135,7 @@ function ProfileUpdatePage() {
         <div className="modal-box w-11/12 max-w-5xl flex flex-col">
           <form method="dialog">
             <ProfileUpdateComponent />
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
         </div>
       </dialog>

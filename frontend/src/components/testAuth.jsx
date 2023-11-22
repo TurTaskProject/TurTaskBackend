@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axiosapi from "../api/AuthenticationApi";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -12,11 +12,11 @@ function TestAuth() {
     // Fetch the "hello" data from the server when the component mounts
     axiosapi
       .getGreeting()
-      .then(res => {
+      .then((res) => {
         console.log(res.data);
         setMessage(res.data.user);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         setMessage("");
       });
@@ -32,14 +32,14 @@ function TestAuth() {
     <div>
       {message !== "" && (
         <div>
-          <h1 class="text-xl font-bold">Login! Hello!</h1>
+          <h1 className="text-xl font-bold">Login! Hello!</h1>
           <h2>{message}</h2>
           <Button variant="contained" onClick={logout}>
             Logout
           </Button>
         </div>
       )}
-      {message === "" && <h1 class="text-xl font-bold">Need to sign in, No authentication found</h1>}
+      {message === "" && <h1 className="text-xl font-bold">Need to sign in, No authentication found</h1>}
     </div>
   );
 }

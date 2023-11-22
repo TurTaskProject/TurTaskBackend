@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { ApiUpdateUserProfile } from "../api/UserProfileApi";
 
 function ProfileUpdateComponent() {
@@ -15,7 +15,7 @@ function ProfileUpdateComponent() {
     }
   };
 
-  const handleFileChange = e => {
+  const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setFile(selectedFile);
@@ -66,7 +66,7 @@ function ProfileUpdateComponent() {
           placeholder="Enter your username"
           className="input w-full"
           value={username}
-          onChange={e => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)}
         />
       </div>
 
@@ -78,7 +78,7 @@ function ProfileUpdateComponent() {
           placeholder="Enter your full name"
           className="input w-full"
           value={fullName}
-          onChange={e => setFullName(e.target.value)}
+          onChange={(e) => setFullName(e.target.value)}
         />
       </div>
 
@@ -89,7 +89,7 @@ function ProfileUpdateComponent() {
           placeholder="Tell us about yourself"
           className="textarea w-full h-32"
           value={about}
-          onChange={e => setAbout(e.target.value)}
+          onChange={(e) => setAbout(e.target.value)}
         />
       </div>
 
