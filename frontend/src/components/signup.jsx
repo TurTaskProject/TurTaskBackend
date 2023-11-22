@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axiosapi from "../api/axiosapi";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -7,7 +7,7 @@ import Container from "@material-ui/core/Container";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   // Styles for various elements
   paper: {
     marginTop: theme.spacing(8),
@@ -38,7 +38,7 @@ const Signup = () => {
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
@@ -53,7 +53,7 @@ const Signup = () => {
     }
   };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
