@@ -10,7 +10,7 @@ import {
   Title,
   Legend,
 } from "@tremor/react";
-import KpiCard from "./kpiCard";
+import KpiCard from "./KpiCard";
 import { BarChartGraph } from "./Barchart";
 import DonutChartGraph from "./DonutChart";
 import { AreaChartGraph } from "./Areachart";

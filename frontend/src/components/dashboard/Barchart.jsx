@@ -4,7 +4,6 @@ import axiosInstance from "../../api/configs/AxiosConfig";
 
 const fetchBarChartData = async () => {
   let res = await axiosInstance.get("/dashboard/weekly/");
-  console.log(res.data);
   // const barchartData = [
   //   {
   //     date: "Mon",
