@@ -16,3 +16,5 @@ django-storages[s3]>=1.14
 Pillow>=10.1
 drf-spectacular>=0.26
 python-dateutil>=2.8
+gunicorn==21.2.0
+packaging==23.1
