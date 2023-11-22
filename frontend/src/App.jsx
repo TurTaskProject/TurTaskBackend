@@ -1,6 +1,7 @@
+import { useEffect } from "react";
 import "./App.css";
-import { Route, Routes, useLocation } from "react-router-dom";
-
+import { Route, Routes } from "react-router-dom";
+import axios from "axios";
 import TestAuth from "./components/testAuth";
 import LoginPage from "./components/authentication/LoginPage";
 import SignUpPage from "./components/authentication/SignUpPage";
@@ -13,18 +14,66 @@ import PrivateRoute from "./PrivateRoute";
 import ProfileUpdatePage from "./components/profilePage";
 import Dashboard from "./components/dashboard/dashboard";
 
+import { useAuth } from "./hooks/AuthHooks";
 
 const App = () => {
-  const location = useLocation();
-  const prevention = ["/login", "/signup"];
-  const isLoginPageOrSignUpPage = prevention.some(_ => location.pathname.includes(_));
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
 
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const data = {
+        access_token: localStorage.getItem("access_token"),
+        refresh_token: localStorage.getItem("refresh_token"),
+      };
+
+      await axios
+        .post("http://127.0.0.1:8000/api/auth/status/", data, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            if (response.data.access_token) {
+              localStorage.setItem("access_token", response.data.access_token);
+              setIsAuthenticated(true);
+            } else {
+              setIsAuthenticated(true);
+            }
+          } else {
+            setIsAuthenticated(false);
+          }
+        })
+        .catch((error) => {
+          console.error("Error checking login status:", error.message);
+        });
+    };
+
+    checkLoginStatus();
+  }, [setIsAuthenticated]);
+
+  return <div>{isAuthenticated ? <AuthenticatedComponents /> : <NonAuthenticatedComponents />}</div>;
+};
+
+const NonAuthenticatedComponents = () => {
   return (
-    <div className={isLoginPageOrSignUpPage ? "" : "display: flex"}>
-      {!isLoginPageOrSignUpPage && <IconSideNav />}
-      <div className={isLoginPageOrSignUpPage ? "" : "flex-1 ml-[76px] overflow-hidden"}>
+    <div>
+      <NavBar />
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+      </Routes>
+    </div>
+  );
+};
+
+const AuthenticatedComponents = () => {
+  return (
+    <div className="display: flex">
+      <IconSideNav />
+      <div className="flex-1 ml-[76px] overflow-hidden">
         <NavBar />
-        <div className={isLoginPageOrSignUpPage ? "" : "overflow-x-auto"}>
+        <div className="overflow-x-auto">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route exact path="/tasks" element={<PrivateRoute />}>
