@@ -16,6 +16,8 @@ import Dashboard from "./components/dashboard/dashboard";
 
 import { useAuth } from "./hooks/AuthHooks";
 
+const baseURL = import.meta.env.VITE_BASE_URL;
+
 const App = () => {
   const { isAuthenticated, setIsAuthenticated } = useAuth();
 
@@ -27,7 +29,7 @@ const App = () => {
       };
 
       await axios
-        .post("http://127.0.0.1:8000/api/auth/status/", data, {
+        .post(`${baseURL}auth/status/`, data, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("access_token"),
           },

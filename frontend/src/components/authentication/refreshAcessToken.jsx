@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const baseURL = import.meta.env.VITE_BASE_URL;
+
 async function refreshAccessToken() {
   const refresh_token = localStorage.getItem("refresh_token");
   const access_token = localStorage.getItem("access_token");
@@ -12,7 +14,7 @@ async function refreshAccessToken() {
     return false;
   }
 
-  const refreshUrl = "http://127.0.0.1:8000/api/token/refresh/";
+  const refreshUrl = `${baseURL}token/refresh/`;
 
   try {
     const response = await axios.post(refreshUrl, { refresh: refresh_token });
