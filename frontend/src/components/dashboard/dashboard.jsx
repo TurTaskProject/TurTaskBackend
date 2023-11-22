@@ -1,25 +1,10 @@
-import {
-  Card,
-  Grid,
-  Tab,
-  TabGroup,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Text,
-  Title,
-  Legend,
-  DateRangePicker,
-} from "@tremor/react";
+import { Card, Grid, Tab, TabGroup, TabList, TabPanel, TabPanels, Text, Title, Legend } from "@tremor/react";
 import KpiCard from "./KpiCard";
 import { BarChartGraph } from "./Barchart";
 import DonutChartGraph from "./DonutChart";
 import { AreaChartGraph } from "./Areachart";
 import ProgressCircleChart from "./ProgressCircle";
 import { useState } from "react";
-
-const valueFormatter = (number) =>
-  `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
 
 export default function Dashboard() {
   const [value, setValue] = useState({
@@ -64,8 +49,7 @@ export default function Dashboard() {
                   <Legend
                     className="mt-3 mx-auto w-1/2"
                     categories={["Completed Tasks", "Assigned Tasks"]}
-                    colors={["indigo"]}
-                  ></Legend>
+                    colors={["indigo"]}></Legend>
                 </Card>
                 <Card>
                   <BarChartGraph />

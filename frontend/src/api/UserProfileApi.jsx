@@ -1,8 +1,10 @@
 import axios from "axios";
 
-const ApiUpdateUserProfile = async formData => {
+const baseURL = import.meta.env.VITE_BASE_URL;
+
+const ApiUpdateUserProfile = async (formData) => {
   try {
-    const response = await axios.post("http://127.0.1:8000/api/user/update/", formData, {
+    const response = await axios.post(`${baseURL}user/update/`, formData, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("access_token"),
         "Content-Type": "multipart/form-data",

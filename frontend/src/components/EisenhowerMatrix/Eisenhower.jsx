@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { FiAlertCircle, FiClock, FiXCircle, FiCheckCircle } from "react-icons/fi";
 import { readTodoTasks } from "../../api/TaskApi";
-import axiosInstance from "../../api/configs/AxiosConfig";
+import axiosInstance from "src/api/AxiosConfig";
 
 function EachBlog({ name, colorCode, contentList, icon }) {
   const [tasks, setTasks] = useState(contentList);
 
-  const handleCheckboxChange = async index => {
+  const handleCheckboxChange = async (index) => {
     try {
-      setTasks(contentList)
+      setTasks(contentList);
 
       const updatedTasks = [...tasks];
       const taskId = updatedTasks[index].id;
@@ -60,12 +60,12 @@ function Eisenhower() {
 
   useEffect(() => {
     readTodoTasks()
-      .then(data => {
+      .then((data) => {
         console.log(data);
-        const contentList_ui = data.filter(task => task.priority === 1);
-        const contentList_uni = data.filter(task => task.priority === 2);
-        const contentList_nui = data.filter(task => task.priority === 3);
-        const contentList_nuni = data.filter(task => task.priority === 4);
+        const contentList_ui = data.filter((task) => task.priority === 1);
+        const contentList_uni = data.filter((task) => task.priority === 2);
+        const contentList_nui = data.filter((task) => task.priority === 3);
+        const contentList_nuni = data.filter((task) => task.priority === 4);
 
         setTasks({
           contentList_ui,
@@ -74,7 +74,7 @@ function Eisenhower() {
           contentList_nuni,
         });
       })
-      .catch(error => console.error("Error fetching tasks:", error));
+      .catch((error) => console.error("Error fetching tasks:", error));
   }, []);
 
   return (
