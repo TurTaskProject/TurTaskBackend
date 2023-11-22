@@ -1,9 +1,9 @@
-import { readTodoTasks } from "../../api/TaskApi";
+import { readTodoTasks } from "src/api/TaskApi";
 
 let eventGuid = 0;
 
-const mapResponseToEvents = response => {
-  return response.map(item => ({
+const mapResponseToEvents = (response) => {
+  return response.map((item) => ({
     id: item.id,
     title: item.title,
     start: item.start_event,

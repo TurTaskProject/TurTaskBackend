@@ -1,4 +1,4 @@
-import axiosInstance from "src/api/AxiosConfig";
+import { axiosInstance } from "src/api/AxiosConfig";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 

@@ -5,9 +5,9 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { getEvents, createEventId } from "./TaskDataHandler";
-import axiosInstance from "src/api/AxiosConfig";
+import { axiosInstance } from "src/api/AxiosConfig";
 
-export default class Calendar extends React.Component {
+export class Calendar extends React.Component {
   state = {
     weekendsVisible: true,
     currentEvents: [],

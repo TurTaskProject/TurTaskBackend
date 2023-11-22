@@ -1,8 +1,8 @@
 import { DonutChart } from "@tremor/react";
-import axiosInstance from "src/api/AxiosConfig";
+import { axiosInstance } from "src/api/AxiosConfig";
 import { useState, useEffect } from "react";
 
-export default function DonutChartGraph() {
+export function DonutChartGraph() {
   const [donutData, setDonutData] = useState([]);
 
   useEffect(() => {

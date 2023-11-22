@@ -1,13 +1,12 @@
 import { useMemo, useState, useEffect } from "react";
-import ColumnContainerCard from "./columnContainerWrapper";
+import { ColumnContainerCard } from "./columnContainerWrapper";
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
-import TaskCard from "./taskCard";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import axiosInstance from "src/api/AxiosConfig";
+import { TaskCard } from "./taskCard";
+import { axiosInstance } from "src/api/AxiosConfig";
 
-function KanbanBoard() {
+export function KanbanBoard() {
   const [columns, setColumns] = useState([]);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [boardId, setBoardData] = useState();
@@ -26,40 +25,6 @@ function KanbanBoard() {
     })
   );
 
-  // Example
-  //   {
-  //     "id": 95,
-  //     "title": "Test Todo",
-  //     "notes": "Test TodoTest TodoTest Todo",
-  //     "importance": 1,
-  //     "difficulty": 1,
-  //     "challenge": false,
-  //     "fromSystem": false,
-  //     "creation_date": "2023-11-20T19:50:16.369308Z",
-  //     "last_update": "2023-11-20T19:50:16.369308Z",
-  //     "is_active": true,
-  //     "is_full_day_event": false,
-  //     "start_event": "2023-11-20T19:49:49Z",
-  //     "end_event": "2023-11-23T18:00:00Z",
-  //     "google_calendar_id": null,
-  //     "completed": true,
-  //     "completion_date": "2023-11-20T19:50:16.369308Z",
-  //     "priority": 3,
-  //     "user": 1,
-  //     "list_board": 1,
-  //     "tags": []
-  //   }
-  // ]
-
-  // [
-  //   {
-  //     "id": 8,
-  //     "name": "test",
-  //     "position": 2,
-  //     "board": 3
-  //   }
-  // ]
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -73,7 +38,6 @@ function KanbanBoard() {
           difficulty: task.difficulty,
           notes: task.notes,
           importance: task.importance,
-          difficulty: task.difficulty,
           challenge: task.challenge,
           fromSystem: task.fromSystem,
           creation_date: task.creation_date,
@@ -149,31 +113,6 @@ function KanbanBoard() {
               ))}
             </SortableContext>
           </div>
-          {/* create new column */}
-          <button
-            onClick={() => {
-              createNewColumn();
-            }}
-            className="
-                    h-[60px]
-                    w-[268px]
-                    max-w-[268px]
-                    cursor-pointer
-                    rounded-xl
-                    bg-[#f1f2f4]
-                    border-2
-                    p-4
-                    hover:bg-gray-200
-                    flex
-                    gap-2
-                    my-2
-                    bg-opacity-60
-                    ">
-            <div className="my-1">
-              <AiOutlinePlusCircle />
-            </div>
-            Add Column
-          </button>
         </div>
 
         {createPortal(
@@ -409,10 +348,4 @@ function KanbanBoard() {
       });
     }
   }
-
-  function generateId() {
-    return Math.floor(Math.random() * 10001);
-  }
 }
-
-export default KanbanBoard;

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaTasks, FaRegListAlt } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { TbChecklist } from "react-icons/tb";
 
-function TaskDetailModal({ title, description, tags, difficulty, challenge, importance, taskId }) {
+export function TaskDetailModal({ title, description, tags, difficulty, challenge, importance, taskId }) {
   const [isChallengeChecked, setChallengeChecked] = useState(challenge);
   const [isImportantChecked, setImportantChecked] = useState(importance);
   const [currentDifficulty, setCurrentDifficulty] = useState(difficulty);
@@ -28,7 +28,8 @@ function TaskDetailModal({ title, description, tags, difficulty, challenge, impo
           <div className="flex flex-col">
             <h3 className="font-bold text-lg">
               <span className="flex gap-2">
-                {<FaTasks className="my-2" />}{title}
+                {<FaTasks className="my-2" />}
+                {title}
               </span>
             </h3>
             <p className="text-xs">{title}</p>
@@ -45,13 +46,13 @@ function TaskDetailModal({ title, description, tags, difficulty, challenge, impo
               <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                 <li>
                   <a>
-                    <input type="checkbox" checked="checked" className="checkbox checkbox-sm"/>
+                    <input type="checkbox" checked="checked" className="checkbox checkbox-sm" />
                     Item 2
                   </a>
                 </li>
               </ul>
             </div>
-            </div>
+          </div>
           <div className="flex flex-nowrap overflow-x-auto"></div>
         </div>
 
@@ -144,5 +145,3 @@ function TaskDetailModal({ title, description, tags, difficulty, challenge, impo
     </dialog>
   );
 }
-
-export default TaskDetailModal;

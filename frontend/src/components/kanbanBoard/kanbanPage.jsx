@@ -1,12 +1,12 @@
-import KanbanBoard from "./kanbanBoard";
-import React, { useState } from 'react';
+import { KanbanBoard } from "./kanbanBoard";
+import { useState } from "react";
 
-const KanbanPage = () => {
-    const [activeTab, setActiveTab] = useState('kanban');
+export const KanbanPage = () => {
+  const [activeTab, setActiveTab] = useState("kanban");
 
-    const handleTabClick = (tabId) => {
-      setActiveTab(tabId);
-    };
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId);
+  };
 
   return (
     <div className="flex flex-col">
@@ -29,10 +29,7 @@ const KanbanPage = () => {
         </div>
       </div>
       <KanbanBoard />
-      <div className="flex justify-center border-2 ">
-      </div>
+      <div className="flex justify-center border-2 "></div>
     </div>
   );
 };
-
-export default KanbanPage;

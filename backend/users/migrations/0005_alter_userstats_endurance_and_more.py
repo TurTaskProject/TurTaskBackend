@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='userstats',
             name='luck',
-            field=models.IntegerField(default=users.models.random_luck, validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(50)]),
+            field=models.IntegerField(default=1, validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(50)]),
         ),
         migrations.AlterField(
             model_name='userstats',

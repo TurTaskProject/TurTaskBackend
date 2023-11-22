@@ -1,8 +1,8 @@
 import { Card, Flex, ProgressCircle } from "@tremor/react";
 import { useState, useEffect } from "react";
-import axiosInstance from "src/api/AxiosConfig";
+import { axiosInstance } from "src/api/AxiosConfig";
 
-export default function ProgressCircleChart() {
+export function ProgressCircleChart() {
   const [progressData, setProgressData] = useState(0);
 
   useEffect(() => {

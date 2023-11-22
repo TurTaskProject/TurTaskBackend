@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { AiOutlineHome, AiOutlineSchedule, AiOutlineUnorderedList, AiOutlinePieChart } from "react-icons/ai";
+import { AiOutlineHome, AiOutlineSchedule, AiOutlineUnorderedList } from "react-icons/ai";
 import { PiStepsDuotone } from "react-icons/pi";
 import { IoSettingsOutline } from "react-icons/io5";
 import { AnimatePresence, motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const menuItems = [
   { id: 0, path: "/", icon: <AiOutlineHome /> },
@@ -13,20 +13,12 @@ const menuItems = [
   { id: 4, path: "/priority", icon: <PiStepsDuotone /> },
 ];
 
-const IconSideNav = () => {
-  return (
-    <div className="bg-slate-900 text-slate-100 flex">
-      <SideNav />
-    </div>
-  );
-};
-
-const SideNav = () => {
+export const SideNav = () => {
   const [selected, setSelected] = useState(0);
 
   return (
     <nav className="bg-slate-950 p-4 flex flex-col items-center gap-2 h-full fixed top-0 left-0 z-50">
-      {menuItems.map(item => (
+      {menuItems.map((item) => (
         <NavItem
           key={item.id}
           icon={item.icon}
@@ -65,5 +57,3 @@ const NavItem = ({ icon, selected, id, setSelected, logo, path }) => {
     </motion.button>
   );
 };
-
-export default IconSideNav;

@@ -3,7 +3,7 @@ import { redirect } from "react-router-dom";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: baseURL,
   timeout: 5000,
   headers: {
@@ -11,6 +11,14 @@ const axiosInstance = axios.create({
     "Content-Type": "application/json",
     accept: "application/json",
   },
+});
+
+axiosInstance.interceptors.request.use((config) => {
+  const access_token = localStorage.getItem("access_token");
+  if (access_token) {
+    config.headers.Authorization = `Bearer ${access_token}`;
+  }
+  return config;
 });
 
 // handling token refresh on 401 Unauthorized errors
@@ -43,5 +51,3 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-export default axiosInstance;

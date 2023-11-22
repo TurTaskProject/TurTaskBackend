@@ -1,17 +1,16 @@
 import { Card, Grid, Tab, TabGroup, TabList, TabPanel, TabPanels, Text, Title, Legend } from "@tremor/react";
-import KpiCard from "./KpiCard";
+import { KpiCard } from "./KpiCard";
 import { BarChartGraph } from "./Barchart";
-import DonutChartGraph from "./DonutChart";
+import { DonutChartGraph } from "./DonutChart";
 import { AreaChartGraph } from "./Areachart";
-import ProgressCircleChart from "./ProgressCircle";
+import { ProgressCircleChart } from "./ProgressCircle";
 import { useState } from "react";
 
-export default function Dashboard() {
+export function Dashboard() {
   const [value, setValue] = useState({
     from: new Date(2021, 0, 1),
     to: new Date(2023, 0, 7),
   });
-  console.log(value);
   return (
     <div className="flex flex-col p-12">
       <div>

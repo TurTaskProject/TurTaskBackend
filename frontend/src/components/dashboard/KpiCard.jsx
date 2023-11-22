@@ -1,8 +1,8 @@
 import { BadgeDelta, Card, Flex, Metric, ProgressBar, Text } from "@tremor/react";
 import { useEffect, useState } from "react";
-import axiosInstance from "src/api/AxiosConfig";
+import { axiosInstance } from "src/api/AxiosConfig";
 
-export default function KpiCard() {
+export function KpiCard() {
   const [kpiCardData, setKpiCardData] = useState({
     completedThisWeek: 0,
     completedLastWeek: 0,

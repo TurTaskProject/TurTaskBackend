@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate, redirect } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-import axiosapi from "../../api/AuthenticationApi";
 import { FcGoogle } from "react-icons/fc";
 import { useAuth } from "src/hooks/AuthHooks";
 import { FloatingParticles } from "../FlaotingParticles";
 import { NavPreLogin } from "../navigations/NavPreLogin";
+import { apiUserLogin, googleLogin } from "src/api/AuthenticationApi";
 
-function LoginPage() {
+export function LoginPage() {
   const { setIsAuthenticated } = useAuth();
   const Navigate = useNavigate();
 
@@ -27,11 +27,10 @@ function LoginPage() {
     event.preventDefault();
 
     // Send a POST request to the authentication API
-    axiosapi
-      .apiUserLogin({
-        email: email,
-        password: password,
-      })
+    apiUserLogin({
+      email: email,
+      password: password,
+    })
       .then((res) => {
         localStorage.setItem("access_token", res.data.access);
         localStorage.setItem("refresh_token", res.data.refresh);
@@ -48,7 +47,7 @@ function LoginPage() {
     redirect_uri: "postmessage",
     onSuccess: async (response) => {
       try {
-        const loginResponse = await axiosapi.googleLogin(response.code);
+        const loginResponse = await googleLogin(response.code);
         if (loginResponse && loginResponse.data) {
           const { access_token, refresh_token } = loginResponse.data;
 
@@ -141,5 +140,3 @@ function LoginPage() {
     </div>
   );
 }
-
-export default LoginPage;

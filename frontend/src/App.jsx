@@ -1,21 +1,19 @@
-import { useEffect } from "react";
 import "./App.css";
-import { Route, Routes, Navigate } from "react-router-dom";
 import axios from "axios";
-import TestAuth from "./components/testAuth";
-import LoginPage from "./components/authentication/LoginPage";
-import SignUpPage from "./components/authentication/SignUpPage";
-import NavBar from "./components/navigations/Navbar";
-import Calendar from "./components/calendar/calendar";
-import KanbanPage from "./components/kanbanBoard/kanbanPage";
-import IconSideNav from "./components/navigations/IconSideNav";
-import Eisenhower from "./components/EisenhowerMatrix/Eisenhower";
-import PrivateRoute from "./PrivateRoute";
-import ProfileUpdatePage from "./components/profilePage";
-import Dashboard from "./components/dashboard/dashboard";
+import { useEffect } from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
+import { LoginPage } from "./components/authentication/LoginPage";
+import { SignUp } from "./components/authentication/SignUpPage";
+import { NavBar } from "./components/navigations/Navbar";
+import { Calendar } from "./components/calendar/calendar";
+import { KanbanPage } from "./components/kanbanBoard/kanbanPage";
+import { SideNav } from "./components/navigations/IconSideNav";
+import { Eisenhower } from "./components/EisenhowerMatrix/Eisenhower";
+import { PrivateRoute } from "./PrivateRoute";
+import { ProfileUpdatePage } from "./components/profile/profilePage";
+import { Dashboard } from "./components/dashboard/dashboard";
 import { LandingPage } from "./components/landingPage/LandingPage";
-import PublicRoute from "./PublicRoute";
-
+import { PublicRoute } from "./PublicRoute";
 import { useAuth } from "./hooks/AuthHooks";
 
 const baseURL = import.meta.env.VITE_BASE_URL;
@@ -48,9 +46,7 @@ const App = () => {
             setIsAuthenticated(false);
           }
         })
-        .catch((error) => {
-          console.error("Error checking login status:", error.message);
-        });
+        .catch((error) => {});
     };
 
     checkLoginStatus();
@@ -70,7 +66,7 @@ const NonAuthenticatedComponents = () => {
           <Route exact path="/login" element={<LoginPage />} />
         </Route>
         <Route exact path="/signup" element={<PublicRoute />}>
-          <Route exact path="/signup" element={<SignUpPage />} />
+          <Route exact path="/signup" element={<SignUp />} />
         </Route>
         <Route path="*" element={<Navigate to="/l" />} />
       </Routes>
@@ -81,7 +77,7 @@ const NonAuthenticatedComponents = () => {
 const AuthenticatedComponents = () => {
   return (
     <div className="display: flex">
-      <IconSideNav />
+      <SideNav />
       <div className="flex-1 ml-[76px] overflow-hidden">
         <NavBar />
         <div className="overflow-x-auto">
@@ -90,7 +86,6 @@ const AuthenticatedComponents = () => {
             <Route exact path="/tasks" element={<PrivateRoute />}>
               <Route exact path="/tasks" element={<KanbanPage />} />
             </Route>
-            <Route path="/testAuth" element={<TestAuth />} />
             <Route exact path="/profile" element={<PrivateRoute />}>
               <Route exact path="/profile" element={<ProfileUpdatePage />} />
             </Route>
