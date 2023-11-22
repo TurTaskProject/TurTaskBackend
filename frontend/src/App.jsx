@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import axios from "axios";
 import TestAuth from "./components/testAuth";
 import LoginPage from "./components/authentication/LoginPage";
@@ -13,6 +13,8 @@ import Eisenhower from "./components/EisenhowerMatrix/Eisenhower";
 import PrivateRoute from "./PrivateRoute";
 import ProfileUpdatePage from "./components/profilePage";
 import Dashboard from "./components/dashboard/dashboard";
+import { LandingPage } from "./components/landingPage/LandingPage";
+import PublicRoute from "./PublicRoute";
 
 import { useAuth } from "./hooks/AuthHooks";
 
@@ -60,10 +62,17 @@ const App = () => {
 const NonAuthenticatedComponents = () => {
   return (
     <div>
-      <NavBar />
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
+        <Route exact path="/l" element={<PublicRoute />}>
+          <Route exact path="/l" element={<LandingPage />} />
+        </Route>
+        <Route exact path="/login" element={<PublicRoute />}>
+          <Route exact path="/login" element={<LoginPage />} />
+        </Route>
+        <Route exact path="/signup" element={<PublicRoute />}>
+          <Route exact path="/signup" element={<SignUpPage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/l" />} />
       </Routes>
     </div>
   );
@@ -91,8 +100,7 @@ const AuthenticatedComponents = () => {
             <Route exact path="/priority" element={<PrivateRoute />}>
               <Route exact path="/priority" element={<Eisenhower />} />
             </Route>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
       </div>
