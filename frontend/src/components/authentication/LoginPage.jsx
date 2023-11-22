@@ -1,23 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, redirect } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-import refreshAccessToken from "./refreshAcessToken";
 import axiosapi from "../../api/AuthenticationApi";
 import { FcGoogle } from "react-icons/fc";
 import { useAuth } from "src/hooks/AuthHooks";
+import { FloatingParticles } from "../FlaotingParticles";
+import { NavPreLogin } from "../navigations/NavPreLogin";
 
 function LoginPage() {
   const { setIsAuthenticated } = useAuth();
   const Navigate = useNavigate();
 
-  useEffect(() => {
-    if (!refreshAccessToken()) {
-      Navigate("/");
-    }
-  }, []);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -26,6 +22,7 @@ function LoginPage() {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -36,17 +33,13 @@ function LoginPage() {
         password: password,
       })
       .then((res) => {
-        // On successful login, store tokens and set the authorization header
         localStorage.setItem("access_token", res.data.access);
         localStorage.setItem("refresh_token", res.data.refresh);
-        axiosapi.axiosInstance.defaults.headers["Authorization"] =
-          "Bearer " + res.data.access;
         setIsAuthenticated(true);
         redirect("/");
       })
       .catch((err) => {
-        console.log("Login failed");
-        console.log(err);
+        setError("Incorrect username or password");
       });
   };
 
@@ -70,71 +63,79 @@ function LoginPage() {
     },
     onError: (errorResponse) => console.log(errorResponse),
   });
-  {
-  }
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-zinc-100 via-gray-200 to-zinc-100">
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40"
-      >
-        <div className="blur-[106px] h-56 bg-gradient-to-br from-pink-600 to-fuchsia-300"></div>
-        <div className="blur-[106px] h-32 bg-gradient-to-r from-fuchsia-500 to-orange-500"></div>
-      </div>
-      {/* Login Box */}
-      <div className="w-1/4 flex items-center justify-center">
-        <div className="w-96 bg-white rounded-lg p-8 shadow-md space-y-4 z-10">
-          <h2 className="text-3xl font-bold text-center">Login</h2>
-          {/* Email Input */}
-          <div className="form-control ">
-            <label className="label" htmlFor="email">
-              <p className="text-bold">
-                Email<span className="text-red-500 text-bold">*</span>
-              </p>
-            </label>
-            <input
-              className="input"
-              type="email"
-              id="email"
-              placeholder="Enter your email"
-              onChange={handleEmailChange}
-            />
+    <div>
+      <NavPreLogin text="Don't have account?" btn_text="Sign Up" link="/signup" />
+      <div className="flex flex-row bg-neutral-400">
+        {/* Login Box */}
+        <div className="flex items-center justify-center flex-1 z-50">
+          <div className="w-100 bg-white border-solid rounded-lg p-8 shadow space-y-4">
+            <h2 className="text-3xl font-bold">Log in to your account</h2>
+            {/* Error Message */}
+            {error && (
+              <div role="alert" className="alert alert-error">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="stroke-current shrink-0 h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span>{error}</span>
+              </div>
+            )}
+            {/* Email Input */}
+            <div className="form-control ">
+              <label className="label" htmlFor="email">
+                <p className="text-bold">
+                  Email<span className="text-red-500 text-bold">*</span>
+                </p>
+              </label>
+              <input
+                className="input"
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={handleEmailChange}
+              />
+            </div>
+            {/* Password Input */}
+            <div className="form-control">
+              <label className="label" htmlFor="password">
+                <p className="text-bold">
+                  Password<span className="text-red-500 text-bold">*</span>
+                </p>
+              </label>
+              <input
+                className="input"
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+            </div>
+            {/* Login Button */}
+            <button className="btn bg-blue-700 hover:bg-blue-900 w-full text-white font-bold" onClick={handleSubmit}>
+              Login
+            </button>
+            <div className="divider">OR</div>
+            {/* Login with Google Button */}
+            <button className="btn bg-gray-200 btn-outline w-full " onClick={() => googleLoginImplicit()}>
+              <FcGoogle className="rounded-full bg-white" />
+              Login with Google
+            </button>
           </div>
-          {/* Password Input */}
-          <div className="form-control">
-            <label className="label" htmlFor="password">
-              <p className="text-bold">
-                Password<span className="text-red-500 text-bold">*</span>
-              </p>
-            </label>
-            <input
-              className="input"
-              type="password"
-              id="password"
-              placeholder="Enter your password"
-              onChange={handlePasswordChange}
-            />
-          </div>
-          {/* Login Button */}
-          <button className="btn btn-success w-full " onClick={handleSubmit}>
-            Login
-          </button>
-          <div className="divider">OR</div>
-          {/* Login with Google Button */}
-          <button
-            className="btn btn-outline btn-secondary w-full "
-            onClick={() => googleLoginImplicit()}
-          >
-            <FcGoogle className="rounded-full bg-white" />
-            Login with Google
-          </button>
-          {/* Forgot Password Link */}
-          <div className="justify-left">
-            <a href="#" className="text-blue-500 text-sm text-left">
-              Forgot your password?
-            </a>
-          </div>
+        </div>
+        <div className="basis-1/2 bg-#ebf2fa h-screen z-0">
+          <FloatingParticles />
         </div>
       </div>
     </div>
