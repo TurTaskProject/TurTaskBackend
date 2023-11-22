@@ -4,9 +4,12 @@ import axiosapi from "../../api/AuthenticationApi";
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
 import { NavPreLogin } from "../navigations/NavPreLogin";
+import { useAuth } from "src/hooks/AuthHooks";
+
 
 export default function SignUp() {
   const Navigate = useNavigate();
+  const { setIsAuthenticated } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
