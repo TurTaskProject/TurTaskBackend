@@ -1,8 +1,10 @@
 import axios from "axios";
 import { redirect } from "react-router-dom";
 
+const baseURL = import.meta.env.VITE_BASE_URL;
+
 const axiosInstance = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/",
+  baseURL: baseURL,
   timeout: 5000,
   headers: {
     Authorization: "Bearer " + localStorage.getItem("access_token"),

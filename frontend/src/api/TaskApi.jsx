@@ -1,6 +1,6 @@
 import axiosInstance from "src/api/AxiosConfig";
 
-const baseURL = "";
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 export const createTask = (endpoint, data) => {
   return axiosInstance
