@@ -1,5 +1,4 @@
 import axios from "axios";
-import { redirect } from "react-router-dom";
 
 const axiosInstance = axios.create({
   baseURL: "http://127.0.0.1:8000/api/",
@@ -13,8 +12,8 @@ const axiosInstance = axios.create({
 
 // handling token refresh on 401 Unauthorized errors
 axiosInstance.interceptors.response.use(
-  response => response,
-  error => {
+  (response) => response,
+  (error) => {
     const originalRequest = error.config;
     const refresh_token = localStorage.getItem("refresh_token");
 
@@ -26,7 +25,7 @@ axiosInstance.interceptors.response.use(
     ) {
       return axiosInstance
         .post("/token/refresh/", { refresh: refresh_token })
-        .then(response => {
+        .then((response) => {
           localStorage.setItem("access_token", response.data.access);
 
           axiosInstance.defaults.headers["Authorization"] = "Bearer " + response.data.access;
@@ -34,7 +33,7 @@ axiosInstance.interceptors.response.use(
 
           return axiosInstance(originalRequest);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("Interceptors error: ", err);
         });
     }

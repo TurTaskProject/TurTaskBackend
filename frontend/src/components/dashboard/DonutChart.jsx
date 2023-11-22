@@ -1,5 +1,5 @@
 import { DonutChart } from "@tremor/react";
-import axiosInstance from "../../api/configs/AxiosConfig";
+import axiosInstance from "src/api/AxiosConfig";
 
 const fetchDonutData = async () => {
   try {

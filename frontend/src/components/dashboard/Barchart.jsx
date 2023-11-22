@@ -1,6 +1,6 @@
 import { BarChart, Title } from "@tremor/react";
 import React from "react";
-import axiosInstance from "../../api/configs/AxiosConfig";
+import axiosInstance from "src/api/AxiosConfig";
 
 const fetchBarChartData = async () => {
   let res = await axiosInstance.get("/dashboard/weekly/");

@@ -1,6 +1,6 @@
-import { Card, Flex, ProgressCircle, Text,  } from "@tremor/react";
+import { Card, Flex, ProgressCircle, Text } from "@tremor/react";
 import React from "react";
-import axiosInstance from "../../api/configs/AxiosConfig";
+import axiosInstance from "src/api/AxiosConfig";
 
 const fetchProgressData = async () => {
   try {
@@ -27,12 +27,7 @@ export default function ProgressCircleChart() {
   return (
     <Card className="max-w-lg mx-auto">
       <Flex className="flex-col items-center">
-        <ProgressCircle
-          className="mt-6" value={progressData}
-          size={200}
-          strokeWidth={10}
-          radius={60}
-          color="indigo">
+        <ProgressCircle className="mt-6" value={progressData} size={200} strokeWidth={10} radius={60} color="indigo">
           <span className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-sm text-indigo-500 font-medium">
             {progressData.toFixed(0)} %
           </span>
