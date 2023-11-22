@@ -7,6 +7,7 @@ const apiUserLogin = (data) => {
     .post("token/obtain/", data)
     .then((response) => {
       console.log(response.statusText);
+
       return response;
     })
     .catch((error) => {
