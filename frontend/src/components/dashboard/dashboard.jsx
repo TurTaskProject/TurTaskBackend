@@ -18,14 +18,6 @@ export default function Dashboard() {
         <Title>Dashboard</Title>
         <Text>All of your progress will be shown right here.</Text>
         <br />
-        <Text className="mr-3">Select Date Range:</Text>
-        <DateRangePicker
-          value={value}
-          onChange={setValue}
-          className="inline-block"
-          maxDate={new Date()}
-        >
-        </DateRangePicker>
       </div>
 
       <div>
