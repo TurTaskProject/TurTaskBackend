@@ -1,6 +1,6 @@
-import ColumnContainer from "./columnContainer";
+import { ColumnContainer } from "./columnContainer";
 
-function ColumnContainerCard({ column, deleteColumn, updateColumn, createTask, tasks, deleteTask, updateTask }) {
+export function ColumnContainerCard({ column, deleteColumn, updateColumn, createTask, tasks, deleteTask, updateTask }) {
   return (
     <div className="card bg-[#f1f2f4] shadow p-1 my-2 border-2">
       <ColumnContainer
@@ -15,5 +15,3 @@ function ColumnContainerCard({ column, deleteColumn, updateColumn, createTask, t
     </div>
   );
 }
-
-export default ColumnContainerCard;

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
 
-function Signup() {
+export function Signup() {
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="flex flex-col items-center bg-white p-10 rounded-lg shadow-md">
@@ -34,5 +34,3 @@ function Signup() {
     </div>
   );
 }
-
-export default Signup;

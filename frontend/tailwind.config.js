@@ -3,17 +3,14 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 export default {
-  content: [
-    "./src/**/*.{js,jsx}",
-    "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./src/**/*.{js,jsx}", "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}"],
 
   theme: {
     extend: {
       fontFamily: {
         sans: ['"Proxima Nova"', ...defaultTheme.fontFamily.sans],
       },
-      colors:{
+      colors: {
         tremor: {
           brand: {
             faint: "#eff6ff", // blue-50
@@ -42,10 +39,9 @@ export default {
             strong: "#111827", // gray-900
             inverted: "#ffffff", // white
           },
-
         },
       },
-      boxShadow:{
+      boxShadow: {
         "tremor-input": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
         "tremor-card": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
         "tremor-dropdown": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
@@ -92,12 +88,7 @@ export default {
         /^(fill-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
     },
   ],
-  plugins: [
-    require("daisyui"),
-    require("@tailwindcss/typography"),
-    require("daisyui"),
-    require("@headlessui/tailwindcss"),
-  ],
+  plugins: [require("daisyui"), require("@tailwindcss/typography"), require("@headlessui/tailwindcss")],
   daisyui: {
     themes: ["light", "night"],
   },

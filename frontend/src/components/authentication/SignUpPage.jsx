@@ -1,29 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosapi from "../../api/AuthenticationApi";
-import { useCallback } from "react";
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
+import { NavPreLogin } from "../navigations/NavPreLogin";
 import { useAuth } from "src/hooks/AuthHooks";
+import { createUser, googleLogin } from "src/api/AuthenticationApi";
 
-function Copyright(props) {
-  return (
-    <div className="text-center text-sm text-gray-500" {...props}>
-      {"Copyright © "}
-      <a href="https://github.com/TurTaskProject/TurTaskWeb" className="text-blue-500 hover:underline">
-        TurTask
-      </a>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </div>
-  );
-}
-
-export default function SignUp() {
+export function SignUp() {
   const Navigate = useNavigate();
-  const { setIsAuthenticated } = useAuth;
+  const { setIsAuthenticated } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -38,47 +23,48 @@ export default function SignUp() {
     setIsSubmitting(true);
     setError(null);
 
+    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
     try {
-      axiosapi.createUser(formData);
+      const data = await createUser(formData);
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+      await delay(200);
+      setIsAuthenticated(true);
+      Navigate("/");
     } catch (error) {
       console.error("Error creating user:", error);
       setError("Registration failed. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
-    Navigate("/login");
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    console.log(formData);
+  const handleEmailChange = (e) => {
+    setFormData({ ...formData, email: e.target.value });
   };
-  {
-    /* Particles Loader*/
-  }
-  const particlesInit = useCallback(async (engine) => {
-    console.log(engine);
-    await loadFull(engine);
-  }, []);
 
-  const particlesLoaded = useCallback(async (container) => {
-    console.log(container);
-  }, []);
+  const handleUsernameChange = (e) => {
+    setFormData({ ...formData, username: e.target.value });
+  };
+
+  const handlePasswordChange = (e) => {
+    setFormData({ ...formData, password: e.target.value });
+  };
 
   const googleLoginImplicit = useGoogleLogin({
     flow: "auth-code",
     redirect_uri: "postmessage",
     onSuccess: async (response) => {
       try {
-        const loginResponse = await axiosapi.googleLogin(response.code);
+        const loginResponse = await googleLogin(response.code);
         if (loginResponse && loginResponse.data) {
           const { access_token, refresh_token } = loginResponse.data;
 
           localStorage.setItem("access_token", access_token);
           localStorage.setItem("refresh_token", refresh_token);
           setIsAuthenticated(true);
-          Navigate("/");
+          Navigate("/profile");
         }
       } catch (error) {
         console.error("Error with the POST request:", error);
@@ -89,140 +75,76 @@ export default function SignUp() {
   });
 
   return (
-    <div data-theme="night" className="h-screen flex items-center justify-center">
-      {/* Particles Container */}
-      <div style={{ width: "0%", height: "100vh" }}>
-        <Particles
-          id="particles"
-          init={particlesInit}
-          loaded={particlesLoaded}
-          className="-z-10"
-          options={{
-            fpsLimit: 240,
-            interactivity: {
-              events: {
-                onClick: {
-                  enable: true,
-                  mode: "push",
-                },
-                onHover: {
-                  enable: true,
-                  mode: "repulse",
-                },
-                resize: true,
-              },
-              modes: {
-                push: {
-                  quantity: 4,
-                },
-                repulse: {
-                  distance: 200,
-                  duration: 0.4,
-                },
-              },
-            },
-            particles: {
-              color: {
-                value: "#023020",
-              },
-              links: {
-                color: "#228B22",
-                distance: 150,
-                enable: true,
-                opacity: 1,
-                width: 1,
-              },
-              move: {
-                direction: "none",
-                enable: true,
-                outModes: {
-                  default: "bounce",
-                },
-                random: false,
-                speed: 4,
-                straight: false,
-              },
-              number: {
-                density: {
-                  enable: true,
-                  area: 800,
-                },
-                value: 50,
-              },
-              opacity: {
-                value: 0.6,
-              },
-              shape: {
-                type: "circle",
-              },
-              size: {
-                value: { min: 6, max: 8 },
-              },
-            },
-            detectRetina: true,
-          }}
-        />
-      </div>
-      <div className="w-1/4 h-1 flex items-center justify-center">
-        <div className="w-96 bg-neutral rounded-lg p-8 shadow-md space-y-4 z-10">
-          {/* Register Form */}
-          <h2 className="text-3xl font-bold text-center">Signup</h2>
-          {/* Email Input */}
-          <div className="form-control ">
-            <label className="label" htmlFor="email">
-              <p className="text-bold">
-                Email<span className="text-red-500 text-bold">*</span>
-              </p>
-            </label>
-            <input className="input" type="email" id="email" placeholder="Enter your email" onChange={handleChange} />
-          </div>
-          {/* Username Input */}
-          <div className="form-control">
-            <label className="label" htmlFor="Username">
-              <p className="text-bold">
-                Username<span className="text-red-500 text-bold">*</span>
-              </p>
-            </label>
-            <input
-              className="input"
-              type="text"
-              id="Username"
-              placeholder="Enter your username"
-              onChange={handleChange}
-            />
-          </div>
-          {/* Password Input */}
-          <div className="form-control">
-            <label className="label" htmlFor="password">
-              <p className="text-bold">
-                Password<span className="text-red-500 text-bold">*</span>
-              </p>
-            </label>
-            <input
-              className="input"
-              type="password"
-              id="password"
-              placeholder="Enter your password"
-              onChange={handleChange}
-            />
-          </div>
-          <br></br>
+    <div>
+      <NavPreLogin text="Already have an account?" btn_text="Log In" link="/login" />
+      <div className="h-screen flex items-center justify-center bg-gradient-to-r from-zinc-100 via-gray-200 to-zinc-100">
+        {/* ... (other code) */}
+        <div className="w-1/4 h-1 flex items-center justify-center z-10">
+          <div className="w-96 bg-white rounded-lg p-8 space-y-4 z-10">
+            {/* Register Form */}
+            <h2 className="text-3xl font-bold text-center">Signup</h2>
+            {/* Email Input */}
+            <div className="form-control ">
+              <label className="label" htmlFor="email">
+                <p className="text-bold">
+                  Email<span className="text-red-500 text-bold">*</span>
+                </p>
+              </label>
+              <input
+                className="input"
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                onChange={handleEmailChange}
+              />
+            </div>
+            {/* Username Input */}
+            <div className="form-control">
+              <label className="label" htmlFor="Username">
+                <p className="text-bold">
+                  Username<span className="text-red-500 text-bold">*</span>
+                </p>
+              </label>
+              <input
+                className="input"
+                type="text"
+                id="Username"
+                placeholder="Enter your username"
+                onChange={handleUsernameChange}
+              />
+            </div>
+            {/* Password Input */}
+            <div className="form-control">
+              <label className="label" htmlFor="password">
+                <p className="text-bold">
+                  Password<span className="text-red-500 text-bold">*</span>
+                </p>
+              </label>
+              <input
+                className="input"
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                onChange={handlePasswordChange}
+              />
+            </div>
+            <br></br>
 
-          {/* Signups Button */}
-          <button className="btn btn-success w-full " onClick={handleSubmit}>
-            Signup
-          </button>
-          <div className="divider">OR</div>
-          {/* Login with Google Button */}
-          <button className="btn btn-outline btn-secondary w-full " onClick={() => googleLoginImplicit()}>
-            <FcGoogle className="rounded-full bg-white" />
-            Login with Google
-          </button>
-          {/* Already have an account? */}
-          <div className="text-blue-500 flex justify-center text-sm">
-            <a href="login">Already have an account?</a>
+            {/* Signups Button */}
+            <button className="btn btn-success w-full " onClick={handleSubmit}>
+              Signup
+            </button>
+            <div className="divider">OR</div>
+            {/* Login with Google Button */}
+            <button className="btn btn-outline btn-secondary w-full " onClick={() => googleLoginImplicit()}>
+              <FcGoogle className="rounded-full bg-white" />
+              Login with Google
+            </button>
+            {/* Already have an account? */}
+            <div className="text-blue-500 flex justify-center text-sm">
+              <a href="login">Already have an account?</a>
+            </div>
           </div>
-          <Copyright />
         </div>
       </div>
     </div>

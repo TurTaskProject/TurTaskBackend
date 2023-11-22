@@ -1,6 +1,6 @@
-import ProfileUpdateComponent from "./ProfileUpdateComponent";
+import { ProfileUpdateComponent } from "./ProfileUpdateComponent";
 
-function ProfileUpdatePage() {
+export function ProfileUpdatePage() {
   return (
     <div>
       <div className="stats shadow mt-3">
@@ -142,4 +142,3 @@ function ProfileUpdatePage() {
     </div>
   );
 }
-export default ProfileUpdatePage;

@@ -31,14 +31,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     # Fields for authentication
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name']
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         # String representation of the user
         return self.username
-
-def random_luck():
-    return random.randint(1, 50)
+    
 
 class UserStats(models.Model):
     """

@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
-import { ApiUpdateUserProfile } from "../api/UserProfileApi";
+import { ApiUpdateUserProfile } from "src/api/UserProfileApi";
 
-function ProfileUpdateComponent() {
+export function ProfileUpdateComponent() {
   const [file, setFile] = useState(null);
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
@@ -100,5 +100,3 @@ function ProfileUpdateComponent() {
     </div>
   );
 }
-
-export default ProfileUpdateComponent;

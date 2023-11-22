@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FiAlertCircle, FiClock, FiXCircle, FiCheckCircle } from "react-icons/fi";
 import { readTodoTasks } from "../../api/TaskApi";
-import axiosInstance from "src/api/AxiosConfig";
+import { axiosInstance } from "src/api/AxiosConfig";
 
 function EachBlog({ name, colorCode, contentList, icon }) {
   const [tasks, setTasks] = useState(contentList);
@@ -55,7 +55,7 @@ function EachBlog({ name, colorCode, contentList, icon }) {
   );
 }
 
-function Eisenhower() {
+export function Eisenhower() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
@@ -108,5 +108,3 @@ function Eisenhower() {
     </div>
   );
 }
-
-export default Eisenhower;
