@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, redirect } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useCallback } from "react";
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
 import refreshAccessToken from "./refreshAcessToken";
 import axiosapi from "../../api/AuthenticationApi";
 import { FcGoogle } from "react-icons/fc";
@@ -74,99 +71,20 @@ function LoginPage() {
     onError: (errorResponse) => console.log(errorResponse),
   });
   {
-    /* Particles Loader*/
   }
-  const particlesInit = useCallback(async (engine) => {
-    console.log(engine);
-    await loadFull(engine);
-  }, []);
-
-  const particlesLoaded = useCallback(async (container) => {
-    console.log(container);
-  }, []);
 
   return (
-    <div
-      data-theme="night"
-      className="h-screen flex items-center justify-center"
-    >
-      {/* Particles Container */}
-      <div style={{ width: "0%", height: "100vh" }}>
-        <Particles
-          id="particles"
-          init={particlesInit}
-          loaded={particlesLoaded}
-          className="-z-10"
-          options={{
-            fpsLimit: 240,
-            smooth: true,
-            interactivity: {
-              events: {
-                onClick: {
-                  enable: true,
-                  mode: "push",
-                },
-                onHover: {
-                  enable: true,
-                  mode: "repulse",
-                },
-                resize: true,
-              },
-              modes: {
-                push: {
-                  quantity: 4,
-                },
-                repulse: {
-                  distance: 200,
-                  duration: 0.4,
-                },
-              },
-            },
-            particles: {
-              color: {
-                value: "#008000",
-              },
-              links: {
-                color: "#00ff00",
-                distance: 150,
-                enable: true,
-                opacity: 0.5,
-                width: 1,
-              },
-              move: {
-                direction: "none",
-                enable: true,
-                outModes: {
-                  default: "bounce",
-                },
-                random: false,
-                speed: 4,
-                straight: false,
-              },
-              number: {
-                density: {
-                  enable: true,
-                  area: 800,
-                },
-                value: 50,
-              },
-              opacity: {
-                value: 0.5,
-              },
-              shape: {
-                type: "circle",
-              },
-              size: {
-                value: { min: 4, max: 5 },
-              },
-            },
-            detectRetina: true,
-          }}
-        />
+    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-zinc-100 via-gray-200 to-zinc-100">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40"
+      >
+        <div className="blur-[106px] h-56 bg-gradient-to-br from-pink-600 to-fuchsia-300"></div>
+        <div className="blur-[106px] h-32 bg-gradient-to-r from-fuchsia-500 to-orange-500"></div>
       </div>
       {/* Login Box */}
       <div className="w-1/4 flex items-center justify-center">
-        <div className="w-96 bg-neutral rounded-lg p-8 shadow-md space-y-4 z-10">
+        <div className="w-96 bg-white rounded-lg p-8 shadow-md space-y-4 z-10">
           <h2 className="text-3xl font-bold text-center">Login</h2>
           {/* Email Input */}
           <div className="form-control ">
