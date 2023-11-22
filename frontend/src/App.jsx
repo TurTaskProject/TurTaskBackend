@@ -46,9 +46,7 @@ const App = () => {
             setIsAuthenticated(false);
           }
         })
-        .catch((error) => {
-          console.error("Error checking login status:", error.message);
-        });
+        .catch((error) => {});
     };
 
     checkLoginStatus();

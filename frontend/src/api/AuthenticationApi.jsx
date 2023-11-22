@@ -34,10 +34,10 @@ export const googleLogin = async (token) => {
 export const createUser = async (formData) => {
   try {
     axios.defaults.withCredentials = true;
-    const response = axios.post(`${baseURL}user/create/`, formData);
-    // const response = await axiosInstance.post('/user/create/', formData);
+    const response = await axios.post(`${baseURL}user/create/`, formData);
     return response.data;
   } catch (e) {
-    console.log(e);
+    console.error("Error in createUser function:", e);
+    throw e;
   }
 };

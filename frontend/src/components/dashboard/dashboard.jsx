@@ -11,7 +11,6 @@ export function Dashboard() {
     from: new Date(2021, 0, 1),
     to: new Date(2023, 0, 7),
   });
-  console.log(value);
   return (
     <div className="flex flex-col p-12">
       <div>

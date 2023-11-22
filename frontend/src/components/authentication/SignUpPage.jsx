@@ -23,20 +23,33 @@ export function SignUp() {
     setIsSubmitting(true);
     setError(null);
 
+    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
     try {
-      createUser(formData);
+      const data = await createUser(formData);
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+      await delay(200);
+      setIsAuthenticated(true);
+      Navigate("/");
     } catch (error) {
       console.error("Error creating user:", error);
       setError("Registration failed. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
-    Navigate("/login");
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handleEmailChange = (e) => {
+    setFormData({ ...formData, email: e.target.value });
+  };
+
+  const handleUsernameChange = (e) => {
+    setFormData({ ...formData, username: e.target.value });
+  };
+
+  const handlePasswordChange = (e) => {
+    setFormData({ ...formData, password: e.target.value });
   };
 
   const googleLoginImplicit = useGoogleLogin({
@@ -51,7 +64,7 @@ export function SignUp() {
           localStorage.setItem("access_token", access_token);
           localStorage.setItem("refresh_token", refresh_token);
           setIsAuthenticated(true);
-          Navigate("/");
+          Navigate("/profile");
         }
       } catch (error) {
         console.error("Error with the POST request:", error);
@@ -63,12 +76,9 @@ export function SignUp() {
 
   return (
     <div>
-      <NavPreLogin text="Already have account?" btn_text="Log In" link="/login" />
+      <NavPreLogin text="Already have an account?" btn_text="Log In" link="/login" />
       <div className="h-screen flex items-center justify-center bg-gradient-to-r from-zinc-100 via-gray-200 to-zinc-100">
-        <div aria-hidden="true" className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40">
-          <div className="blur-[106px] h-56 bg-gradient-to-br from-primary to-purple-400"></div>
-          <div className="blur-[106px] h-32 bg-gradient-to-r from-cyan-400 to-sky-300"></div>
-        </div>
+        {/* ... (other code) */}
         <div className="w-1/4 h-1 flex items-center justify-center z-10">
           <div className="w-96 bg-white rounded-lg p-8 space-y-4 z-10">
             {/* Register Form */}
@@ -80,7 +90,13 @@ export function SignUp() {
                   Email<span className="text-red-500 text-bold">*</span>
                 </p>
               </label>
-              <input className="input" type="email" id="email" placeholder="Enter your email" onChange={handleChange} />
+              <input
+                className="input"
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                onChange={handleEmailChange}
+              />
             </div>
             {/* Username Input */}
             <div className="form-control">
@@ -94,7 +110,7 @@ export function SignUp() {
                 type="text"
                 id="Username"
                 placeholder="Enter your username"
-                onChange={handleChange}
+                onChange={handleUsernameChange}
               />
             </div>
             {/* Password Input */}
@@ -109,7 +125,7 @@ export function SignUp() {
                 type="password"
                 id="password"
                 placeholder="Enter your password"
-                onChange={handleChange}
+                onChange={handlePasswordChange}
               />
             </div>
             <br></br>
