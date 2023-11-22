@@ -1,15 +1,18 @@
 import axios from "axios";
-import axiosInstance from "./configs/AxiosConfig";
+import axiosInstance from "./AxiosConfig";
+
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 // Function for user login
-const apiUserLogin = data => {
+const apiUserLogin = (data) => {
   return axiosInstance
     .post("token/obtain/", data)
-    .then(response => {
+    .then((response) => {
       console.log(response.statusText);
+
       return response;
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("apiUserLogin error: ", error);
       return error;
     });
@@ -23,9 +26,9 @@ const apiUserLogout = () => {
 };
 
 // Function for Google login
-const googleLogin = async token => {
+const googleLogin = async (token) => {
   axios.defaults.withCredentials = true;
-  let res = await axios.post("http://localhost:8000/api/auth/google/", {
+  let res = await axios.post(`${baseURL}auth/google/`, {
     code: token,
   });
   // console.log('service google login res: ', res);
@@ -36,29 +39,23 @@ const googleLogin = async token => {
 const getGreeting = () => {
   return axiosInstance
     .get("hello")
-    .then(response => {
+    .then((response) => {
       return response;
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
 
-const config = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-};
-
 // Function to register
-const createUser = async formData => {
+const createUser = async (formData) => {
   try {
     axios.defaults.withCredentials = true;
-    const resposne = axios.post("http://localhost:8000/api/user/create/", formData);
+    const response = axios.post(`${baseURL}user/create/`, formData);
     // const response = await axiosInstance.post('/user/create/', formData);
     return response.data;
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    console.log(e);
   }
 };
 
