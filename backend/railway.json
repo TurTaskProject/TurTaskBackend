@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python manage.py migrate && python manage.py createcachetable accesstokencache && gunicorn --timeout 500 main.wsgi",
+    "startCommand": "python manage.py migrate && python manage.py createcachetable accesstokencache && gunicorn --timeout 500 core.wsgi",
     "restartPolicyType": "NEVER",
     "restartPolicyMaxRetries": 10
   }
