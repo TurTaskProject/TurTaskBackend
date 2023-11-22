@@ -182,7 +182,7 @@ DATABASES = {
 
 # Cache
 
-CACHES_LOCATION = f"{config('DB_NAME', default='db_test')}_cache"
+CACHES_LOCATION = "accesstokencache"
 
 CACHES = {
     "default": {
