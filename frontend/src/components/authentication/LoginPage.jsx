@@ -4,7 +4,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { useCallback } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import refreshAccessToken from "./refreshAcesstoken";
+import refreshAccessToken from "./refreshAcessToken";
 import axiosapi from "../../api/AuthenticationApi";
 import { useAuth } from "../../hooks/authentication/IsAuthenticated";
 import { FcGoogle } from "react-icons/fc";
