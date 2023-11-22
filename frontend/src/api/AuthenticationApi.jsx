@@ -7,14 +7,9 @@ const baseURL = import.meta.env.VITE_BASE_URL;
 export const apiUserLogin = (data) => {
   return axiosInstance
     .post("token/obtain/", data)
-    .then((response) => {
-      console.log(response.statusText);
-
-      return response;
-    })
+    .then((response) => response)
     .catch((error) => {
-      console.log("apiUserLogin error: ", error);
-      return error;
+      throw error;
     });
 };
 

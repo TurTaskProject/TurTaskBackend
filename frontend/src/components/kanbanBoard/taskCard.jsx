@@ -44,7 +44,7 @@ export function TaskCard({ task, deleteTask, updateTask }) {
         description={task.description}
         tags={task.tags}
         difficulty={task.difficulty}
-        challenge={task.challenge}
+    f    challenge={task.challenge}
         importance={task.importance}
       />
       <div
