@@ -25,14 +25,14 @@ export function NavBar() {
         </a>
       </div>
       <div className="flex-none gap-2">
-        <div className="form-control">
-          <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
-        </div>
+        {/* <div className="form-control">
+          <button className="btn btn-success">Sync Data</button>
+        </div> */}
         {isAuthenticated ? (
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img src="https://us-tuna-sounds-images.voicemod.net/f322631f-689a-43ac-81ab-17a70f27c443-1692187175560.png" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" />
               </div>
             </label>
             <ul
