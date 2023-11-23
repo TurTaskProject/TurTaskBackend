@@ -4,28 +4,13 @@ import { useMemo } from "react";
 import { TaskCard } from "./taskCard";
 
 export function ColumnContainer({ column, createTask, tasks, deleteTask, updateTask }) {
+  // Memoize task IDs to prevent unnecessary recalculations
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id);
   }, [tasks]);
 
-  const {
-    setNodeRef: columnNodeRef,
-    attributes: columnAttributes,
-    listeners: columnListeners,
-  } = useSortable({
-    id: column.id,
-    data: {
-      type: "Column",
-      column,
-    },
-    disabled: true, // Disable drag for the entire column
-  });
-
   return (
     <div
-      ref={columnNodeRef}
-      {...columnAttributes}
-      {...columnListeners}
       className="
   bg-[#f1f2f4]
   w-[280px]
@@ -49,14 +34,16 @@ export function ColumnContainer({ column, createTask, tasks, deleteTask, updateT
 
       {/* Column task container */}
       <div className="flex flex-grow flex-col gap-2 p-1 overflow-x-hidden overflow-y-auto">
+        {/* Provide a SortableContext for the tasks within the column */}
         <SortableContext items={tasksIds}>
+          {/* Render TaskCard for each task in the column */}
           {tasks.map((task) => (
             <TaskCard
               key={task.id}
               task={task}
               deleteTask={deleteTask}
               updateTask={updateTask}
-              // Adjust the useSortable hook for tasks
+              // Adjust the useSortable hook for tasks to enable dragging
               useSortable={(props) => useSortable({ ...props, disabled: false })}
             />
           ))}
