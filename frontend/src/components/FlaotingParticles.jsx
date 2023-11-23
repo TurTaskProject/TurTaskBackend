@@ -8,14 +8,7 @@ export function FloatingParticles() {
   }, []);
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        width: "100%",
-        height: "100vh",
-        zIndex: 0,
-        backgroundColor: "#EBF2FA",
-      }}>
+    <div style={{ width: "0%", height: "100vh" }}>
       <Particles
         id="particles"
         init={particlesInit}
