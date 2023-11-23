@@ -123,10 +123,8 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "https://turtask.vercel.app",
 ]
-
 CSRF_TRUSTED_ORIGINS = ["https://turtask.vercel.app"]
-
-CORS_ORIGIN_WHITELIST = ["*"]
+CORS_ORIGIN_WHITELIST = ["https://turtask.vercel.app"]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
