@@ -7,6 +7,7 @@ import { TaskCard } from "./taskCard";
 import { axiosInstance } from "src/api/AxiosConfig";
 
 export function KanbanBoard() {
+  const [refreshKey, setRefreshKey] = useState(0);
   const [columns, setColumns] = useState([]);
   const [boardId, setBoardData] = useState();
   const [isLoading, setLoading] = useState(false);
@@ -15,6 +16,10 @@ export function KanbanBoard() {
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
   // ---------------- END STATE INITIATE ----------------
+
+  const refreshSortableContext = () => {
+    setRefreshKey((prevKey) => prevKey + 1);
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -25,7 +30,7 @@ export function KanbanBoard() {
   );
 
   // ---------------- Task Handlers ----------------
-  const handleTaskUpdate = (tasks, setTasks, updatedTask) => {
+  const handleTaskUpdate = (tasks, updatedTask) => {
     const updatedTasks = tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task));
     setTasks(updatedTasks);
   };
@@ -34,7 +39,7 @@ export function KanbanBoard() {
     console.error(`Error ${action}:`, error);
   };
 
-  const createTask = async (columnId, setTasks) => {
+  const createTask = async (columnId) => {
     try {
       const response = await axiosInstance.post("todo/", {
         title: `Task ${tasks.length + 1}`,
@@ -55,13 +60,14 @@ export function KanbanBoard() {
         content: response.data.title,
       };
 
-      setTasks((tasks) => [...tasks, newTask]);
+      setTasks((prevTasks) => [...prevTasks, newTask]);
+      refreshSortableContext();
     } catch (error) {
       handleApiError(error, "creating task");
     }
   };
 
-  const deleteTask = async (id, tasks, setTasks) => {
+  const deleteTask = async (id, tasks) => {
     try {
       await axiosInstance.delete(`todo/${id}/`);
       const newTasks = tasks.filter((task) => task.id !== id);
@@ -71,7 +77,7 @@ export function KanbanBoard() {
     }
   };
 
-  const updateTask = async (id, content, tasks, setTasks) => {
+  const updateTask = async (id, content, tasks) => {
     try {
       if (content === "") {
         await deleteTask(id, tasks, setTasks);
@@ -84,7 +90,7 @@ export function KanbanBoard() {
           content: response.data.title,
         };
 
-        handleTaskUpdate(tasks, setTasks, updatedTask);
+        handleTaskUpdate(tasks, updatedTask);
       }
     } catch (error) {
       handleApiError(error, "updating task");
@@ -194,6 +200,7 @@ export function KanbanBoard() {
 
         {createPortal(
           <DragOverlay className="bg-white" dropAnimation={null} zIndex={20}>
+            {/* Render the active task as a draggable overlay */}
             {activeTask && <TaskCard task={activeTask} deleteTask={deleteTask} updateTask={updateTask} />}
           </DragOverlay>,
           document.body
