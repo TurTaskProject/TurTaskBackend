@@ -10,7 +10,7 @@ export function KanbanBoard() {
   const [columns, setColumns] = useState([]);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [boardId, setBoardData] = useState();
-
+  const [isLoading, setLoading] = useState(false);
   const [tasks, setTasks] = useState([]);
 
   const [activeColumn, setActiveColumn] = useState(null);
@@ -74,13 +74,16 @@ export function KanbanBoard() {
   useEffect(() => {
     const fetchBoardData = async () => {
       try {
+        setLoading(true);
         const response = await axiosInstance.get("boards/");
         if (response.data && response.data.length > 0) {
           setBoardData(response.data[0]);
         }
       } catch (error) {
         console.error("Error fetching board data:", error);
+        setLoading(false);
       }
+      setLoading(false);
     };
     fetchBoardData();
   }, []);
@@ -92,26 +95,29 @@ export function KanbanBoard() {
       flex
       w-full
       items-center
+      justify-center
       overflow-x-auto
       overflow-y-hidden
   ">
       <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
-        <div className="ml-2 flex gap-4">
+        <div className="flex gap-4">
           <div className="flex gap-4">
-            <SortableContext items={columnsId}>
-              {columns.map((col) => (
-                <ColumnContainerCard
-                  key={col.id}
-                  column={col}
-                  deleteColumn={deleteColumn}
-                  updateColumn={updateColumn}
-                  createTask={createTask}
-                  deleteTask={deleteTask}
-                  updateTask={updateTask}
-                  tasks={tasks.filter((task) => task.columnId === col.id)}
-                />
-              ))}
-            </SortableContext>
+            {!isLoading ? (
+              <SortableContext items={columnsId}>
+                {columns.map((col) => (
+                  <ColumnContainerCard
+                    key={col.id}
+                    column={col}
+                    createTask={createTask}
+                    deleteTask={deleteTask}
+                    updateTask={updateTask}
+                    tasks={tasks.filter((task) => task.columnId === col.id)}
+                  />
+                ))}{" "}
+              </SortableContext>
+            ) : (
+              <span className="loading loading-dots loading-lg"></span>
+            )}
           </div>
         </div>
 
@@ -120,8 +126,6 @@ export function KanbanBoard() {
             {activeColumn && (
               <ColumnContainerCard
                 column={activeColumn}
-                deleteColumn={deleteColumn}
-                updateColumn={updateColumn}
                 createTask={createTask}
                 deleteTask={deleteTask}
                 updateTask={updateTask}
@@ -185,58 +189,6 @@ export function KanbanBoard() {
     });
     if (content === "") return deleteTask(id);
     setTasks(newTasks);
-  }
-
-  function createNewColumn() {
-    axiosInstance
-      .post("lists/", { name: `Column ${columns.length + 1}`, position: 1, board: boardId.id })
-      .then((response) => {
-        const newColumn = {
-          id: response.data.id,
-          title: response.data.name,
-        };
-
-        setColumns((prevColumns) => [...prevColumns, newColumn]);
-      })
-      .catch((error) => {
-        console.error("Error creating ListBoard:", error);
-      });
-  }
-
-  function deleteColumn(id) {
-    axiosInstance
-      .delete(`lists/${id}/`)
-      .then((response) => {
-        setColumns((prevColumns) => prevColumns.filter((col) => col.id !== id));
-      })
-      .catch((error) => {
-        console.error("Error deleting ListBoard:", error);
-      });
-
-    const tasksToDelete = tasks.filter((t) => t.columnId === id);
-
-    tasksToDelete.forEach((task) => {
-      axiosInstance
-        .delete(`todo/${task.id}/`)
-        .then((response) => {
-          setTasks((prevTasks) => prevTasks.filter((t) => t.id !== task.id));
-        })
-        .catch((error) => {
-          console.error("Error deleting Task:", error);
-        });
-    });
-  }
-
-  function updateColumn(id, title) {
-    // Update the column
-    axiosInstance
-      .patch(`lists/${id}/`, { name: title }) // Adjust the payload based on your API requirements
-      .then((response) => {
-        setColumns((prevColumns) => prevColumns.map((col) => (col.id === id ? { ...col, title } : col)));
-      })
-      .catch((error) => {
-        console.error("Error updating ListBoard:", error);
-      });
   }
 
   function onDragStart(event) {

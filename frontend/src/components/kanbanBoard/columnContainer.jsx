@@ -1,53 +1,31 @@
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import { BsFillTrashFill } from "react-icons/bs";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { CSS } from "@dnd-kit/utilities";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { TaskCard } from "./taskCard";
 
-export function ColumnContainer({ column, deleteColumn, updateColumn, createTask, tasks, deleteTask, updateTask }) {
-  const [editMode, setEditMode] = useState(false);
-
+export function ColumnContainer({ column, createTask, tasks, deleteTask, updateTask }) {
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id);
   }, [tasks]);
 
-  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
+  const {
+    setNodeRef: columnNodeRef,
+    attributes: columnAttributes,
+    listeners: columnListeners,
+  } = useSortable({
     id: column.id,
     data: {
       type: "Column",
       column,
     },
-    disabled: editMode,
+    disabled: true, // Disable drag for the entire column
   });
-
-  const style = {
-    transition,
-    transform: CSS.Transform.toString(transform),
-  };
-
-  if (isDragging) {
-    return (
-      <div
-        ref={setNodeRef}
-        style={style}
-        className="
-      opacity-40
-      border-2
-      border-blue-500
-      w-[350px]
-      max-h-[400px]
-      rounded-md
-      flex
-      flex-col
-      "></div>
-    );
-  }
 
   return (
     <div
-      ref={setNodeRef}
-      style={style}
+      ref={columnNodeRef}
+      {...columnAttributes}
+      {...columnListeners}
       className="
   bg-[#f1f2f4]
   w-[280px]
@@ -58,62 +36,33 @@ export function ColumnContainer({ column, deleteColumn, updateColumn, createTask
   ">
       {/* Column title */}
       <div
-        {...attributes}
-        {...listeners}
-        onClick={() => {
-          setEditMode(true);
-        }}
         className="
       ml-3
       text-md
-      cursor-grab
       font-bold
       flex
       items-center
       justify-between
       ">
-        <div className="flex gap-2">
-          {!editMode && column.title}
-          {editMode && (
-            <input
-              className="bg-gray-200 focus:border-blue-500 border rounded-md outline-none px-2"
-              value={column.title}
-              onChange={(e) => updateColumn(column.id, e.target.value)}
-              autoFocus
-              onBlur={() => {
-                setEditMode(false);
-              }}
-              onKeyDown={(e) => {
-                if (e.key !== "Enter") return;
-                setEditMode(false);
-              }}
-            />
-          )}
-        </div>
-        <button
-          onClick={() => {
-            deleteColumn(column.id);
-          }}
-          className="
-        stroke-gray-500
-        hover:stroke-white
-        hover:bg-columnBackgroundColor
-        rounded
-        px-1
-        py-2
-        ">
-          <BsFillTrashFill />
-        </button>
+        <div className="flex gap-2">{column.title}</div>
       </div>
 
       {/* Column task container */}
       <div className="flex flex-grow flex-col gap-2 p-1 overflow-x-hidden overflow-y-auto">
         <SortableContext items={tasksIds}>
           {tasks.map((task) => (
-            <TaskCard key={task.id} task={task} deleteTask={deleteTask} updateTask={updateTask} />
+            <TaskCard
+              key={task.id}
+              task={task}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+              // Adjust the useSortable hook for tasks
+              useSortable={(props) => useSortable({ ...props, disabled: false })}
+            />
           ))}
         </SortableContext>
       </div>
+
       {/* Column footer */}
       <button
         className="flex gap-2 items-center rounded-md p-2 my-2 hover:bg-zinc-200 active:bg-zinc-400"
