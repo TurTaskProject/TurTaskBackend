@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { formatDate } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { getEvents, createEventId } from "./TaskDataHandler";
-import { axiosInstance } from "src/api/AxiosConfig";
 
 export class Calendar extends React.Component {
   state = {
@@ -62,10 +61,13 @@ export class Calendar extends React.Component {
               type="checkbox"
               checked={this.state.weekendsVisible}
               onChange={this.handleWeekendsToggle}
-              className="mr-2"
+              className="mr-2 mb-4"
             />
             Toggle weekends
           </label>
+          <button className="btn btn-info" onClick={() => alert("Commit soon🥺")}>
+            Load Data from Google
+          </button>
         </div>
 
         {/* Show all task */}

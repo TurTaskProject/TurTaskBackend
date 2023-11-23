@@ -9,9 +9,9 @@ const menuItems = [
   { id: 0, path: "/", icon: <AiOutlineHome /> },
   { id: 1, path: "/tasks", icon: <AiOutlineUnorderedList /> },
   { id: 2, path: "/calendar", icon: <AiOutlineSchedule /> },
-  { id: 3, path: "/settings", icon: <IoSettingsOutline /> },
-  { id: 4, path: "/priority", icon: <PiStepsDuotone /> },
+  { id: 3, path: "/priority", icon: <PiStepsDuotone /> },
 ];
+// { id: 3, path: "/settings", icon: <IoSettingsOutline /> },
 
 export const SideNav = () => {
   const [selected, setSelected] = useState(0);

@@ -224,30 +224,24 @@ export function KanbanBoard() {
 
     const isActiveATask = active.data.current?.type === "Task";
     const isOverAColumn = over.data.current?.type === "Column";
-    const isOverATask = over.data.current?.type === "Task";
-
-    // Reorder logic for Tasks within the same column
-    if (isActiveATask && isOverATask) {
-      setTasks((tasks) => {
-        const activeIndex = tasks.findIndex((t) => t.id === activeId);
-        const overIndex = tasks.findIndex((t) => t.id === overId);
-
-        const reorderedTasks = arrayMove(tasks, activeIndex, overIndex);
-
-        return reorderedTasks;
-      });
-    }
 
     // Move tasks between columns and update columnId
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
 
-        tasks[activeIndex].columnId = overId;
+        // Extract the column ID from overId
+        const columnId = extractColumnId(overId);
+
+        tasks[activeIndex].columnId = columnId;
 
         // API call to update task's columnId
         axiosInstance
-          .put(`todo/change_task_list_board/`, { todo_id: activeId, new_list_board_id: overId, new_index: 0 })
+          .put(`todo/change_task_list_board/`, {
+            todo_id: activeId,
+            new_list_board_id: over.data.current.task.columnId,
+            new_index: 0,
+          })
           .then((response) => {})
           .catch((error) => {
             console.error("Error updating task columnId:", error);
@@ -256,6 +250,14 @@ export function KanbanBoard() {
         return arrayMove(tasks, activeIndex, activeIndex);
       });
     }
+  }
+
+  // Helper function to extract the column ID from the element ID
+  function extractColumnId(elementId) {
+    // Implement logic to extract the column ID from elementId
+    // For example, if elementId is in the format "column-123", you can do:
+    const parts = elementId.split("-");
+    return parts.length === 2 ? parseInt(parts[1], 10) : null;
   }
 
   // Handle the drag-over event
@@ -284,7 +286,16 @@ export function KanbanBoard() {
           tasks[activeIndex].columnId = tasks[overIndex].columnId;
           return arrayMove(tasks, activeIndex, overIndex - 1);
         }
-
+        axiosInstance
+          .put(`todo/change_task_list_board/`, {
+            todo_id: activeId,
+            new_list_board_id: over.data.current.task.columnId,
+            new_index: 0,
+          })
+          .then((response) => {})
+          .catch((error) => {
+            console.error("Error updating task columnId:", error);
+          });
         return arrayMove(tasks, activeIndex, overIndex);
       });
     }
@@ -294,7 +305,16 @@ export function KanbanBoard() {
     if (isActiveATask && isOverAColumn && tasks.some((task) => task.columnId !== overId)) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
-
+        axiosInstance
+          .put(`todo/change_task_list_board/`, {
+            todo_id: activeId,
+            new_list_board_id: over.data.current.task.columnId,
+            new_index: 0,
+          })
+          .then((response) => {})
+          .catch((error) => {
+            console.error("Error updating task columnId:", error);
+          });
         tasks[activeIndex].columnId = overId;
         return arrayMove(tasks, activeIndex, activeIndex);
       });
