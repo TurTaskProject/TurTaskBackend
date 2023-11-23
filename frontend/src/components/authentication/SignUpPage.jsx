@@ -5,6 +5,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { NavPreLogin } from "../navigations/NavPreLogin";
 import { useAuth } from "src/hooks/AuthHooks";
 import { createUser, googleLogin } from "src/api/AuthenticationApi";
+import { FloatingParticles } from "../FlaotingParticles";
 
 export function SignUp() {
   const Navigate = useNavigate();
@@ -78,9 +79,13 @@ export function SignUp() {
 
   return (
     <div>
-      <NavPreLogin text="Already have an account?" btn_text="Log In" link="/login" />
+      <NavPreLogin
+        text="Already have an account?"
+        btn_text="Log In"
+        link="/login"
+      />
       <div className="h-screen flex items-center justify-center bg-gradient-to-r from-zinc-100 via-gray-200 to-zinc-100">
-        {/* ... (other code) */}
+        <FloatingParticles />
         <div className="w-1/4 h-1 flex items-center justify-center z-10">
           <div className="w-96 bg-white rounded-lg p-8 space-y-4 z-10">
             {/* Register Form */}
@@ -138,7 +143,10 @@ export function SignUp() {
             </button>
             <div className="divider">OR</div>
             {/* Login with Google Button */}
-            <button className="btn btn-outline btn-secondary w-full " onClick={() => googleLoginImplicit()}>
+            <button
+              className="btn btn-outline btn-secondary w-full "
+              onClick={() => googleLoginImplicit()}
+            >
               <FcGoogle className="rounded-full bg-white" />
               Login with Google
             </button>
