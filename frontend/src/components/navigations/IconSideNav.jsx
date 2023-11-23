@@ -32,12 +32,12 @@ export const SideNav = () => {
   );
 };
 
-const NavItem = ({ icon, selected, id, setSelected, logo, path }) => {
+const NavItem = ({ icon, selected, id, setSelected, path }) => {
   const navigate = useNavigate();
 
   return (
     <motion.button
-      className="p-3 text-xl bg-slate-800 hover-bg-slate-700 rounded-md transition-colors relative"
+      className="p-3 text-xl text-white bg-slate-800 hover-bg-slate-700 rounded-md transition-colors relative"
       onClick={() => {
         setSelected(id);
         navigate(path);
