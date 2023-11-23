@@ -65,8 +65,15 @@ export function LoginPage() {
 
   return (
     <div>
-      <NavPreLogin text="Don't have account?" btn_text="Sign Up" link="/signup" />
-      <div className="flex flex-row bg-neutral-400">
+      <NavPreLogin
+        text="Don't have account?"
+        btn_text="Sign Up"
+        link="/signup"
+      />
+      <div className="h-screen flex items-center justify-center bg-gradient-to-r from-zinc-100 via-gray-200 to-zinc-100">
+        {/* Particles Container */}
+
+        <FloatingParticles />
         {/* Login Box */}
         <div className="flex items-center justify-center flex-1 z-50">
           <div className="w-100 bg-white border-solid rounded-lg p-8 shadow space-y-4">
@@ -78,7 +85,8 @@ export function LoginPage() {
                   xmlns="http://www.w3.org/2000/svg"
                   className="stroke-current shrink-0 h-6 w-6"
                   fill="none"
-                  viewBox="0 0 24 24">
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -122,19 +130,22 @@ export function LoginPage() {
               />
             </div>
             {/* Login Button */}
-            <button className="btn bg-blue-700 hover:bg-blue-900 w-full text-white font-bold" onClick={handleSubmit}>
+            <button
+              className="btn bg-blue-700 hover:bg-blue-900 w-full text-white font-bold"
+              onClick={handleSubmit}
+            >
               Login
             </button>
             <div className="divider">OR</div>
             {/* Login with Google Button */}
-            <button className="btn bg-gray-200 btn-outline w-full " onClick={() => googleLoginImplicit()}>
+            <button
+              className="btn bg-gray-200 btn-outline w-full "
+              onClick={() => googleLoginImplicit()}
+            >
               <FcGoogle className="rounded-full bg-white" />
               Login with Google
             </button>
           </div>
-        </div>
-        <div className="basis-1/2 bg-#ebf2fa h-screen z-0">
-          <FloatingParticles />
         </div>
       </div>
     </div>
