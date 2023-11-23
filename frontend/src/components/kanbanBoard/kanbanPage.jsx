@@ -19,12 +19,12 @@ export const KanbanPage = () => {
               onClick={() => handleTabClick("kanban")}>
               Kanban
             </a>
-            <a
+            {/* <a
               id="table"
               className={`tab ${activeTab === "table" ? "tab-active" : ""}`}
               onClick={() => handleTabClick("table")}>
               Table
-            </a>
+            </a> */}
           </div>
         </div>
       </div>
