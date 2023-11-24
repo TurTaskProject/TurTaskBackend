@@ -1,151 +1,162 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axiosapi from '../../api/AuthenticationApi';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
+import { useGoogleLogin } from "@react-oauth/google";
+import { NavPreLogin } from "../navigations/NavPreLogin";
+import { useAuth } from "src/hooks/AuthHooks";
+import { createUser, googleLogin } from "src/api/AuthenticationApi";
+import { FloatingParticles } from "../FlaotingParticles";
 
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+export function SignUp() {
+  const Navigate = useNavigate();
+  const { setIsAuthenticated } = useAuth();
 
+  const [formData, setFormData] = useState({
+    email: "",
+    username: "",
+    password: "",
+  });
+  const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://github.com/TurTaskProject/TurTaskWeb">
-        TurTask
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
 
-const defaultTheme = createTheme();
+    const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-export default function SignUp() {
+    try {
+      const data = await createUser(formData);
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+      await delay(200);
+      setIsAuthenticated(true);
+      Navigate("/");
+    } catch (error) {
+      console.error("Error creating user:", error);
+      setError("Registration failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-    const Navigate = useNavigate();
+  const handleEmailChange = (e) => {
+    setFormData({ ...formData, email: e.target.value });
+  };
 
-    const [formData, setFormData] = useState({
-      email: '',
-      username: '',
-      password: '',
-    });
-    const [error, setError] = useState(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setIsSubmitting(true);
-      setError(null);
-  
+  const handleUsernameChange = (e) => {
+    setFormData({ ...formData, username: e.target.value });
+  };
+
+  const handlePasswordChange = (e) => {
+    setFormData({ ...formData, password: e.target.value });
+  };
+
+  const googleLoginImplicit = useGoogleLogin({
+    flow: "auth-code",
+    redirect_uri: "postmessage",
+    scope:
+      "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar.acls.readonly https://www.googleapis.com/auth/calendar.events.readonly",
+    onSuccess: async (response) => {
       try {
-          axiosapi.createUser(formData);
+        const loginResponse = await googleLogin(response.code);
+        if (loginResponse && loginResponse.data) {
+          const { access_token, refresh_token } = loginResponse.data;
+
+          localStorage.setItem("access_token", access_token);
+          localStorage.setItem("refresh_token", refresh_token);
+          setIsAuthenticated(true);
+          Navigate("/profile");
+        }
       } catch (error) {
-          console.error('Error creating user:', error);
-          setError('Registration failed. Please try again.');
-      } finally {
-          setIsSubmitting(false);
+        console.error("Error with the POST request:", error);
+        setIsAuthenticated(false);
       }
-      Navigate('/login');
-    };
-  
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData({ ...formData, [name]: value });
-    };
+    },
+    onError: (errorResponse) => console.log(errorResponse),
+  });
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-              marginTop: 8,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
+    <div>
+      <NavPreLogin
+        text="Already have an account?"
+        btn_text="Log In"
+        link="/login"
+      />
+      <div className="h-screen flex items-center justify-center bg-gradient-to-r from-zinc-100 via-gray-200 to-zinc-100">
+        <FloatingParticles />
+        <div className="w-1/4 h-1 flex items-center justify-center z-10">
+          <div className="w-96 bg-white rounded-lg p-8 space-y-4 z-10">
+            {/* Register Form */}
+            <h2 className="text-3xl font-bold text-center">Signup</h2>
+            {/* Email Input */}
+            <div className="form-control ">
+              <label className="label" htmlFor="email">
+                <p className="text-bold">
+                  Email<span className="text-red-500 text-bold">*</span>
+                </p>
+              </label>
+              <input
+                className="input"
+                type="email"
                 id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                onChange={handleChange}
+                placeholder="Enter your email"
+                onChange={handleEmailChange}
               />
-            </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="username"
-                  name="Username"
-                  required
-                  fullWidth
-                  id="Username"
-                  label="Username"
-                  autoFocus
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+            </div>
+            {/* Username Input */}
+            <div className="form-control">
+              <label className="label" htmlFor="Username">
+                <p className="text-bold">
+                  Username<span className="text-red-500 text-bold">*</span>
+                </p>
+              </label>
+              <input
+                className="input"
+                type="text"
+                id="Username"
+                placeholder="Enter your username"
+                onChange={handleUsernameChange}
+              />
+            </div>
+            {/* Password Input */}
+            <div className="form-control">
+              <label className="label" htmlFor="password">
+                <p className="text-bold">
+                  Password<span className="text-red-500 text-bold">*</span>
+                </p>
+              </label>
+              <input
+                className="input"
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                onChange={handlePasswordChange}
+              />
+            </div>
+            <br></br>
+
+            {/* Signups Button */}
+            <button className="btn btn-success w-full " onClick={handleSubmit}>
+              Signup
+            </button>
+            <div className="divider">OR</div>
+            {/* Login with Google Button */}
+            <button
+              className="btn btn-outline btn-secondary w-full "
+              onClick={() => googleLoginImplicit()}
             >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        <Copyright sx={{ mt: 5 }} />
-      </Container>
-    </ThemeProvider>
+              <FcGoogle className="rounded-full bg-white" />
+              Login with Google
+            </button>
+            {/* Already have an account? */}
+            <div className="text-blue-500 flex justify-center text-sm">
+              <a href="login">Already have an account?</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

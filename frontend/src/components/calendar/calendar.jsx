@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { formatDate } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -6,7 +6,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { getEvents, createEventId } from "./TaskDataHandler";
 
-export default class Calendar extends React.Component {
+export class Calendar extends React.Component {
   state = {
     weekendsVisible: true,
     currentEvents: [],
@@ -43,7 +43,8 @@ export default class Calendar extends React.Component {
 
   renderSidebar() {
     return (
-      <div className="w-72 bg-blue-100 border-r border-blue-200 p-8 flex-shrink-0">
+      <div className="w-72 bg-blue-100 border-r border-blue-200 p-8 flex flex-col">
+        {/* Description Zone */}
         <div className="mb-8">
           <h2 className="text-xl font-bold">Instructions</h2>
           <ul className="list-disc pl-4">
@@ -53,19 +54,24 @@ export default class Calendar extends React.Component {
           </ul>
         </div>
 
+        {/* Toggle */}
         <div className="mb-8">
           <label className="flex items-center">
             <input
               type="checkbox"
               checked={this.state.weekendsVisible}
               onChange={this.handleWeekendsToggle}
-              className="mr-2"
+              className="mr-2 mb-4"
             />
             Toggle weekends
           </label>
+          <button className="btn btn-info" onClick={() => alert("Commit soon🥺")}>
+            Load Data from Google
+          </button>
         </div>
 
-        <div>
+        {/* Show all task */}
+        <div className="overflow-y-auto">
           <h2 className="text-xl font-bold">All Events ({this.state.currentEvents.length})</h2>
           <ul>{this.state.currentEvents.map(renderSidebarEvent)}</ul>
         </div>
@@ -98,7 +104,14 @@ export default class Calendar extends React.Component {
 
   handleEventClick = (clickInfo) => {
     if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
+      axiosInstance
+        .delete(`todo/${clickInfo.event.id}/`)
+        .then((response) => {
+          clickInfo.event.remove();
+        })
+        .catch((error) => {
+          console.error("Error deleting Task:", error);
+        });
     }
   };
 

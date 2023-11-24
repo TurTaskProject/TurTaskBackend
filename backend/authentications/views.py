@@ -1,6 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
 """This module defines API views for authentication, user creation, and a simple hello message."""
 
 import json
@@ -10,14 +7,11 @@ from django.conf import settings
 from django.contrib.auth.hashers import make_password
 
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-
-from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-
-from dj_rest_auth.registration.views import SocialLoginView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from google_auth_oauthlib.flow import InstalledAppFlow
 
@@ -25,6 +19,31 @@ from authentications.access_token_cache import store_token
 from authentications.serializers import MyTokenObtainPairSerializer
 from users.managers import CustomAccountManager
 from users.models import CustomUser
+
+
+class CheckAccessTokenAndRefreshToken(APIView):
+    permission_classes = (AllowAny,)
+    JWT_authenticator = JWTAuthentication()
+
+    def post(self, request, *args, **kwargs):
+        access_token = request.data.get('access_token')
+        refresh_token = request.data.get('refresh_token')
+        # Check if the access token is valid
+        if access_token:
+            response = self.JWT_authenticator.authenticate(request)
+            if response is not None:
+                return Response({'status': 'true'}, status=status.HTTP_200_OK)
+
+        # Check if the refresh token is valid
+        if refresh_token:
+            try:
+                refresh = RefreshToken(refresh_token)
+                access_token = str(refresh.access_token)
+                return Response({'access_token': access_token}, status=status.HTTP_200_OK)
+            except Exception as e:
+                return Response({'status': 'false'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response({'status': 'false'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ObtainTokenPairWithCustomView(APIView):
@@ -43,39 +62,6 @@ class ObtainTokenPairWithCustomView(APIView):
             token = serializer.validated_data
             return Response(token, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class GreetingView(APIView):
-    """
-    Hello World View.
-    Returns a greeting and user information for authenticated users.
-    """
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        """
-        Retrieve a greeting message and user information.
-        """
-        user = request.user
-        user_info = {
-            "username": user.username,
-        }
-        response_data = {
-            "message": "Hello, world!",
-            "user_info": user_info,
-        }
-        return Response(response_data, status=status.HTTP_200_OK)
-
-
-class GoogleLogin(SocialLoginView):
-    """
-    Google Login View.
-    Handles Google OAuth2 authentication.
-    """
-    # permission_classes = (AllowAny,)
-    adapter_class = GoogleOAuth2Adapter
-    # client_class = OAuth2Client
-    # callback_url = 'http://localhost:8000/accounts/google/login/callback/'
 
 
 class GoogleRetrieveUserInfo(APIView):

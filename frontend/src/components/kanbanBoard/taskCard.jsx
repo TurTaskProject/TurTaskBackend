@@ -1,26 +1,18 @@
 import { useState } from "react";
-import TrashIcon from "../icons/trashIcon";
+import { BsFillTrashFill } from "react-icons/bs";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { TaskDetailModal } from "./taskDetailModal";
 
-function TaskCard({ task, deleteTask, updateTask }) {
+export function TaskCard({ task, deleteTask, updateTask }) {
   const [mouseIsOver, setMouseIsOver] = useState(false);
-  const [editMode, setEditMode] = useState(true);
 
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: task.id,
     data: {
       type: "Task",
       task,
     },
-    disabled: editMode,
   });
 
   const style = {
@@ -28,11 +20,9 @@ function TaskCard({ task, deleteTask, updateTask }) {
     transform: CSS.Transform.toString(transform),
   };
 
-  const toggleEditMode = () => {
-    setEditMode((prev) => !prev);
-    setMouseIsOver(false);
-  };
-
+  {
+    /* If card is dragged */
+  }
   if (isDragging) {
     return (
       <div
@@ -40,72 +30,51 @@ function TaskCard({ task, deleteTask, updateTask }) {
         style={style}
         className="
         opacity-30
-      bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-rose-500  cursor-grab relative
+      bg-mainBackgroundColor p-2.5 items-center flex text-left rounded-xl border-2 border-gray-400  cursor-grab relative
       "
       />
     );
   }
 
-  if (editMode) {
-    return (
+  return (
+    <div>
+      <TaskDetailModal
+        taskId={task.id}
+        title={task.content}
+        description={task.description}
+        tags={task.tags}
+        difficulty={task.difficulty}
+    f    challenge={task.challenge}
+        importance={task.importance}
+      />
       <div
         ref={setNodeRef}
-        style={style}
         {...attributes}
         {...listeners}
-        className="outline-double outline-1 outline-offset-2 hover:outline-double hover:outline-1 hover:outline-offset-2 bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative"
-      >
-        <textarea
-          className="
-        h-[90%]
-        w-full resize-none border-none rounded bg-transparent text-black focus:outline-none
-        "
-          value={task.content}
-          autoFocus
-          placeholder="Task content here"
-          onBlur={toggleEditMode}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && e.shiftKey) {
-              toggleEditMode();
-            }
-          }}
-          onChange={(e) => updateTask(task.id, e.target.value)}
-        />
+        style={style}
+        className="justify-center items-center flex text-left rounded-xl cursor-grab relative hover:border-2 hover:border-blue-400 shadow bg-white"
+        onMouseEnter={() => {
+          setMouseIsOver(true);
+        }}
+        onMouseLeave={() => {
+          setMouseIsOver(false);
+        }}>
+        <p
+          className="p-2.5 my-auto w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap rounded-xl shadow bg-white"
+          onClick={() => document.getElementById(`task_detail_modal_${task.id}`).showModal()}>
+          {task.content}
+        </p>
+
+        {mouseIsOver && (
+          <button
+            onClick={() => {
+              deleteTask(task.id);
+            }}
+            className="stroke-white absolute right-0 top-1/2 rounded-full bg-white -translate-y-1/2 bg-columnBackgroundColor p-2 hover:opacity-100 ">
+            <BsFillTrashFill />
+          </button>
+        )}
       </div>
-    );
-  }
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      onClick={toggleEditMode}
-      className="outline-double outline-1 outline-offset-2 hover:outline-double hover:outline-1 hover:outline-offset-2 sbg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative task"
-      onMouseEnter={() => {
-        setMouseIsOver(true);
-      }}
-      onMouseLeave={() => {
-        setMouseIsOver(false);
-      }}
-    >
-      <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
-        {task.content}
-      </p>
-
-      {mouseIsOver && (
-        <button
-          onClick={() => {
-            deleteTask(task.id);
-          }}
-          className="stroke-white absolute right-4 top-1/2 -translate-y-1/2 bg-columnBackgroundColor p-2 rounded opacity-60 hover:opacity-100"
-        >
-          <TrashIcon />
-        </button>
-      )}
     </div>
   );
 }
-
-export default TaskCard;
