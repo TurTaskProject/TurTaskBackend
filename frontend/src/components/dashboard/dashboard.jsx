@@ -154,7 +154,9 @@ export function Dashboard() {
                       color="rose"
                     >
                       <span className="h-12 w-12 rounded-full bg-rose-100 flex items-center justify-center text-sm text-rose-500 font-medium">
-                        {progressData.toFixed(0)} %
+                        {isNaN(progressData) || !isFinite(progressData)
+                          ? "0%"
+                          : `${progressData.toFixed(0)}%`}
                       </span>
                     </ProgressCircle>
                     <br></br>

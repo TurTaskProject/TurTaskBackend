@@ -1,4 +1,5 @@
 import { useState } from "react";
+import  { useEffect } from "react";
 import { BsFillTrashFill } from "react-icons/bs";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -6,6 +7,9 @@ import { TaskDetailModal } from "./taskDetailModal";
 
 export function TaskCard({ task, deleteTask, updateTask }) {
   const [mouseIsOver, setMouseIsOver] = useState(false);
+  // console.log(task.challenge);
+  // console.log(task.importance);
+  // console.log(task.difficulty);
 
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: task.id,
@@ -14,11 +18,12 @@ export function TaskCard({ task, deleteTask, updateTask }) {
       task,
     },
   });
-
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
   };
+
+
 
   {
     /* If card is dragged */
@@ -60,7 +65,7 @@ export function TaskCard({ task, deleteTask, updateTask }) {
           setMouseIsOver(false);
         }}>
         <p
-          className="p-2.5 my-auto w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap rounded-xl shadow bg-white"
+          className={`p-2.5 my-auto w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap rounded-xl shadow bg-white`}
           onClick={() => document.getElementById(`task_detail_modal_${task.id}`).showModal()}>
           {task.content}
         </p>

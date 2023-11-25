@@ -7,6 +7,9 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
   const [isChallengeChecked, setChallengeChecked] = useState(challenge);
   const [isImportantChecked, setImportantChecked] = useState(importance);
   const [currentDifficulty, setCurrentDifficulty] = useState(difficulty);
+  // console.log(currentDifficulty);
+  // console.log(isChallengeChecked);
+  // console.log(isImportantChecked);
 
   const handleChallengeChange = () => {
     setChallengeChecked(!isChallengeChecked);
