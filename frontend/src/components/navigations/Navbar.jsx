@@ -1,20 +1,18 @@
-import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import axiosapi from "../../api/AuthenticationApi";
-import { useAuth } from "../../hooks/authentication/IsAuthenticated"; 
+import { apiUserLogout } from "src/api/AuthenticationApi";
+import { useAuth } from "src/hooks/AuthHooks";
 
 const settings = {
-  Profile: '/profile',
-  Account: '/account',
+  Profile: "/profile",
+  Account: "/account",
 };
 
-function NavBar() {
+export function NavBar() {
   const Navigate = useNavigate();
-
   const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   const logout = () => {
-    axiosapi.apiUserLogout();
+    apiUserLogout();
     setIsAuthenticated(false);
     Navigate("/");
   };
@@ -67,4 +65,3 @@ function NavBar() {
     </div>
   );
 }
-export default NavBar;

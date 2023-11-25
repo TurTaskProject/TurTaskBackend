@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { formatDate } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { getEvents, createEventId } from "./TaskDataHandler";
-import axiosInstance from "../../api/configs/AxiosConfig";
+import { axiosInstance } from "src/api/AxiosConfig";
 
-export default class Calendar extends React.Component {
+export class Calendar extends React.Component {
   state = {
     weekendsVisible: true,
     currentEvents: [],
@@ -83,7 +83,7 @@ export default class Calendar extends React.Component {
     });
   };
 
-  handleDateSelect = selectInfo => {
+  handleDateSelect = (selectInfo) => {
     let title = prompt("Please enter a new title for your event");
     let calendarApi = selectInfo.view.calendar;
 
@@ -100,20 +100,20 @@ export default class Calendar extends React.Component {
     }
   };
 
-  handleEventClick = clickInfo => {
+  handleEventClick = (clickInfo) => {
     if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
       axiosInstance
-      .delete(`todo/${clickInfo.event.id}/`)
-      .then(response => {
-        clickInfo.event.remove();
-      })
-      .catch(error => {
-        console.error("Error deleting Task:", error);
-      });
+        .delete(`todo/${clickInfo.event.id}/`)
+        .then((response) => {
+          clickInfo.event.remove();
+        })
+        .catch((error) => {
+          console.error("Error deleting Task:", error);
+        });
     }
   };
 
-  handleEvents = events => {
+  handleEvents = (events) => {
     this.setState({
       currentEvents: events,
     });

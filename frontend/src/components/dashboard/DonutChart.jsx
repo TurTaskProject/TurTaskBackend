@@ -1,40 +1,37 @@
 import { DonutChart } from "@tremor/react";
-import axiosInstance from "../../api/configs/AxiosConfig";
+import { axiosInstance } from "src/api/AxiosConfig";
+import { useState, useEffect } from "react";
 
-const fetchDonutData = async () => {
-  try {
-    let res = await axiosInstance.get("/dashboard/stats/");
-    // let todoCount = res.data.todo_count;
-    // let recurrenceCount = res.data.recurrence_count;
-    let todoCount = 10;
-    let recurrenceCount = 15;
-    if (todoCount === undefined) {
-      todoCount = 0;
-    }
-    if (recurrenceCount === undefined) {
-      recurrenceCount = 0;
-    }
-    const donutData = [
-      { name: "Todo", count: todoCount },
-      { name: "Recurrence", count: recurrenceCount },
-    ];
-    return donutData;
-  } catch (error) {
-    console.error("Error fetching donut data:", error);
-    return [];
-  }
-};
+export function DonutChartGraph() {
+  const [donutData, setDonutData] = useState([]);
 
-const donutDataArray = await fetchDonutData();
-export default function DonutChartGraph() {
+  useEffect(() => {
+    const fetchDonutData = async () => {
+      try {
+        const response = await axiosInstance.get("/dashboard/stats/");
+        const todoCount = response.data.todo_count || 0;
+        const recurrenceCount = response.data.recurrence_count || 0;
+
+        const donutData = [
+          { name: "Todo", count: todoCount },
+          { name: "Recurrence", count: recurrenceCount },
+        ];
+
+        setDonutData(donutData);
+      } catch (error) {
+        console.error("Error fetching donut data:", error);
+      }
+    };
+    fetchDonutData();
+  }, []);
+
   return (
     <DonutChart
       className="mt-6"
-      data={donutDataArray}
+      data={donutData}
       category="count"
       index="name"
       colors={["rose", "yellow", "orange"]}
-      onValueChange={(v) => setValue(v)}
       showAnimation
       radius={25}
     />

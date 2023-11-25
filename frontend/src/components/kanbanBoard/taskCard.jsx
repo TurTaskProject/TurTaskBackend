@@ -2,9 +2,9 @@ import { useState } from "react";
 import { BsFillTrashFill } from "react-icons/bs";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import TaskDetailModal from "./taskDetailModal";
+import { TaskDetailModal } from "./taskDetailModal";
 
-function TaskCard({ task, deleteTask, updateTask}) {
+export function TaskCard({ task, deleteTask, updateTask }) {
   const [mouseIsOver, setMouseIsOver] = useState(false);
 
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
@@ -14,7 +14,6 @@ function TaskCard({ task, deleteTask, updateTask}) {
       task,
     },
   });
-
 
   const style = {
     transition,
@@ -45,7 +44,7 @@ function TaskCard({ task, deleteTask, updateTask}) {
         description={task.description}
         tags={task.tags}
         difficulty={task.difficulty}
-        challenge={task.challenge}
+    f    challenge={task.challenge}
         importance={task.importance}
       />
       <div
@@ -79,5 +78,3 @@ function TaskCard({ task, deleteTask, updateTask}) {
     </div>
   );
 }
-
-export default TaskCard;
