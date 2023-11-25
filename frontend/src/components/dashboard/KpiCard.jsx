@@ -13,7 +13,7 @@ export function KpiCard() {
   useEffect(() => {
     const fetchKpiCardData = async () => {
       try {
-        const response = await axiosInstance.get("/dashboard/stats/");
+        const response = await axiosInstance.get("/dashboard/todostats/");
         const completedThisWeek = response.data.completed_this_week || 0;
         const completedLastWeek = response.data.completed_last_week || 0;
         const percentage = (completedThisWeek / completedLastWeek) * 100;

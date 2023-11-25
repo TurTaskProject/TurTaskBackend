@@ -8,7 +8,7 @@ export function ProgressCircleChart() {
   useEffect(() => {
     const fetchProgressData = async () => {
       try {
-        const response = await axiosInstance.get("/dashboard/stats/");
+        const response = await axiosInstance.get("/dashboard/todostats/");
         let completedLastWeek = response.data.completed_last_week || 0;
         let assignLastWeek = response.data.tasks_assigned_last_week || 0;
 
