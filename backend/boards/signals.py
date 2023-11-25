@@ -8,8 +8,10 @@ from users.models import CustomUser
 def create_default_board(sender, instance, created, **kwargs):
     """Signal handler to automatically create a default Board for a user upon creation."""
     if created:
-        board = Board.objects.create(user=instance, name="My Default Board")
-
-        ListBoard.objects.create(board=board, name="Todo", position=1)
-        ListBoard.objects.create(board=board, name="In Progress", position=2)
-        ListBoard.objects.create(board=board, name="Done", position=3)
+        # Create unique board by user id
+        user_id = instance.id
+        board = Board.objects.create(user=instance, name=f"Board of #{user_id}")
+        ListBoard.objects.create(board=board, name="Backlog", position=1)
+        ListBoard.objects.create(board=board, name="Doing", position=2)
+        ListBoard.objects.create(board=board, name="Review", position=3)
+        ListBoard.objects.create(board=board, name="Done", position=4)

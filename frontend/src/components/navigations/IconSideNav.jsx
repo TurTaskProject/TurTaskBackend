@@ -9,9 +9,9 @@ const menuItems = [
   { id: 0, path: "/", icon: <AiOutlineHome /> },
   { id: 1, path: "/tasks", icon: <AiOutlineUnorderedList /> },
   { id: 2, path: "/calendar", icon: <AiOutlineSchedule /> },
-  { id: 3, path: "/settings", icon: <IoSettingsOutline /> },
-  { id: 4, path: "/priority", icon: <PiStepsDuotone /> },
+  { id: 3, path: "/priority", icon: <PiStepsDuotone /> },
 ];
+// { id: 3, path: "/settings", icon: <IoSettingsOutline /> },
 
 export const SideNav = () => {
   const [selected, setSelected] = useState(0);
@@ -32,12 +32,12 @@ export const SideNav = () => {
   );
 };
 
-const NavItem = ({ icon, selected, id, setSelected, logo, path }) => {
+const NavItem = ({ icon, selected, id, setSelected, path }) => {
   const navigate = useNavigate();
 
   return (
     <motion.button
-      className="p-3 text-xl bg-slate-800 hover-bg-slate-700 rounded-md transition-colors relative"
+      className="p-3 text-xl text-white bg-slate-800 hover-bg-slate-700 rounded-md transition-colors relative"
       onClick={() => {
         setSelected(id);
         navigate(path);

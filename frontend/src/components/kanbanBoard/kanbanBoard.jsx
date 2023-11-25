@@ -8,14 +8,13 @@ import { axiosInstance } from "src/api/AxiosConfig";
 
 export function KanbanBoard() {
   const [columns, setColumns] = useState([]);
-  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [boardId, setBoardData] = useState();
-
+  const [isLoading, setLoading] = useState(false);
   const [tasks, setTasks] = useState([]);
-
-  const [activeColumn, setActiveColumn] = useState(null);
-
   const [activeTask, setActiveTask] = useState(null);
+  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
+
+  // ---------------- END STATE INITIATE ----------------
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -25,6 +24,75 @@ export function KanbanBoard() {
     })
   );
 
+  // ---------------- Task Handlers ----------------
+  const handleTaskUpdate = (tasks, updatedTask) => {
+    const updatedTasks = tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task));
+    setTasks(updatedTasks);
+  };
+
+  const handleApiError = (error, action) => {
+    console.error(`Error ${action}:`, error);
+  };
+
+  const createTask = async (columnId) => {
+    try {
+      const response = await axiosInstance.post("todo/", {
+        title: `New Task`,
+        importance: 1,
+        difficulty: 1,
+        challenge: false,
+        fromSystem: false,
+        is_active: false,
+        is_full_day_event: false,
+        completed: false,
+        priority: 1,
+        list_board: columnId,
+      });
+      const newTask = {
+        id: response.data.id,
+        columnId,
+        content: response.data.title,
+      };
+
+      setTasks((prevTasks) => [...prevTasks, newTask]);
+    } catch (error) {
+      handleApiError(error, "creating task");
+    }
+  };
+
+  const deleteTask = async (id) => {
+    try {
+      await axiosInstance.delete(`todo/${id}/`);
+      const newTasks = tasks.filter((task) => task.id !== id);
+      setTasks(newTasks);
+    } catch (error) {
+      handleApiError(error, "deleting task");
+    }
+  };
+
+  const updateTask = async (id, content, tasks) => {
+    try {
+      if (content === "") {
+        await deleteTask(id);
+      } else {
+        const response = await axiosInstance.put(`todo/${id}/`, { content });
+
+        const updatedTask = {
+          id,
+          columnId: response.data.list_board,
+          content: response.data.title,
+        };
+
+        handleTaskUpdate(tasks, updatedTask);
+      }
+    } catch (error) {
+      handleApiError(error, "updating task");
+    }
+  };
+
+  // ---------------- END Task Handlers ----------------
+
+  // ---------------- Fetch Data ----------------
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -74,16 +142,21 @@ export function KanbanBoard() {
   useEffect(() => {
     const fetchBoardData = async () => {
       try {
+        setLoading(true);
         const response = await axiosInstance.get("boards/");
         if (response.data && response.data.length > 0) {
           setBoardData(response.data[0]);
         }
       } catch (error) {
         console.error("Error fetching board data:", error);
+        setLoading(false);
       }
+      setLoading(false);
     };
     fetchBoardData();
   }, []);
+
+  // ---------------- END Fetch Data ----------------
 
   return (
     <div
@@ -92,43 +165,36 @@ export function KanbanBoard() {
       flex
       w-full
       items-center
+      justify-center
       overflow-x-auto
       overflow-y-hidden
   ">
       <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
-        <div className="ml-2 flex gap-4">
+        <div className="flex gap-4">
           <div className="flex gap-4">
-            <SortableContext items={columnsId}>
-              {columns.map((col) => (
-                <ColumnContainerCard
-                  key={col.id}
-                  column={col}
-                  deleteColumn={deleteColumn}
-                  updateColumn={updateColumn}
-                  createTask={createTask}
-                  deleteTask={deleteTask}
-                  updateTask={updateTask}
-                  tasks={tasks.filter((task) => task.columnId === col.id)}
-                />
-              ))}
-            </SortableContext>
+            {!isLoading ? (
+              <SortableContext items={columnsId}>
+                {columns.map((col) => (
+                  <ColumnContainerCard
+                    key={col.id}
+                    column={col}
+                    createTask={createTask}
+                    deleteTask={deleteTask}
+                    updateTask={updateTask}
+                    tasks={(tasks || []).filter((task) => task.columnId === col.id)}
+                  />
+                ))}{" "}
+              </SortableContext>
+            ) : (
+              <span className="loading loading-dots loading-lg"></span>
+            )}
           </div>
         </div>
 
         {createPortal(
           <DragOverlay className="bg-white" dropAnimation={null} zIndex={20}>
-            {activeColumn && (
-              <ColumnContainerCard
-                column={activeColumn}
-                deleteColumn={deleteColumn}
-                updateColumn={updateColumn}
-                createTask={createTask}
-                deleteTask={deleteTask}
-                updateTask={updateTask}
-                tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
-              />
-            )}
-            {activeTask && <TaskCard task={activeTask} deleteTask={deleteTask} updateTask={updateTask} />}
+            {/* Render the active task as a draggable overlay */}
+            <TaskCard task={activeTask} deleteTask={deleteTask} updateTask={updateTask} />
           </DragOverlay>,
           document.body
         )}
@@ -136,169 +202,46 @@ export function KanbanBoard() {
     </div>
   );
 
-  function createTask(columnId, setTasks) {
-    const newTaskData = {
-      title: `Task ${tasks.length + 1}`,
-      importance: 1,
-      difficulty: 1,
-      challenge: false,
-      fromSystem: false,
-      is_active: false,
-      is_full_day_event: false,
-      completed: false,
-      priority: 1,
-      list_board: columnId,
-    };
-
-    axiosInstance
-      .post("todo/", newTaskData)
-      .then((response) => {
-        const newTask = {
-          id: response.data.id,
-          columnId,
-          content: response.data.title,
-        };
-      })
-      .catch((error) => {
-        console.error("Error creating task:", error);
-      });
-    setTasks((tasks) => [...tasks, newTask]);
-  }
-
-  function deleteTask(id) {
-    const newTasks = tasks.filter((task) => task.id !== id);
-    axiosInstance
-      .delete(`todo/${id}/`)
-      .then((response) => {
-        setTasks(newTasks);
-      })
-      .catch((error) => {
-        console.error("Error deleting Task:", error);
-      });
-    setTasks(newTasks);
-  }
-
-  function updateTask(id, content) {
-    const newTasks = tasks.map((task) => {
-      if (task.id !== id) return task;
-      return { ...task, content };
-    });
-    if (content === "") return deleteTask(id);
-    setTasks(newTasks);
-  }
-
-  function createNewColumn() {
-    axiosInstance
-      .post("lists/", { name: `Column ${columns.length + 1}`, position: 1, board: boardId.id })
-      .then((response) => {
-        const newColumn = {
-          id: response.data.id,
-          title: response.data.name,
-        };
-
-        setColumns((prevColumns) => [...prevColumns, newColumn]);
-      })
-      .catch((error) => {
-        console.error("Error creating ListBoard:", error);
-      });
-  }
-
-  function deleteColumn(id) {
-    axiosInstance
-      .delete(`lists/${id}/`)
-      .then((response) => {
-        setColumns((prevColumns) => prevColumns.filter((col) => col.id !== id));
-      })
-      .catch((error) => {
-        console.error("Error deleting ListBoard:", error);
-      });
-
-    const tasksToDelete = tasks.filter((t) => t.columnId === id);
-
-    tasksToDelete.forEach((task) => {
-      axiosInstance
-        .delete(`todo/${task.id}/`)
-        .then((response) => {
-          setTasks((prevTasks) => prevTasks.filter((t) => t.id !== task.id));
-        })
-        .catch((error) => {
-          console.error("Error deleting Task:", error);
-        });
-    });
-  }
-
-  function updateColumn(id, title) {
-    // Update the column
-    axiosInstance
-      .patch(`lists/${id}/`, { name: title }) // Adjust the payload based on your API requirements
-      .then((response) => {
-        setColumns((prevColumns) => prevColumns.map((col) => (col.id === id ? { ...col, title } : col)));
-      })
-      .catch((error) => {
-        console.error("Error updating ListBoard:", error);
-      });
-  }
-
+  // Handle the start of a drag event
   function onDragStart(event) {
-    if (event.active.data.current?.type === "Column") {
-      setActiveColumn(event.active.data.current.column);
-      return;
-    }
-
+    // Check if the dragged item is a Task
     if (event.active.data.current?.type === "Task") {
       setActiveTask(event.active.data.current.task);
       return;
     }
   }
 
+  // Handle the end of a drag event
   function onDragEnd(event) {
-    setActiveColumn(null);
+    // Reset active column and task after the drag ends
     setActiveTask(null);
 
     const { active, over } = event;
-    if (!over) return;
+    if (!over) return; // If not dropped over anything, exit
 
     const activeId = active.id;
     const overId = over.id;
 
-    const isActiveAColumn = active.data.current?.type === "Column";
     const isActiveATask = active.data.current?.type === "Task";
     const isOverAColumn = over.data.current?.type === "Column";
-    const isOverATask = over.data.current?.type === "Task";
-
-    // Reorder columns if the dragged item is a column
-    if (isActiveAColumn && isOverAColumn) {
-      setColumns((columns) => {
-        const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
-        const overColumnIndex = columns.findIndex((col) => col.id === overId);
-
-        const reorderedColumns = arrayMove(columns, activeColumnIndex, overColumnIndex);
-
-        return reorderedColumns;
-      });
-    }
-
-    // Reorder tasks within the same column
-    if (isActiveATask && isOverATask) {
-      setTasks((tasks) => {
-        const activeIndex = tasks.findIndex((t) => t.id === activeId);
-        const overIndex = tasks.findIndex((t) => t.id === overId);
-
-        const reorderedTasks = arrayMove(tasks, activeIndex, overIndex);
-
-        return reorderedTasks;
-      });
-    }
 
     // Move tasks between columns and update columnId
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
 
-        tasks[activeIndex].columnId = overId;
+        // Extract the column ID from overId
+        const columnId = extractColumnId(overId);
 
+        tasks[activeIndex].columnId = columnId;
+
+        // API call to update task's columnId
         axiosInstance
-          .put(`todo/change_task_list_board/`, { todo_id: activeId, new_list_board_id: overId, new_index: 0 })
+          .put(`todo/change_task_list_board/`, {
+            todo_id: activeId,
+            new_list_board_id: over.data.current.task.columnId,
+            new_index: 0,
+          })
           .then((response) => {})
           .catch((error) => {
             console.error("Error updating task columnId:", error);
@@ -309,40 +252,69 @@ export function KanbanBoard() {
     }
   }
 
+  // Helper function to extract the column ID from the element ID
+  function extractColumnId(elementId) {
+    // Implement logic to extract the column ID from elementId
+    // For example, if elementId is in the format "column-123", you can do:
+    const parts = elementId.split("-");
+    return parts.length === 2 ? parseInt(parts[1], 10) : null;
+  }
+
+  // Handle the drag-over event
   function onDragOver(event) {
     const { active, over } = event;
-    if (!over) return;
+    if (!over) return; // If not over anything, exit
 
     const activeId = active.id;
     const overId = over.id;
 
-    if (activeId === overId) return;
+    if (activeId === overId) return; // If over the same element, exit
 
     const isActiveATask = active.data.current?.type === "Task";
     const isOverATask = over.data.current?.type === "Task";
 
-    if (!isActiveATask) return;
+    if (!isActiveATask) return; // If not dragging a Task, exit
 
+    // Reorder logic for Tasks within the same column
     if (isActiveATask && isOverATask) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
         const overIndex = tasks.findIndex((t) => t.id === overId);
 
+        // If moving to a different column, update columnId
         if (tasks[activeIndex].columnId !== tasks[overIndex].columnId) {
           tasks[activeIndex].columnId = tasks[overIndex].columnId;
           return arrayMove(tasks, activeIndex, overIndex - 1);
         }
-
+        axiosInstance
+          .put(`todo/change_task_list_board/`, {
+            todo_id: activeId,
+            new_list_board_id: over.data.current.task.columnId,
+            new_index: 0,
+          })
+          .then((response) => {})
+          .catch((error) => {
+            console.error("Error updating task columnId:", error);
+          });
         return arrayMove(tasks, activeIndex, overIndex);
       });
     }
 
     const isOverAColumn = over.data.current?.type === "Column";
-
-    if (isActiveATask && isOverAColumn) {
+    // Move the Task to a different column and update columnId
+    if (isActiveATask && isOverAColumn && tasks.some((task) => task.columnId !== overId)) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
-
+        axiosInstance
+          .put(`todo/change_task_list_board/`, {
+            todo_id: activeId,
+            new_list_board_id: over.data.current.task.columnId,
+            new_index: 0,
+          })
+          .then((response) => {})
+          .catch((error) => {
+            console.error("Error updating task columnId:", error);
+          });
         tasks[activeIndex].columnId = overId;
         return arrayMove(tasks, activeIndex, activeIndex);
       });

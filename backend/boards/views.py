@@ -1,11 +1,13 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 from boards.models import Board, ListBoard
 from boards.serializers import BoardSerializer, ListBoardSerializer
 
 class BoardViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
     http_method_names = ['get']
@@ -16,6 +18,7 @@ class BoardViewSet(viewsets.ModelViewSet):
 
 
 class ListBoardViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
     serializer_class = ListBoardSerializer
 
     def get_queryset(self):

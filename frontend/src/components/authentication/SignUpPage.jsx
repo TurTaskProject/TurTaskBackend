@@ -56,6 +56,8 @@ export function SignUp() {
   const googleLoginImplicit = useGoogleLogin({
     flow: "auth-code",
     redirect_uri: "postmessage",
+    scope:
+      "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar.acls.readonly https://www.googleapis.com/auth/calendar.events.readonly",
     onSuccess: async (response) => {
       try {
         const loginResponse = await googleLogin(response.code);
