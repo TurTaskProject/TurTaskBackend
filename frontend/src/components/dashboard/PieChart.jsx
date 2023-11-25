@@ -1,37 +1,34 @@
 import { DonutChart } from "@tremor/react";
-import axiosInstance from "../../api/configs/AxiosConfig";
+import { axiosInstance } from "src/api/AxiosConfig";
+import { useState, useEffect } from "react";
 
-const fetchPieData = async () => {
-  try {
-    let res = await axiosInstance.get("/dashboard/stats/");
-    // let todoCount = res.data.todo_count;
-    // let recurrenceCount = res.data.recurrence_count;
-    let todoCount = 10;
-    let recurrenceCount = 15;
-    if (todoCount === undefined) {
-      todoCount = 0;
-    }
-    if (recurrenceCount === undefined) {
-      recurrenceCount = 0;
-    }
-    const donutData = [
-      { name: "Completed Tasks", count: todoCount },
-      { name: "Uncompleted Tasks", count: recurrenceCount },
-    ];
-    return donutData;
-  } catch (error) {
-    console.error("Error fetching donut data:", error);
-    return [];
-  }
-};
+export function DonutChartGraph() {
+  const [donutData, setDonutData] = useState([]);
 
-const pieDataArray = await fetchPieData();
+  useEffect(() => {
+    const fetchDonutData = async () => {
+      try {
+        const response = await axiosInstance.get("/dashboard/todostats/");
+        const totalTask = response.data.total_tasks || 0;
+        const completedTask = response.data.total_completed_tasks || 0;
 
-export  function PieChartGraph() {
+        const donutData = [
+          { name: "Completed task", count: totalTask },
+          { name: "Total task", count: completedTask },
+        ];
+
+        setDonutData(donutData);
+      } catch (error) {
+        console.error("Error fetching donut data:", error);
+      }
+    };
+    fetchDonutData();
+  }, []);
+
   return (
     <DonutChart
       className="mt-6"
-      data={pieDataArray}
+      data={donutData}
       category="count"
       index="name"
       colors={["rose", "yellow"]}

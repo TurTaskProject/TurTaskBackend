@@ -10,10 +10,11 @@ import {
   Title,
   Legend,
 } from "@tremor/react";
-import {KpiCard} from "./KpiCard";
+import { KpiCard } from "./KpiCard";
 import { BarChartGraph } from "./Barchart";
 import { AreaChartGraph } from "./Areachart";
-import {ProgressCircleChart} from "./ProgressCircle";
+import { DonutChartGraph } from "./PieChart";
+import { ProgressCircleChart } from "./ProgressCircle";
 
 const valueFormatter = (number) =>
   `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
@@ -59,17 +60,20 @@ export function Dashboard() {
               </Grid>
             </TabPanel>
             <TabPanel>
-            <div className="h-31">
+              <Grid numItemsMd={2} numItemsLg={3} className="gap-6 mt-6">
+                <div className="h-31">
                   <Card className="mx-auto h-full">
                     <Title>Tasks</Title>
+                    <DonutChartGraph />
                     <br />
                     <Legend
                       className="mt-3 mx-auto w-1/2"
-                      categories={["Todo Task", "Recurrence Task"]}
+                      categories={["Completed Task", "Total Task"]}
                       colors={["rose", "yellow"]}
                     />
                   </Card>
                 </div>
+              </Grid>
             </TabPanel>
           </TabPanels>
         </TabGroup>
