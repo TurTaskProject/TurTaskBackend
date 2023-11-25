@@ -74,10 +74,20 @@ class DashboardStatsTodoViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 
         total_tasks = Todo.objects.filter(user=user).count()
 
+        today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today_end = timezone.now().replace(hour=23, minute=59, second=59, microsecond=999999)
+
         tasks_completed_today = Todo.objects.filter(
             user=user,
             completed=True,
-            completion_date__gte=timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            completion_date__gte=today_start,
+            completion_date__lte=today_end
+        ).count()
+
+        total_tasks_today = Todo.objects.filter(
+            user=user,
+            completion_date__gte=today_start,
+            completion_date__lte=today_end
         ).count()
 
 
@@ -91,6 +101,7 @@ class DashboardStatsTodoViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             "overall_completion_rate": overall_completion_rate,
             "total_completed_tasks": total_completed_tasks,
             "total_tasks" : total_tasks,
+            "total_tasks_today": total_tasks_today,
             "tasks_completed_today": tasks_completed_today,
         }
 
