@@ -60,7 +60,7 @@ export function TaskCard({ task, deleteTask, updateTask }) {
           setMouseIsOver(false);
         }}>
         <p
-          className="p-2.5 my-auto w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap rounded-xl shadow bg-white"
+          className={`p-2.5 my-auto w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap rounded-xl shadow bg-white`}
           onClick={() => document.getElementById(`task_detail_modal_${task.id}`).showModal()}>
           {task.content}
         </p>

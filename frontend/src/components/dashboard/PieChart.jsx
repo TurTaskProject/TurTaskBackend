@@ -13,8 +13,8 @@ export function DonutChartGraph() {
         const completedTask = response.data.total_completed_tasks || 0;
 
         const donutData = [
-          { name: "Completed task", count: totalTask },
-          { name: "Total task", count: completedTask },
+          { name: "Completed task", count: completedTask },
+          { name: "Total task", count: totalTask },
         ];
 
         setDonutData(donutData);
