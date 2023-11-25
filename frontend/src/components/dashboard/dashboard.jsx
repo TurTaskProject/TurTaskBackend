@@ -10,6 +10,8 @@ import {
   Title,
   Legend,
   Metric,
+  ProgressCircle,
+  Flex,
 } from "@tremor/react";
 import { KpiCard } from "./KpiCard";
 import { BarChartGraph } from "./Barchart";
@@ -26,7 +28,8 @@ export function Dashboard() {
   const [totalTask, setTotalTask] = useState(0);
   const [totalCompletedTasks, settotalCompletedTasks] = useState(0);
   const [totalCompletedTasksToday, setTotalCompletedTasksToday] = useState(0);
-  const [totalTaskToday, setTotalTaskToday] = useState(0);
+  const [progressData, setProgressData] = useState(0);
+  const [overdueTask, setOverdueTask] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,11 +39,18 @@ export function Dashboard() {
       const totalCompletedTasksTodayValue =
         response.data.total_completed_tasks_today || 0;
       const totalTaskToday = response.data.total_task_today || 0;
+      const totalCompletedTasksToday = response.data.tasks_completed_today || 0;
+      const overdueTasks = response.data.overdue_tasks || 0;
+
+      const progress =
+        (totalCompletedTasksToday / totalCompletedTasksToday) * 100;
 
       setTotalTask(totalTaskValue);
       settotalCompletedTasks(totalCompletedTasksValue);
       setTotalCompletedTasksToday(totalCompletedTasksTodayValue);
       setTotalTaskToday(totalTaskToday);
+      setProgressData(progress);
+      setOverdueTask(overdueTasks);
     };
 
     fetchData();
@@ -73,7 +83,7 @@ export function Dashboard() {
                   <ProgressCircleChart />
                   <Legend
                     className="mt-3 mx-auto w-1/2"
-                    categories={["Completed Tasks", "Assigned Tasks"]}
+                    categories={["Completed Tasks"]}
                     colors={["indigo"]}
                   ></Legend>
                 </Card>
@@ -89,6 +99,7 @@ export function Dashboard() {
             <TabPanel>
               <Grid numItemsMd={2} numItemsLg={3} className="gap-6 mt-6">
                 <Card>
+                  <Title className="mx-auto">Overview</Title>
                   <Card
                     className="max-w-xs mx-auto"
                     decoration="top"
@@ -110,25 +121,50 @@ export function Dashboard() {
                   <Card
                     className="max-w-xs mx-auto"
                     decoration="top"
-                    decorationColor="orange"
+                    decorationColor="pink"
                   >
-                    <Text>Task completed today</Text>
-                    <Metric>{totalCompletedTasksToday}</Metric>
+                    <Text>Overdue tasks</Text>
+                    <Metric>{overdueTask}</Metric>
                   </Card>
+                  <br></br>
                 </Card>
                 {/*Pie chart graph*/}
-                <div className="h-31">
-                  <Card className="mx-auto h-full">
-                    <Title>Tasks</Title>
-                    <DonutChartGraph />
-                    <br />
+                <Card className="mx-auto h-full">
+                  <Title>Overall completion rate</Title>
+                  <DonutChartGraph />
+                  <br />
+                  <Legend
+                    className="mt-3 mx-auto w-1/2"
+                    categories={["Completed Task", "Total Task"]}
+                    colors={["rose", "yellow"]}
+                  />
+                </Card>
+                {/*Progress circle graph*/}
+
+                <Card className="max-w-lg mx-auto">
+                  <Title>Today's progress</Title>
+                  <br />
+                  <Flex className="flex-col items-center">
+                    <ProgressCircle
+                      className="mt-6"
+                      value={progressData}
+                      size={200}
+                      strokeWidth={10}
+                      radius={60}
+                      color="rose"
+                    >
+                      <span className="h-12 w-12 rounded-full bg-rose-100 flex items-center justify-center text-sm text-rose-500 font-medium">
+                        {progressData.toFixed(0)} %
+                      </span>
+                    </ProgressCircle>
+                    <br></br>
                     <Legend
                       className="mt-3 mx-auto w-1/2"
-                      categories={["Completed Task", "Total Task"]}
-                      colors={["rose", "yellow"]}
-                    />
-                  </Card>
-                </div>
+                      categories={["Completed Tasks"]}
+                      colors={["rose"]}
+                    ></Legend>
+                  </Flex>
+                </Card>
               </Grid>
             </TabPanel>
           </TabPanels>
