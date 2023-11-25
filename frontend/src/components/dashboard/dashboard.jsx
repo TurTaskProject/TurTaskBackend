@@ -1,22 +1,29 @@
-import { Card, Grid, Tab, TabGroup, TabList, TabPanel, TabPanels, Text, Title, Legend } from "@tremor/react";
-import { KpiCard } from "./KpiCard";
+import {
+  Card,
+  Grid,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Text,
+  Title,
+  Legend,
+} from "@tremor/react";
+import {KpiCard} from "./KpiCard";
 import { BarChartGraph } from "./Barchart";
-import { DonutChartGraph } from "./DonutChart";
 import { AreaChartGraph } from "./Areachart";
-import { ProgressCircleChart } from "./ProgressCircle";
-import { useState } from "react";
+import {ProgressCircleChart} from "./ProgressCircle";
+
+const valueFormatter = (number) =>
+  `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
 
 export function Dashboard() {
-  const [value, setValue] = useState({
-    from: new Date(2021, 0, 1),
-    to: new Date(2023, 0, 7),
-  });
   return (
     <div className="flex flex-col p-12">
       <div>
         <Title>Dashboard</Title>
         <Text>All of your progress will be shown right here.</Text>
-        <br />
       </div>
 
       <div>
@@ -40,7 +47,8 @@ export function Dashboard() {
                   <Legend
                     className="mt-3 mx-auto w-1/2"
                     categories={["Completed Tasks", "Assigned Tasks"]}
-                    colors={["indigo"]}></Legend>
+                    colors={["indigo"]}
+                  ></Legend>
                 </Card>
                 <Card>
                   <BarChartGraph />
@@ -51,18 +59,17 @@ export function Dashboard() {
               </Grid>
             </TabPanel>
             <TabPanel>
-              <div className="h-31">
-                <Card className="mx-auto h-full">
-                  <Title>Tasks</Title>
-                  <DonutChartGraph />
-                  <br />
-                  <Legend
-                    className="mt-3 mx-auto w-1/2"
-                    categories={["Todo Task", "Recurrence Task"]}
-                    colors={["rose", "yellow"]}
-                  />
-                </Card>
-              </div>
+            <div className="h-31">
+                  <Card className="mx-auto h-full">
+                    <Title>Tasks</Title>
+                    <br />
+                    <Legend
+                      className="mt-3 mx-auto w-1/2"
+                      categories={["Todo Task", "Recurrence Task"]}
+                      colors={["rose", "yellow"]}
+                    />
+                  </Card>
+                </div>
             </TabPanel>
           </TabPanels>
         </TabGroup>
