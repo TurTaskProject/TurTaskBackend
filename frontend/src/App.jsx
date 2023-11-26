@@ -11,7 +11,7 @@ import { SideNav } from "./components/navigations/IconSideNav";
 import { Eisenhower } from "./components/EisenhowerMatrix/Eisenhower";
 import { PrivateRoute } from "./PrivateRoute";
 import { ProfileUpdatePage } from "./components/profile/profilePage";
-import { Dashboard } from "./components/dashboard/Dashboard";
+import { Dashboard } from "./components/dashboard/dashboard";
 import { LandingPage } from "./components/landingPage/LandingPage";
 import { PublicRoute } from "./PublicRoute";
 import { useAuth } from "./hooks/AuthHooks";
