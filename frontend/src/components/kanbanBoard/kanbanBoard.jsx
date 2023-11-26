@@ -1,6 +1,12 @@
 import { useMemo, useState, useEffect } from "react";
 import { ColumnContainerCard } from "./columnContainerWrapper";
-import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import { TaskCard } from "./taskCard";
@@ -26,7 +32,9 @@ export function KanbanBoard() {
 
   // ---------------- Task Handlers ----------------
   const handleTaskUpdate = (tasks, updatedTask) => {
-    const updatedTasks = tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task));
+    const updatedTasks = tasks.map((task) =>
+      task.id === updatedTask.id ? updatedTask : task
+    );
     setTasks(updatedTasks);
   };
 
@@ -168,8 +176,14 @@ export function KanbanBoard() {
       justify-center
       overflow-x-auto
       overflow-y-hidden
-  ">
-      <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
+  "
+    >
+      <DndContext
+        sensors={sensors}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        onDragOver={onDragOver}
+      >
         <div className="flex gap-4">
           <div className="flex gap-4">
             {!isLoading ? (
@@ -181,7 +195,9 @@ export function KanbanBoard() {
                     createTask={createTask}
                     deleteTask={deleteTask}
                     updateTask={updateTask}
-                    tasks={(tasks || []).filter((task) => task.columnId === col.id)}
+                    tasks={(tasks || []).filter(
+                      (task) => task.columnId === col.id
+                    )}
                   />
                 ))}{" "}
               </SortableContext>
@@ -194,7 +210,11 @@ export function KanbanBoard() {
         {createPortal(
           <DragOverlay className="bg-white" dropAnimation={null} zIndex={20}>
             {/* Render the active task as a draggable overlay */}
-            <TaskCard task={activeTask} deleteTask={deleteTask} updateTask={updateTask} />
+            <TaskCard
+              task={activeTask}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+            />
           </DragOverlay>,
           document.body
         )}
@@ -302,7 +322,11 @@ export function KanbanBoard() {
 
     const isOverAColumn = over.data.current?.type === "Column";
     // Move the Task to a different column and update columnId
-    if (isActiveATask && isOverAColumn && tasks.some((task) => task.columnId !== overId)) {
+    if (
+      isActiveATask &&
+      isOverAColumn &&
+      tasks.some((task) => task.columnId !== overId)
+    ) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
         axiosInstance

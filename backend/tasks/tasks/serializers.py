@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from users.models import CustomUser
 from boards.models import ListBoard
 from tasks.models import Todo, RecurrenceTask, Habit
 
@@ -8,7 +9,14 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        # Create a new task with validated data
+        user_id = validated_data.get('user')
+
+        try:
+            user = CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError("User with the provided ID does not exist.")
+
+        validated_data['user'] = user
         return Todo.objects.create(**validated_data)
 
 class TaskCreateSerializer(serializers.ModelSerializer):

@@ -5,10 +5,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, mixins
 
-from tasks.models import Todo
+from tasks.models import Todo, RecurrenceTask
 
 
-class DashboardStatsViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+class DashboardStatsTodoViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+    """
+    A viewset for retrieving statistics related to user tasks for the last 7 days.
+    """
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
@@ -66,6 +69,27 @@ class DashboardStatsViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         # Overall completion rate
         total_tasks = Todo.objects.filter(user=user).count()
         overall_completion_rate = (completed_last_7_days / total_tasks) * 100 if total_tasks > 0 else 0
+        
+        total_completed_tasks = Todo.objects.filter(user=user, completed=True).count()
+
+        total_tasks = Todo.objects.filter(user=user).count()
+
+        today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today_end = timezone.now().replace(hour=23, minute=59, second=59, microsecond=999999)
+
+        tasks_completed_today = Todo.objects.filter(
+            user=user,
+            completed=True,
+            completion_date__gte=today_start,
+            completion_date__lte=today_end
+        ).count()
+
+        total_tasks_today = Todo.objects.filter(
+            user=user,
+            completion_date__gte=today_start,
+            completion_date__lte=today_end
+        ).count()
+
 
         data = {
             "completed_last_7_days": completed_last_7_days,
@@ -75,6 +99,10 @@ class DashboardStatsViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             "completed_this_week": completed_this_week,
             "overdue_tasks": overdue_tasks,
             "overall_completion_rate": overall_completion_rate,
+            "total_completed_tasks": total_completed_tasks,
+            "total_tasks" : total_tasks,
+            "total_tasks_today": total_tasks_today,
+            "tasks_completed_today": tasks_completed_today,
         }
 
         return Response(data, status=status.HTTP_200_OK)
@@ -145,7 +173,142 @@ class DashboardWeeklyViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 
         return Response(weekly_stats, status=status.HTTP_200_OK)
 
+class DashboardStatsReccurenceViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+    """
+    A viewset for retrieving statistics related to user tasks for the last 7 days.
+    """
+    permission_classes = (IsAuthenticated,)
 
+    def get_queryset(self):
+        return RecurrenceTask.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        user = self.request.user
+
+        # Calculate the start and end date for the last 7 days
+        end_date = timezone.now()
+        start_date = end_date - timedelta(days=7)
+
+        # How many tasks were completed in the last 7 days
+        completed_last_7_days = RecurrenceTask.objects.filter(
+            user=user,
+            completed=True,
+            completion_date__gte=start_date,
+            completion_date__lte=end_date
+        ).count()
+
+        # Task assign last week compared with this week
+        tasks_assigned_last_week = RecurrenceTask.objects.filter(
+            user=user,
+            completion_date__gte=start_date - timedelta(days=7),
+            completion_date__lte=start_date
+        ).count()
+
+        tasks_assigned_this_week = RecurrenceTask.objects.filter(
+            user=user,
+            completion_date__gte=start_date,
+            completion_date__lte=end_date
+        ).count()
+
+        # Completed tasks from last week compared with this week
+        completed_last_week = RecurrenceTask.objects.filter(
+            user=user,
+            completed=True,
+            completion_date__gte=start_date - timedelta(days=7),
+            completion_date__lte=start_date
+        ).count()
+
+        completed_this_week = RecurrenceTask.objects.filter(
+            user=user,
+            completed=True,
+            completion_date__gte=start_date,
+            completion_date__lte=end_date
+        ).count()
+
+        overdue_tasks = RecurrenceTask.objects.filter(
+            user=user,
+            completed=False,
+            end_event__lt=timezone.now()
+        ).count()
+
+        # Overall completion rate
+        total_tasks = RecurrenceTask.objects.filter(user=user).count()
+        overall_completion_rate = (completed_last_7_days / total_tasks) * 100 if total_tasks > 0 else 0
+        
+        total_completed_tasks = RecurrenceTask.objects.filter(
+            user=user, 
+            completed=True
+        ).count()
+
+        total_tasks = RecurrenceTask.objects.filter(user=user).count()
+
+        tasks_completed_today = RecurrenceTask.objects.filter(
+            user=user,
+            completed=True,
+            completion_date__gte=timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        ).count()
+
+        data = {
+            "completed_last_7_days": completed_last_7_days,
+            "tasks_assigned_last_week": tasks_assigned_last_week,
+            "tasks_assigned_this_week": tasks_assigned_this_week,
+            "completed_last_week": completed_last_week,
+            "completed_this_week": completed_this_week,
+            "overdue_tasks": overdue_tasks,
+            "overall_completion_rate": overall_completion_rate,
+            "total_completed_tasks": total_completed_tasks,
+            "total_tasks" : total_tasks,
+            "tasks_completed_today": tasks_completed_today,
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
+    
+# class DashboardStatsAllViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+#     permission_classes = [IsAuthenticated]
+
+#     def get_queryset(self):
+#         return Todo.objects.filter(user=self.request.user)
+
+#     def list(self, request, *args, **kwargs):
+#         user = request.user
+
+#         # Calculate task usage statistics
+#         todo_count = self.get_queryset().count()
+#         recurrence_task_count = RecurrenceTask.objects.filter(user=user).count()
+
+#         # Calculate how many tasks were completed in the last 7 days
+#         completed_todo_count_last_week = Todo.objects.filter(user=user, completed=True, last_update__gte=timezone.now() - timezone.timedelta(days=7)).count()
+#         completed_recurrence_task_count_last_week = RecurrenceTask.objects.filter(user=user, completed=True, last_update__gte=timezone.now() - timezone.timedelta(days=7)).count()
+
+#         # Calculate subtask completion rate
+#         total_subtasks = Todo.objects.filter(user=user).aggregate(total=Count('subtask__id'))['total']
+#         completed_subtasks = Todo.objects.filter(user=user, subtask__completed=True).aggregate(total=Count('subtask__id'))['total']
+
+#         # Calculate overall completion rate
+#         total_tasks = todo_count + recurrence_task_count
+#         completed_tasks = completed_todo_count_last_week + completed_recurrence_task_count_last_week
+#         overall_completion_rate = (completed_tasks / total_tasks) * 100 if total_tasks > 0 else 0
+
+#         # pie chart show
+#         complete_todo_percent_last_week =  (completed_todo_count_last_week / todo_count) * 100 if todo_count > 0 else 0
+#         complete_recurrence_percent_last_week = (completed_recurrence_task_count_last_week / recurrence_task_count) * 100 if recurrence_task_count > 0 else 0
+#         incomplete_task_percent_last_week = 100 -  complete_recurrence_percent_last_week - complete_todo_percent_last_week
+
+#         data = {
+#             'todo_count': todo_count,
+#             'recurrence_task_count': recurrence_task_count,
+#             'completed_todo_count_last_week': completed_todo_count_last_week,
+#             'completed_recurrence_task_count_last_week': completed_recurrence_task_count_last_week,
+#             'total_subtasks': total_subtasks,
+#             'completed_subtasks': completed_subtasks,
+#             'overall_completion_rate': overall_completion_rate,
+#             'complete_todo_percent_last_week': complete_todo_percent_last_week,
+#             'complete_recurrence_percent_last_week' : complete_recurrence_percent_last_week,
+#             'incomplete_task_percent_last_week': incomplete_task_percent_last_week,
+#         }
+
+#         return Response(data, status=status.HTTP_200_OK)
+    
 # class DashboardStatsAPIView(APIView):
 #     permission_classes = [IsAuthenticated]
 
