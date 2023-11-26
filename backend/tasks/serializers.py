@@ -29,10 +29,11 @@ class TodoUpdateSerializer(serializers.ModelSerializer):
         super(TodoUpdateSerializer, self).__init__(*args, **kwargs)
 
     def get_list_board(self, obj):
-        return Board.objects.filter(user=self.user).first()
+        return Board.objects.get(user=self.user).listboard_set.first()
 
     def create(self, validated_data):
         validated_data['user'] = self.user
+        validated_data['list_board'] = self.get_list_board(self)
         task = Todo.objects.create(**validated_data)
 
         return task
