@@ -107,4 +107,4 @@ class SubTaskSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # Create a new task with validated data
-        return Todo.objects.create(**validated_data)
+        return Subtask.objects.create(**validated_data)

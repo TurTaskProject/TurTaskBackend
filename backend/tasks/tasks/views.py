@@ -130,7 +130,8 @@ list=extend_schema(
 class SubTaskViewset(viewsets.GenericViewSet,
                      mixins.CreateModelMixin,
                      mixins.DestroyModelMixin,
-                     mixins.ListModelMixin):
+                     mixins.ListModelMixin,
+                     mixins.UpdateModelMixin):
     queryset = Subtask.objects.all()
     permission_classes = (IsAuthenticated,)
 
@@ -168,6 +169,19 @@ class SubTaskViewset(viewsets.GenericViewSet,
             instance = self.get_object()
             self.perform_destroy(instance)
             return Response(status=status.HTTP_204_NO_CONTENT)
+        
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+    def partial_update(self, request, *args, **kwargs):
+        """Update a subtask."""
+        try:
+            instance = self.get_o
+            serializer = self.get_serializer(instance, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(serializer.data)
         
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
