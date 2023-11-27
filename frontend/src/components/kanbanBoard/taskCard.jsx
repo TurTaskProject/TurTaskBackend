@@ -60,7 +60,7 @@ export function TaskCard({ task, deleteTask, updateTask }) {
   // Due Date
   const dueDateTag =
     task.end_event && new Date(task.end_event) > new Date()
-      ? (() => {
+      ? (() => {  
           const daysUntilDue = Math.ceil((new Date(task.end_event) - new Date()) / (1000 * 60 * 60 * 24));
 
           let colorClass =
@@ -139,23 +139,6 @@ export function TaskCard({ task, deleteTask, updateTask }) {
         onMouseLeave={() => {
           setMouseIsOver(false);
         }}>
-<<<<<<< HEAD
-        <p
-          className={`p-2.5 my-auto w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap rounded-xl shadow bg-white`}
-          onClick={() => document.getElementById(`task_detail_modal_${task.id}`).showModal()}>
-          {task.content}
-        </p>
-
-        {mouseIsOver && (
-          <button
-            onClick={() => {
-              deleteTask(task.id);
-            }}
-            className="stroke-white absolute right-0 top-1/2 rounded-full bg-white -translate-y-1/2 bg-columnBackgroundColor p-2 hover:opacity-100 ">
-            <BsFillTrashFill />
-          </button>
-        )}
-=======
         {/* -------- Task Content -------- */}
         {/* Tags */}
         {tags}
@@ -183,7 +166,6 @@ export function TaskCard({ task, deleteTask, updateTask }) {
           {dueDateTag}
           {subtaskCountTag}
         </div>
->>>>>>> 4a3f253e3049f97ef4479dd423642897a56e13fc
       </div>
     </div>
   );

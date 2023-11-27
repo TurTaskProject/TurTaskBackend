@@ -1,13 +1,30 @@
 import { useState, useRef } from "react";
 import { ApiUpdateUserProfile } from "src/api/UserProfileApi";
+import { axiosInstance } from "src/api/AxiosConfig";
+import { useEffect } from "react";
 
 export function ProfileUpdateComponent() {
   const [file, setFile] = useState(null);
-  const [username, setUsername] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [about, setAbout] = useState("");
-  const defaultImage = "https://i1.sndcdn.com/artworks-cTz48e4f1lxn5Ozp-L3hopw-t500x500.jpg";
+  const [firstName, setFirstName] = useState("");
+  const [about, setAbout] = useState();
   const fileInputRef = useRef(null);
+  const [profile_pic, setProfilePic] = useState(undefined);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axiosInstance.get("/user/data/");
+        const fetchedProfilePic = response.data.profile_pic;
+        const fetchedName = response.data.first_name;
+        const fetchedAbout = response.data.about;
+        setProfilePic(fetchedProfilePic);
+        setAbout(fetchedAbout);
+        setFirstName(fetchedName);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleImageUpload = () => {
     if (fileInputRef.current) {
@@ -25,7 +42,7 @@ export function ProfileUpdateComponent() {
   const handleSave = () => {
     const formData = new FormData();
     formData.append("profile_pic", file);
-    formData.append("first_name", username);
+    formData.append("first_name", firstName);
     formData.append("about", about);
 
     ApiUpdateUserProfile(formData);
@@ -45,12 +62,19 @@ export function ProfileUpdateComponent() {
             ref={fileInputRef}
           />
         </label>
-        <div className="avatar w-32 h-32 cursor-pointer hover:blur" onClick={handleImageUpload}>
+        <div
+          className="avatar w-32 h-32 cursor-pointer hover:blur"
+          onClick={handleImageUpload}
+        >
           {file ? (
-            <img src={URL.createObjectURL(file)} alt="Profile" className="rounded-full" />
+            <img
+              src={URL.createObjectURL(file)}
+              alt="Profile"
+              className="rounded-full"
+            />
           ) : (
             <>
-              <img src={defaultImage} alt="Default" className="rounded-full" />
+              <img src={profile_pic} alt="Default" className="rounded-full" />
               <i className="fas fa-camera text-white text-2xl absolute bottom-0 right-0 mr-2 mb-2"></i>
               <i className="fas fa-arrow-up text-white text-2xl absolute top-0 right-0 mr-2 mt-2"></i>
             </>
@@ -58,7 +82,7 @@ export function ProfileUpdateComponent() {
         </div>
       </div>
 
-      {/* Username Field */}
+      {/* Username Field
       <div className="w-96">
         <label className="block mb-2 text-gray-600">Username</label>
         <input
@@ -68,16 +92,16 @@ export function ProfileUpdateComponent() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-      </div>
+      </div> */}
 
       {/* Full Name Field */}
       <div className="w-96">
-        <label className="block mb-2 text-gray-600">Full Name</label>
+        <label className="block mb-2 text-gray-600">First Name</label>
         <input
           type="text"
-          placeholder="Enter your full name"
+          placeholder="Enter your first name"
           className="input w-full"
-          value={fullName}
+          value={firstName}
           onChange={(e) => setFullName(e.target.value)}
         />
       </div>

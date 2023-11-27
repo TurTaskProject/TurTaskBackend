@@ -39,12 +39,12 @@ export function NavBar() {
               tabIndex={0}
               className="mt-3 z-[10] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
               <li>
-                <a href={settings.Profile} className="justify-between">
+                <a onClick={() => Navigate(settings.Profile)} className="justify-between">
                   Profile
                 </a>
               </li>
               <li>
-                <a href={settings.Account}>Settings</a>
+                <a onClick={() => Navigate(settings.Account)}>Settings</a>
               </li>
               <li>
                 <a onClick={logout}>Logout</a>

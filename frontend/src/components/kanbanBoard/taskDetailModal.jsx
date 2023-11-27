@@ -3,9 +3,21 @@ import { FaTasks, FaRegListAlt } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { TbChecklist } from "react-icons/tb";
 import DatePicker from "react-datepicker";
+import { TimePicker } from "react-ios-time-picker";
 import "react-datepicker/dist/react-datepicker.css";
+import { borderColor } from "@mui/system";
 
-export function TaskDetailModal({ title, description, tags, difficulty, challenge, importance, taskId, updateTask }) {
+export function TaskDetailModal({
+  title,
+  description,
+  tags,
+  difficulty,
+  challenge,
+  importance,
+  taskId,
+  updateTask,
+}) {
+  let date = new Date();
   const [isChallengeChecked, setChallengeChecked] = useState(challenge);
   const [isImportantChecked, setImportantChecked] = useState(importance);
   const [currentDifficulty, setCurrentDifficulty] = useState(difficulty);
@@ -15,7 +27,11 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
   const [startDateEnabled, setStartDateEnabled] = useState(false);
   const [endDateEnabled, setEndDateEnabled] = useState(false);
   const [isTaskComplete, setTaskComplete] = useState(false);
+  const [value, setValue] = useState('10:00');
 
+  const onChange = (timeValue) => {
+    setValue(timeValue);
+  };
   const handleChallengeChange = () => {
     setChallengeChecked(!isChallengeChecked);
   };
@@ -30,7 +46,11 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
 
   const handleTagChange = (tag) => {
     const isSelected = selectedTags.includes(tag);
-    setSelectedTags(isSelected ? selectedTags.filter((selectedTag) => selectedTag !== tag) : [...selectedTags, tag]);
+    setSelectedTags(
+      isSelected
+        ? selectedTags.filter((selectedTag) => selectedTag !== tag)
+        : [...selectedTags, tag]
+    );
   };
 
   const handleStartDateChange = () => {
@@ -59,7 +79,8 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
   const existingTags = tags.map((tag, index) => (
     <div
       key={index}
-      className={`text-xs inline-flex items-center font-bold leading-sm uppercase px-2 py-1 bg-${tag.color}-200 text-${tag.color}-700 rounded-full`}>
+      className={`text-xs inline-flex items-center font-bold leading-sm uppercase px-2 py-1 bg-${tag.color}-200 text-${tag.color}-700 rounded-full`}
+    >
       {tag.label}
     </div>
   ));
@@ -68,7 +89,8 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
   const selectedTagElements = selectedTags.map((tag, index) => (
     <div
       key={index}
-      className={`text-xs inline-flex items-center font-bold leading-sm uppercase px-2 py-1 bg-${tag.color}-200 text-${tag.color}-700 rounded-full`}>
+      className={`text-xs inline-flex items-center font-bold leading-sm uppercase px-2 py-1 bg-${tag.color}-200 text-${tag.color}-700 rounded-full`}
+    >
       {tag.label}
     </div>
   ));
@@ -92,10 +114,16 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
         <div className="flex flex-col py-2 pb-4">
           <div className="flex flex-row space-x-5">
             <div className="dropdown">
-              <label tabIndex={0} className="btn-md border-2 rounded-xl m-1 py-1">
+              <label
+                tabIndex={0}
+                className="btn-md border-2 rounded-xl m-1 py-1"
+              >
                 + Add Tags
               </label>
-              <ul tabIndex={0} className="dropdown-content z-[10] menu p-2 shadow bg-base-100 rounded-box w-52">
+              <ul
+                tabIndex={0}
+                className="dropdown-content z-[10] menu p-2 shadow bg-base-100 rounded-box w-52"
+              >
                 {tags.map((tag, index) => (
                   <li key={index}>
                     <label className="cursor-pointer space-x-2">
@@ -127,10 +155,14 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
                 <input
                   type="checkbox"
                   checked={startDateEnabled}
-                  className="checkbox checkbox-xs"
+                  className="checkbox checkbox-xs  bg-black"
                   onChange={handleStartDateChange}
                 />
-                <div className={`rounded p-2 shadow border-2 ${!startDateEnabled && "opacity-50"}`}>
+                <div
+                  className={`rounded p-2 shadow border-2 ${
+                    !startDateEnabled && "opacity-50"
+                  }`}
+                >
                   <DatePicker
                     selected={dateStart}
                     onChange={(date) => setDateStart(date)}
@@ -138,6 +170,15 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
                   />
                 </div>
               </div>
+            </div> 
+
+            <div className="rounded p-2 shadow border-2">
+
+              <TimePicker  
+                value={value}
+                onChange={onChange}
+                className="rounded p-2 shadow border-2 z-[10000] relative"
+              />
             </div>
             {/* Complete? */}
             <div className="mx-4">
@@ -147,7 +188,7 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
                   <input
                     type="checkbox"
                     checked={isTaskComplete}
-                    className="checkbox checkbox-xl"
+                    className="checkbox checkbox-xl bg-black"
                     onChange={handleTaskCompleteChange}
                   />
                 </div>
@@ -161,11 +202,19 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
               <input
                 type="checkbox"
                 checked={endDateEnabled}
-                className="checkbox checkbox-xs"
+                className="checkbox checkbox-xs bg-black"
                 onChange={handleEndDateChange}
               />
-              <div className={`rounded p-2 shadow border-2 ${!endDateEnabled && "opacity-50"}`}>
-                <DatePicker selected={dateEnd} onChange={(date) => setDateEnd(date)} disabled={!endDateEnabled} />
+              <div
+                className={`rounded p-2 shadow border-2 ${
+                  !endDateEnabled && "opacity-50"
+                }`}
+              >
+                <DatePicker
+                  selected={dateEnd}
+                  onChange={(date) => setDateEnd(date)}
+                  disabled={!endDateEnabled}
+                />
               </div>
             </div>
           </div>
@@ -211,7 +260,7 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
                 <input
                   type="checkbox"
                   checked={isChallengeChecked}
-                  className="checkbox"
+                  className="checkbox bg-black"
                   onChange={handleChallengeChange}
                 />
               </label>
@@ -226,7 +275,7 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
                 <input
                   type="checkbox"
                   checked={isImportantChecked}
-                  className="checkbox"
+                  className="checkbox bg-black"
                   onChange={handleImportantChange}
                 />
               </label>
@@ -242,7 +291,11 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
             </span>
           </h2>
           <div className="flex space-x-3 pt-2">
-            <input type="text" placeholder="subtask topic" className="input input-bordered flex-1 w-full" />
+            <input
+              type="text"
+              placeholder="subtask topic"
+              className="input input-bordered flex-1 w-full"
+            />
             <button className="btn">
               <FaPlus />
               Add Subtask
@@ -250,7 +303,9 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
           </div>
         </div>
         <form method="dialog">
-          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">X</button>
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+            X
+          </button>
         </form>
       </div>
     </dialog>
