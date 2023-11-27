@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Todo, RecurrenceTask
+from boards.models import Board
+from tasks.models import Todo, RecurrenceTask
 
 
 class GoogleCalendarEventSerializer(serializers.Serializer):
@@ -17,18 +18,22 @@ class TodoUpdateSerializer(serializers.ModelSerializer):
     updated = serializers.DateTimeField(source="last_update")
     start_datetime = serializers.DateTimeField(source="start_event", required=False)
     end_datetime = serializers.DateTimeField(source="end_event", required=False)
-
+    list_board = serializers.SerializerMethodField()
 
     class Meta:
         model = Todo
-        fields = ('id', 'summary', 'description', 'created', 'updated', 'start_datetime', 'end_datetime')
+        fields = ('id', 'summary', 'description', 'created', 'updated', 'start_datetime', 'end_datetime', 'list_board')
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super(TodoUpdateSerializer, self).__init__(*args, **kwargs)
 
+    def get_list_board(self, obj):
+        return Board.objects.get(user=self.user).listboard_set.first()
+
     def create(self, validated_data):
         validated_data['user'] = self.user
+        validated_data['list_board'] = self.get_list_board(self)
         task = Todo.objects.create(**validated_data)
 
         return task
