@@ -9,8 +9,17 @@ export function ColumnContainer({ column, createTask, tasks, deleteTask, updateT
     return tasks.map((task) => task.id);
   }, [tasks]);
 
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
+    id: column.id,
+    data: {
+      type: "Column",
+      column,
+    },
+  });
+
   return (
     <div
+      ref={setNodeRef}
       className="
   bg-[#f1f2f4]
   w-[280px]
@@ -21,6 +30,8 @@ export function ColumnContainer({ column, createTask, tasks, deleteTask, updateT
   ">
       {/* Column title */}
       <div
+        {...attributes}
+        {...listeners}
         className="
       ml-3
       text-md
