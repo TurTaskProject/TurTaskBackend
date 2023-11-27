@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from users.models import CustomUser
 from boards.models import ListBoard
-from tasks.models import Todo, RecurrenceTask, Habit
+from tasks.models import Todo, RecurrenceTask, Habit, Subtask
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
@@ -98,3 +98,13 @@ class HabitTaskCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habit
         exclude = ('tags',)
+
+
+class SubTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subtask
+        fields = '__all__'
+
+    def create(self, validated_data):
+        # Create a new task with validated data
+        return Todo.objects.create(**validated_data)
