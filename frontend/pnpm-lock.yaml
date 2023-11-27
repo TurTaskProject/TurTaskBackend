@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 dependencies:
   '@dnd-kit/core':
     specifier: ^6.1.0
@@ -113,6 +109,9 @@ dependencies:
   react-icons:
     specifier: ^4.11.0
     version: 4.12.0(react@18.2.0)
+  react-ios-time-picker:
+    specifier: ^0.2.2
+    version: 0.2.2(react-dom@18.2.0)(react@18.2.0)
   react-router-dom:
     specifier: ^6.18.0
     version: 6.19.0(react-dom@18.2.0)(react@18.2.0)
@@ -3573,6 +3572,17 @@ packages:
       react: 18.2.0
     dev: false
 
+  /react-ios-time-picker@0.2.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-bi+K23lK6Pf2xDXmhAlz+RJuy9/onWYi7Ye+ODVhIkis9AVFECOza2ckkZl/4vUypj2+TdTsHn+VZrTNdGIwDQ==}
+    peerDependencies:
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-portal: 4.2.2(react-dom@18.2.0)(react@18.2.0)
+    dev: false
+
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -3610,6 +3620,17 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
       react-fast-compare: 3.2.2
       warning: 4.0.3
+    dev: false
+
+  /react-portal@4.2.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-vS18idTmevQxyQpnde0Td6ZcUlv+pD8GTyR42n3CHUQq9OHi1C4jDE4ZWEbEsrbrLRhSECYiao58cvocwMtP7Q==}
+    peerDependencies:
+      react: ^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0
+      react-dom: ^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-redux@7.2.9(react-dom@18.2.0)(react@18.2.0):
@@ -4663,3 +4684,7 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
