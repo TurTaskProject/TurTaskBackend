@@ -86,10 +86,9 @@ class DashboardStatsTodoViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 
         total_tasks_today = Todo.objects.filter(
             user=user,
-            completion_date__gte=today_start,
-            completion_date__lte=today_end
+            start_event__gte=today_start,
+            end_event__lte=today_end
         ).count()
-
 
         data = {
             "completed_last_7_days": completed_last_7_days,
