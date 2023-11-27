@@ -9,7 +9,7 @@ export function ColumnContainer({ column, createTask, tasks, deleteTask, updateT
     return tasks.map((task) => task.id);
   }, [tasks]);
 
-  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
+  const { setNodeRef, attributes, listeners } = useSortable({
     id: column.id,
     data: {
       type: "Column",

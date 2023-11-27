@@ -221,17 +221,37 @@ export function KanbanBoard() {
 
     const activeId = active.id;
     const isActiveATask = active.data.current?.type === "Task";
+    const isOverATask = over.data.current?.type === "Task";
     const isOverAColumn = over.data.current?.type === "Column";
+
+    if (isActiveATask && isOverATask) {
+      setTasks((tasks) => {
+        const activeIndex = tasks.findIndex((t) => t.id === activeId);
+        const columnId = over.data.current.task.columnId;
+        tasks[activeIndex].columnId = columnId;
+        // API call to update task's columnId
+        axiosInstance
+          .put(`todo/change_task_list_board/`, {
+            todo_id: activeId,
+            new_list_board_id: columnId,
+            new_index: 0,
+          })
+          .then((response) => {})
+          .catch((error) => {
+            console.error("Error updating task columnId:", error);
+          });
+
+        return arrayMove(tasks, activeIndex, activeIndex);
+      });
+    }
 
     // Move tasks between columns and update columnId
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
-
         const columnId = over.data.current.column.id;
 
         tasks[activeIndex].columnId = columnId;
-
         // API call to update task's columnId
         axiosInstance
           .put(`todo/change_task_list_board/`, {
