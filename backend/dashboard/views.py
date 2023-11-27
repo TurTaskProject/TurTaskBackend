@@ -35,14 +35,12 @@ class DashboardStatsTodoViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         # Task assign last week compared with this week
         tasks_assigned_last_week = Todo.objects.filter(
             user=user,
-            completion_date__gte=start_date - timedelta(days=7),
-            completion_date__lte=start_date
-        ).count()
+            creation_date__range = (start_date, start_date - timedelta(days=7))
+        )
 
         tasks_assigned_this_week = Todo.objects.filter(
             user=user,
-            completion_date__gte=start_date,
-            completion_date__lte=end_date
+            creation_date__range = (start_date, end_date)
         ).count()
 
         # Completed tasks from last week compared with this week
@@ -82,12 +80,6 @@ class DashboardStatsTodoViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             completed=True,
             completion_date__gte=today_start,
             completion_date__lte=today_end
-        ).count()
-
-        total_tasks_today = Todo.objects.filter(
-            user=user,
-            start_event__gte=today_start,
-            end_event__lte=today_end
         ).count()
 
         data = {
