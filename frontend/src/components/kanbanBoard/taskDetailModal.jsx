@@ -1,23 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaTasks, FaRegListAlt } from "react-icons/fa";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaRegTrashCan } from "react-icons/fa6";
 import { TbChecklist } from "react-icons/tb";
 import DatePicker from "react-datepicker";
 import { TimePicker } from "react-ios-time-picker";
 import "react-datepicker/dist/react-datepicker.css";
-import { borderColor } from "@mui/system";
+import { addSubtasks, deleteSubtasks, getSubtask, updateSubtask } from "src/api/SubTaskApi";
 
-export function TaskDetailModal({
-  title,
-  description,
-  tags,
-  difficulty,
-  challenge,
-  importance,
-  taskId,
-  updateTask,
-}) {
-  let date = new Date();
+export function TaskDetailModal({ title, description, tags, difficulty, challenge, importance, taskId, updateTask }) {
   const [isChallengeChecked, setChallengeChecked] = useState(challenge);
   const [isImportantChecked, setImportantChecked] = useState(importance);
   const [currentDifficulty, setCurrentDifficulty] = useState(difficulty);
@@ -27,7 +17,9 @@ export function TaskDetailModal({
   const [startDateEnabled, setStartDateEnabled] = useState(false);
   const [endDateEnabled, setEndDateEnabled] = useState(false);
   const [isTaskComplete, setTaskComplete] = useState(false);
-  const [value, setValue] = useState('10:00');
+  const [value, setValue] = useState("10:00");
+  const [subtaskText, setSubtaskText] = useState("");
+  const [subtasks, setSubtasks] = useState([]);
 
   const onChange = (timeValue) => {
     setValue(timeValue);
@@ -46,11 +38,7 @@ export function TaskDetailModal({
 
   const handleTagChange = (tag) => {
     const isSelected = selectedTags.includes(tag);
-    setSelectedTags(
-      isSelected
-        ? selectedTags.filter((selectedTag) => selectedTag !== tag)
-        : [...selectedTags, tag]
-    );
+    setSelectedTags(isSelected ? selectedTags.filter((selectedTag) => selectedTag !== tag) : [...selectedTags, tag]);
   };
 
   const handleStartDateChange = () => {
@@ -75,12 +63,73 @@ export function TaskDetailModal({
     }
   };
 
+  const addSubtask = async () => {
+    try {
+      if (subtaskText.trim() !== "") {
+        const newSubtask = await addSubtasks(taskId, subtaskText.trim());
+        setSubtasks([...subtasks, newSubtask]);
+        setSubtaskText("");
+      }
+    } catch (error) {
+      console.error("Error adding subtask:", error);
+    }
+  };
+
+  const toggleSubtaskCompletion = async (index) => {
+    try {
+      const updatedSubtasks = [...subtasks];
+      updatedSubtasks[index].completed = !updatedSubtasks[index].completed;
+      await updateSubtask(updatedSubtasks[index].id, { completed: updatedSubtasks[index].completed });
+      setSubtasks(updatedSubtasks);
+    } catch (error) {
+      console.error("Error updating subtask:", error);
+    }
+  };
+
+  const deleteSubtask = async (index) => {
+    try {
+      await deleteSubtasks(subtasks[index].id);
+      const updatedSubtasks = [...subtasks];
+      updatedSubtasks.splice(index, 1);
+      setSubtasks(updatedSubtasks);
+    } catch (error) {
+      console.error("Error deleting subtask:", error);
+    }
+  };
+
+  const subtaskElements = subtasks.map((subtask, index) => (
+    <div key={index} className="flex items-center space-x-2">
+      <input
+        type="checkbox"
+        checked={subtask.completed}
+        className="checkbox checkbox-xs bg-gray-400"
+        onChange={() => toggleSubtaskCompletion(index)}
+      />
+      <div className={`flex items-center rounded p-2 shadow border-2 ${subtask.completed && "line-through"}`}>
+        {subtask.description}
+        <FaRegTrashCan className="cursor-pointer ml-2 text-red-500" onClick={() => deleteSubtask(index)} />
+      </div>
+    </div>
+  ));
+
+  useEffect(() => {
+    const fetchSubtasks = async () => {
+      try {
+        const fetchedSubtasks = await getSubtask(taskId);
+        setSubtasks(fetchedSubtasks);
+      } catch (error) {
+        console.error("Error fetching subtasks:", error);
+      }
+    };
+
+    fetchSubtasks();
+  }, [taskId]);
+
   // Existing tags
   const existingTags = tags.map((tag, index) => (
     <div
       key={index}
-      className={`text-xs inline-flex items-center font-bold leading-sm uppercase px-2 py-1 bg-${tag.color}-200 text-${tag.color}-700 rounded-full`}
-    >
+      className={`text-xs inline-flex items-center font-bold leading-sm uppercase px-2 py-1 bg-${tag.color}-200 text-${tag.color}-700 rounded-full`}>
       {tag.label}
     </div>
   ));
@@ -89,8 +138,7 @@ export function TaskDetailModal({
   const selectedTagElements = selectedTags.map((tag, index) => (
     <div
       key={index}
-      className={`text-xs inline-flex items-center font-bold leading-sm uppercase px-2 py-1 bg-${tag.color}-200 text-${tag.color}-700 rounded-full`}
-    >
+      className={`text-xs inline-flex items-center font-bold leading-sm uppercase px-2 py-1 bg-${tag.color}-200 text-${tag.color}-700 rounded-full`}>
       {tag.label}
     </div>
   ));
@@ -114,16 +162,10 @@ export function TaskDetailModal({
         <div className="flex flex-col py-2 pb-4">
           <div className="flex flex-row space-x-5">
             <div className="dropdown">
-              <label
-                tabIndex={0}
-                className="btn-md border-2 rounded-xl m-1 py-1"
-              >
+              <label tabIndex={0} className="btn-md border-2 rounded-xl m-1 py-1">
                 + Add Tags
               </label>
-              <ul
-                tabIndex={0}
-                className="dropdown-content z-[10] menu p-2 shadow bg-base-100 rounded-box w-52"
-              >
+              <ul tabIndex={0} className="dropdown-content z-[10] menu p-2 shadow bg-base-100 rounded-box w-52">
                 {tags.map((tag, index) => (
                   <li key={index}>
                     <label className="cursor-pointer space-x-2">
@@ -155,14 +197,10 @@ export function TaskDetailModal({
                 <input
                   type="checkbox"
                   checked={startDateEnabled}
-                  className="checkbox checkbox-xs  bg-black"
+                  className="checkbox checkbox-xs bg-gray-400"
                   onChange={handleStartDateChange}
                 />
-                <div
-                  className={`rounded p-2 shadow border-2 ${
-                    !startDateEnabled && "opacity-50"
-                  }`}
-                >
+                <div className={`rounded p-2 shadow border-2 ${!startDateEnabled && "opacity-50"}`}>
                   <DatePicker
                     selected={dateStart}
                     onChange={(date) => setDateStart(date)}
@@ -170,11 +208,10 @@ export function TaskDetailModal({
                   />
                 </div>
               </div>
-            </div> 
+            </div>
 
             <div className="rounded p-2 shadow border-2">
-
-              <TimePicker  
+              <TimePicker
                 value={value}
                 onChange={onChange}
                 className="rounded p-2 shadow border-2 z-[10000] relative"
@@ -188,7 +225,7 @@ export function TaskDetailModal({
                   <input
                     type="checkbox"
                     checked={isTaskComplete}
-                    className="checkbox checkbox-xl bg-black"
+                    className="checkbox checkbox-xl bg-gray-400"
                     onChange={handleTaskCompleteChange}
                   />
                 </div>
@@ -202,19 +239,11 @@ export function TaskDetailModal({
               <input
                 type="checkbox"
                 checked={endDateEnabled}
-                className="checkbox checkbox-xs bg-black"
+                className="checkbox checkbox-xs bg-gray-400"
                 onChange={handleEndDateChange}
               />
-              <div
-                className={`rounded p-2 shadow border-2 ${
-                  !endDateEnabled && "opacity-50"
-                }`}
-              >
-                <DatePicker
-                  selected={dateEnd}
-                  onChange={(date) => setDateEnd(date)}
-                  disabled={!endDateEnabled}
-                />
+              <div className={`rounded p-2 shadow border-2 ${!endDateEnabled && "opacity-50"}`}>
+                <DatePicker selected={dateEnd} onChange={(date) => setDateEnd(date)} disabled={!endDateEnabled} />
               </div>
             </div>
           </div>
@@ -295,17 +324,19 @@ export function TaskDetailModal({
               type="text"
               placeholder="subtask topic"
               className="input input-bordered flex-1 w-full"
+              value={subtaskText}
+              onChange={(e) => setSubtaskText(e.target.value)}
             />
-            <button className="btn">
+            <button className="btn" onClick={addSubtask}>
               <FaPlus />
               Add Subtask
             </button>
           </div>
+          {/* Display Subtasks */}
+          <div className="flex flex-col space-y-2 pt-2">{subtaskElements}</div>
         </div>
         <form method="dialog">
-          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-            X
-          </button>
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">X</button>
         </form>
       </div>
     </dialog>
