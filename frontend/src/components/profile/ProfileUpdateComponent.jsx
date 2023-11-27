@@ -102,7 +102,7 @@ export function ProfileUpdateComponent() {
           placeholder="Enter your first name"
           className="input w-full"
           value={firstName}
-          onChange={(e) => setFullName(e.target.value)}
+          onChange={(e) => setFirstName(e.target.value)}
         />
       </div>
 
