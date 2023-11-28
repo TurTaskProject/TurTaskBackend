@@ -81,6 +81,11 @@ class Todo(Task):
     priority = models.PositiveSmallIntegerField(choices=EisenhowerMatrix.choices, default=EisenhowerMatrix.NOT_IMPORTANT_NOT_URGENT)
 
     def save(self, *args, **kwargs):
+        done_list_name = "Done"
+        if self.list_board.name == done_list_name:
+            self.completed = True
+            Todo.objects.filter(list_board=self.list_board).update(completed=True)
+
         if self.completed and not self.completion_date:
             self.completion_date = timezone.now()
         elif not self.completed:
