@@ -121,6 +121,7 @@ export function KanbanBoard() {
           user: task.user,
           list_board: task.list_board,
           tags: task.tags,
+          subtaskCount: task.sub_task_count,
         }));
         setTasks(transformedTasks);
 
@@ -220,26 +221,43 @@ export function KanbanBoard() {
     if (!over) return; // If not dropped over anything, exit
 
     const activeId = active.id;
-    const overId = over.id;
-
     const isActiveATask = active.data.current?.type === "Task";
+    const isOverATask = over.data.current?.type === "Task";
     const isOverAColumn = over.data.current?.type === "Column";
+
+    if (isActiveATask && isOverATask) {
+      setTasks((tasks) => {
+        const activeIndex = tasks.findIndex((t) => t.id === activeId);
+        const columnId = over.data.current.task.columnId;
+        tasks[activeIndex].columnId = columnId;
+        // API call to update task's columnId
+        axiosInstance
+          .put(`todo/change_task_list_board/`, {
+            todo_id: activeId,
+            new_list_board_id: columnId,
+            new_index: 0,
+          })
+          .then((response) => {})
+          .catch((error) => {
+            console.error("Error updating task columnId:", error);
+          });
+
+        return arrayMove(tasks, activeIndex, activeIndex);
+      });
+    }
 
     // Move tasks between columns and update columnId
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
-
-        // Extract the column ID from overId
-        const columnId = extractColumnId(overId);
+        const columnId = over.data.current.column.id;
 
         tasks[activeIndex].columnId = columnId;
-
         // API call to update task's columnId
         axiosInstance
           .put(`todo/change_task_list_board/`, {
             todo_id: activeId,
-            new_list_board_id: over.data.current.task.columnId,
+            new_list_board_id: columnId,
             new_index: 0,
           })
           .then((response) => {})
@@ -251,15 +269,6 @@ export function KanbanBoard() {
       });
     }
   }
-
-  // Helper function to extract the column ID from the element ID
-  function extractColumnId(elementId) {
-    // Implement logic to extract the column ID from elementId
-    // For example, if elementId is in the format "column-123", you can do:
-    const parts = elementId.split("-");
-    return parts.length === 2 ? parseInt(parts[1], 10) : null;
-  }
-
   // Handle the drag-over event
   function onDragOver(event) {
     const { active, over } = event;
@@ -286,16 +295,6 @@ export function KanbanBoard() {
           tasks[activeIndex].columnId = tasks[overIndex].columnId;
           return arrayMove(tasks, activeIndex, overIndex - 1);
         }
-        axiosInstance
-          .put(`todo/change_task_list_board/`, {
-            todo_id: activeId,
-            new_list_board_id: over.data.current.task.columnId,
-            new_index: 0,
-          })
-          .then((response) => {})
-          .catch((error) => {
-            console.error("Error updating task columnId:", error);
-          });
         return arrayMove(tasks, activeIndex, overIndex);
       });
     }
@@ -305,16 +304,6 @@ export function KanbanBoard() {
     if (isActiveATask && isOverAColumn && tasks.some((task) => task.columnId !== overId)) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
-        axiosInstance
-          .put(`todo/change_task_list_board/`, {
-            todo_id: activeId,
-            new_list_board_id: over.data.current.task.columnId,
-            new_index: 0,
-          })
-          .then((response) => {})
-          .catch((error) => {
-            console.error("Error updating task columnId:", error);
-          });
         tasks[activeIndex].columnId = overId;
         return arrayMove(tasks, activeIndex, activeIndex);
       });

@@ -1,4 +1,11 @@
-import { BadgeDelta, Card, Flex, Metric, ProgressBar, Text } from "@tremor/react";
+import {
+  BadgeDelta,
+  Card,
+  Flex,
+  Metric,
+  ProgressBar,
+  Text,
+} from "@tremor/react";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "src/api/AxiosConfig";
 
@@ -13,7 +20,7 @@ export function KpiCard() {
   useEffect(() => {
     const fetchKpiCardData = async () => {
       try {
-        const response = await axiosInstance.get("/dashboard/stats/");
+        const response = await axiosInstance.get("/dashboard/todostats/");
         const completedThisWeek = response.data.completed_this_week || 0;
         const completedLastWeek = response.data.completed_last_week || 0;
         const percentage = (completedThisWeek / completedLastWeek) * 100;
@@ -46,10 +53,16 @@ export function KpiCard() {
         <div>
           <Metric>{kpiCardData.completedThisWeek}</Metric>
         </div>
-        <BadgeDelta deltaType={kpiCardData.incOrdec}>{kpiCardData.percentage.toFixed(0)}%</BadgeDelta>
+        <BadgeDelta deltaType={kpiCardData.incOrdec}>
+          {isNaN(kpiCardData.percentage) || !isFinite(kpiCardData.percentage)
+            ? "0%"
+            : `${kpiCardData.percentage.toFixed(0)}%`}
+        </BadgeDelta>
       </Flex>
       <Flex className="mt-4">
-        <Text className="truncate">vs. {kpiCardData.completedLastWeek} (last week)</Text>
+        <Text className="truncate">
+          vs. {kpiCardData.completedLastWeek} (last week)
+        </Text>
       </Flex>
       <ProgressBar value={kpiCardData.percentage} className="mt-2" />
     </Card>

@@ -8,7 +8,7 @@ export function ProgressCircleChart() {
   useEffect(() => {
     const fetchProgressData = async () => {
       try {
-        const response = await axiosInstance.get("/dashboard/stats/");
+        const response = await axiosInstance.get("/dashboard/todostats/");
         let completedLastWeek = response.data.completed_last_week || 0;
         let assignLastWeek = response.data.tasks_assigned_last_week || 0;
 
@@ -33,9 +33,18 @@ export function ProgressCircleChart() {
   return (
     <Card className="max-w-lg mx-auto">
       <Flex className="flex-col items-center">
-        <ProgressCircle className="mt-6" value={progressData} size={200} strokeWidth={10} radius={60} color="indigo">
+        <ProgressCircle
+          className="mt-6"
+          value={progressData}
+          size={200}
+          strokeWidth={10}
+          radius={60}
+          color="indigo"
+        >
           <span className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-sm text-indigo-500 font-medium">
-            {progressData.toFixed(0)} %
+            {isNaN(progressData) || !isFinite(progressData)
+              ? "0%"
+              : `${progressData.toFixed(0)}%`}
           </span>
         </ProgressCircle>
       </Flex>
