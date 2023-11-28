@@ -336,20 +336,20 @@ export function TaskDetailModal({
                 onClick={handleStartEventTimeChange}
               />
             </div>
-
+            <button className="btn btn-sm mt" onClick={handleStartEventTimeChange}>
+              Update
+            </button>
             {/* Complete? */}
             <div className="mx-4">
               <div className="flex items-center space-x-2 mt-4">
                 <div className="flex-1 flex-row card shadow border-2 p-2 pr-2">
                   <p className="text-md mx-2">Complete</p>
                   <input type="checkbox" checked={isTaskComplete} className="checkbox checkbox-xl bg-gray-400" />
-                  <button className="btn btn-sm mt-2" onClick={handleStartEventTimeChange}>
-                    Update Start Time
-                  </button>
                 </div>
               </div>
             </div>
           </div>
+
           {/* End */}
           <div>
             <p className="text-xs font-bold">End At</p>
