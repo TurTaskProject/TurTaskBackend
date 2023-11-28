@@ -34,6 +34,8 @@ export function TaskDetailModal({
   const [subtasks, setSubtasks] = useState([]);
   const [currentTitle, setTitle] = useState(title);
   const [isTitleEditing, setTitleEditing] = useState(false);
+  const [isCheckboxChecked, setCheckboxChecked] = useState(false);
+  
 
   const handleTitleChange = async () => {
     const data = {
@@ -41,6 +43,10 @@ export function TaskDetailModal({
     };
     await updateTodoTaskPartial(taskId, data);
     setTitleEditing(false);
+  };
+
+  const handleCheckboxChange = () => {
+    setCheckboxChecked(!isCheckboxChecked);
   };
 
   const handleStartEventTimeChange = async (timeValue) => {
@@ -327,18 +333,28 @@ export function TaskDetailModal({
             </div>
 
             {/* Start event time picker */}
-            <div className="rounded p-2 shadow border-2 ml-2 mt-4">
+            <div className="rounded mx-2 mt-4 flex flex-row items-center">
               {/* handleStartEventTimeChange */}
+              <input
+                type="checkbox"
+                checked={isCheckboxChecked}
+                className="checkbox checkbox-xs bg-gray-400 mr-2"
+                onChange={handleCheckboxChange}
+              />
               <input
                 type="text"
                 placeholder="10:00 AM"
                 className="input input-bordered w-full max-w-xs"
-                onClick={handleStartEventTimeChange}
+                onClick={() => handleStartEventTimeChange(dateStart)}
+                disabled={!isCheckboxChecked}
               />
+              <div className="rounded mx-2">
+                <button className="btn btn-sm" onClick={() => handleStartEventTimeChange(dateStart)}>
+                  Update Time
+                </button>
+              </div>
             </div>
-            <button className="btn btn-sm mt" onClick={handleStartEventTimeChange}>
-              Update
-            </button>
+
             {/* Complete? */}
             <div className="mx-4">
               <div className="flex items-center space-x-2 mt-4">
