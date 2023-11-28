@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { apiUserLogout } from "src/api/AuthenticationApi";
 import { useAuth } from "src/hooks/AuthHooks";
+import { axiosInstance } from "src/api/AxiosConfig";
+import { useEffect, useState } from "react";
 
 const settings = {
   Profile: "/profile",
@@ -10,12 +12,32 @@ const settings = {
 export function NavBar() {
   const Navigate = useNavigate();
   const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const [profile_pic, setProfilePic] = useState(undefined);
 
   const logout = () => {
     apiUserLogout();
     setIsAuthenticated(false);
     Navigate("/");
   };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (isAuthenticated) {
+        try {
+          const response = await axiosInstance.get("/user/data/");
+          const fetchedProfilePic = response.data.profile_pic;
+          setProfilePic(fetchedProfilePic);
+        } catch (error) {
+          console.error("Error fetching user:", error);
+        }
+      } else {
+        setProfilePic(
+          "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
+        );
+      }
+    };
+    fetchUser();
+  }, []);
 
   return (
     <div data-theme="night" className="navbar bg-base-100">
@@ -32,19 +54,23 @@ export function NavBar() {
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png" />
+                <img src={profile_pic} />
               </div>
             </label>
             <ul
               tabIndex={0}
-              className="mt-3 z-[10] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+              className="mt-3 z-[10] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
+            >
               <li>
-                <a href={settings.Profile} className="justify-between">
+                <a
+                  onClick={() => Navigate(settings.Profile)}
+                  className="justify-between"
+                >
                   Profile
                 </a>
               </li>
               <li>
-                <a href={settings.Account}>Settings</a>
+                <a onClick={() => Navigate(settings.Account)}>Settings</a>
               </li>
               <li>
                 <a onClick={logout}>Logout</a>
@@ -53,10 +79,16 @@ export function NavBar() {
           </div>
         ) : (
           <div className="flex gap-2">
-            <button className="btn btn-outline btn-info" onClick={() => Navigate("/login")}>
+            <button
+              className="btn btn-outline btn-info"
+              onClick={() => Navigate("/login")}
+            >
               Login
             </button>
-            <button className="btn btn-success" onClick={() => Navigate("/signup")}>
+            <button
+              className="btn btn-success"
+              onClick={() => Navigate("/signup")}
+            >
               Sign Up
             </button>
           </div>

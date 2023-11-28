@@ -28,6 +28,7 @@ export function Dashboard() {
   const [totalTask, setTotalTask] = useState(0);
   const [totalCompletedTasks, settotalCompletedTasks] = useState(0);
   const [totalCompletedTasksToday, setTotalCompletedTasksToday] = useState(0);
+  const [totalTaskToday, setTotalTaskToday] = useState(0);
   const [progressData, setProgressData] = useState(0);
   const [overdueTask, setOverdueTask] = useState(0);
 
@@ -36,19 +37,16 @@ export function Dashboard() {
       const response = await axiosInstance.get("/dashboard/todostats/");
       const totalTaskValue = response.data.total_tasks || 0;
       const totalCompletedTasksValue = response.data.total_completed_tasks || 0;
+      const totalTaskTodayValue = response.data.total_task_today || 0;
       const totalCompletedTasksTodayValue =
-        response.data.total_completed_tasks_today || 0;
-      const totalTaskToday = response.data.total_task_today || 0;
-      const totalCompletedTasksToday = response.data.tasks_completed_today || 0;
+        response.data.tasks_completed_today || 0;
       const overdueTasks = response.data.overdue_tasks || 0;
-
-      const progress =
-        (totalCompletedTasksToday / totalCompletedTasksToday) * 100;
+      const progress = (totalCompletedTasksToday / totalTaskToday) * 100;
 
       setTotalTask(totalTaskValue);
       settotalCompletedTasks(totalCompletedTasksValue);
       setTotalCompletedTasksToday(totalCompletedTasksTodayValue);
-      setTotalTaskToday(totalTaskToday);
+      setTotalTaskToday(totalTaskTodayValue);
       setProgressData(progress);
       setOverdueTask(overdueTasks);
     };
@@ -147,7 +145,11 @@ export function Dashboard() {
                   <Flex className="flex-col items-center">
                     <ProgressCircle
                       className="mt-6"
-                      value={progressData}
+                      value={
+                        isNaN(progressData) || !isFinite(progressData)
+                          ? 0
+                          : `${progressData.toFixed(0)}%`
+                      }
                       size={200}
                       strokeWidth={10}
                       radius={60}

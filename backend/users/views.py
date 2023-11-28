@@ -9,7 +9,7 @@ from rest_framework.parsers import MultiPartParser
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from users.serializers import CustomUserSerializer, UpdateProfileSerializer
+from users.serializers import CustomUserSerializer, UpdateProfileSerializer, UpdateProfileNopicSerializer
 from users.models import CustomUser
 
 class CustomUserCreate(APIView):
@@ -57,13 +57,17 @@ class CustomUserProfileUpdate(APIView):
             return Response ({
                 'error': 'User does not exist'
             }, status=status.HTTP_404_NOT_FOUND)
+        
         serializer = UpdateProfileSerializer(request.user, data=request.data)
+        if request.data.get('profile_pic') == "null":
+            serializer = UpdateProfileNopicSerializer(request.user, data=request.data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    
+
 class UserDataRetriveViewset(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     queryset = CustomUser.objects.all()
     permission_classes = (IsAuthenticated,)

@@ -1,12 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { ColumnContainerCard } from "./columnContainerWrapper";
-import {
-  DndContext,
-  DragOverlay,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
+import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import { TaskCard } from "./taskCard";
@@ -32,9 +26,7 @@ export function KanbanBoard() {
 
   // ---------------- Task Handlers ----------------
   const handleTaskUpdate = (tasks, updatedTask) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === updatedTask.id ? updatedTask : task
-    );
+    const updatedTasks = tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task));
     setTasks(updatedTasks);
   };
 
@@ -129,6 +121,7 @@ export function KanbanBoard() {
           user: task.user,
           list_board: task.list_board,
           tags: task.tags,
+          subtaskCount: task.sub_task_count,
         }));
         setTasks(transformedTasks);
 
@@ -176,14 +169,8 @@ export function KanbanBoard() {
       justify-center
       overflow-x-auto
       overflow-y-hidden
-  "
-    >
-      <DndContext
-        sensors={sensors}
-        onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
-        onDragOver={onDragOver}
-      >
+  ">
+      <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
         <div className="flex gap-4">
           <div className="flex gap-4">
             {!isLoading ? (
@@ -195,9 +182,7 @@ export function KanbanBoard() {
                     createTask={createTask}
                     deleteTask={deleteTask}
                     updateTask={updateTask}
-                    tasks={(tasks || []).filter(
-                      (task) => task.columnId === col.id
-                    )}
+                    tasks={(tasks || []).filter((task) => task.columnId === col.id)}
                   />
                 ))}{" "}
               </SortableContext>
@@ -210,11 +195,7 @@ export function KanbanBoard() {
         {createPortal(
           <DragOverlay className="bg-white" dropAnimation={null} zIndex={20}>
             {/* Render the active task as a draggable overlay */}
-            <TaskCard
-              task={activeTask}
-              deleteTask={deleteTask}
-              updateTask={updateTask}
-            />
+            <TaskCard task={activeTask} deleteTask={deleteTask} updateTask={updateTask} />
           </DragOverlay>,
           document.body
         )}
@@ -240,26 +221,43 @@ export function KanbanBoard() {
     if (!over) return; // If not dropped over anything, exit
 
     const activeId = active.id;
-    const overId = over.id;
-
     const isActiveATask = active.data.current?.type === "Task";
+    const isOverATask = over.data.current?.type === "Task";
     const isOverAColumn = over.data.current?.type === "Column";
+
+    if (isActiveATask && isOverATask) {
+      setTasks((tasks) => {
+        const activeIndex = tasks.findIndex((t) => t.id === activeId);
+        const columnId = over.data.current.task.columnId;
+        tasks[activeIndex].columnId = columnId;
+        // API call to update task's columnId
+        axiosInstance
+          .put(`todo/change_task_list_board/`, {
+            todo_id: activeId,
+            new_list_board_id: columnId,
+            new_index: 0,
+          })
+          .then((response) => {})
+          .catch((error) => {
+            console.error("Error updating task columnId:", error);
+          });
+
+        return arrayMove(tasks, activeIndex, activeIndex);
+      });
+    }
 
     // Move tasks between columns and update columnId
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
-
-        // Extract the column ID from overId
-        const columnId = extractColumnId(overId);
+        const columnId = over.data.current.column.id;
 
         tasks[activeIndex].columnId = columnId;
-
         // API call to update task's columnId
         axiosInstance
           .put(`todo/change_task_list_board/`, {
             todo_id: activeId,
-            new_list_board_id: over.data.current.task.columnId,
+            new_list_board_id: columnId,
             new_index: 0,
           })
           .then((response) => {})
@@ -271,15 +269,6 @@ export function KanbanBoard() {
       });
     }
   }
-
-  // Helper function to extract the column ID from the element ID
-  function extractColumnId(elementId) {
-    // Implement logic to extract the column ID from elementId
-    // For example, if elementId is in the format "column-123", you can do:
-    const parts = elementId.split("-");
-    return parts.length === 2 ? parseInt(parts[1], 10) : null;
-  }
-
   // Handle the drag-over event
   function onDragOver(event) {
     const { active, over } = event;
@@ -306,39 +295,15 @@ export function KanbanBoard() {
           tasks[activeIndex].columnId = tasks[overIndex].columnId;
           return arrayMove(tasks, activeIndex, overIndex - 1);
         }
-        axiosInstance
-          .put(`todo/change_task_list_board/`, {
-            todo_id: activeId,
-            new_list_board_id: over.data.current.task.columnId,
-            new_index: 0,
-          })
-          .then((response) => {})
-          .catch((error) => {
-            console.error("Error updating task columnId:", error);
-          });
         return arrayMove(tasks, activeIndex, overIndex);
       });
     }
 
     const isOverAColumn = over.data.current?.type === "Column";
     // Move the Task to a different column and update columnId
-    if (
-      isActiveATask &&
-      isOverAColumn &&
-      tasks.some((task) => task.columnId !== overId)
-    ) {
+    if (isActiveATask && isOverAColumn && tasks.some((task) => task.columnId !== overId)) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
-        axiosInstance
-          .put(`todo/change_task_list_board/`, {
-            todo_id: activeId,
-            new_list_board_id: over.data.current.task.columnId,
-            new_index: 0,
-          })
-          .then((response) => {})
-          .catch((error) => {
-            console.error("Error updating task columnId:", error);
-          });
         tasks[activeIndex].columnId = overId;
         return arrayMove(tasks, activeIndex, activeIndex);
       });

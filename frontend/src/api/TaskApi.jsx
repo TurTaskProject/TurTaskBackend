@@ -38,6 +38,15 @@ export const updateTask = (endpoint, id, data) => {
     });
 };
 
+export const updateTaskPartial = (endpoint, id, data) => {
+  return axiosInstance
+    .patch(`${baseURL}${endpoint}/${id}/`, data)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
 export const deleteTask = (endpoint, id) => {
   return axiosInstance
     .delete(`${baseURL}${endpoint}/${id}/`)
@@ -64,6 +73,7 @@ export const readHabitTaskByID = (id) => readTaskByID("habit", id);
 
 // Update
 export const updateTodoTask = (id, data) => updateTask("todo", id, data);
+export const updateTodoTaskPartial = (id, data) => updateTaskPartial("todo", id, data);
 export const updateRecurrenceTask = (id, data) => updateTask("daily", id, data);
 export const updateHabitTask = (id, data) => updateTask("habit", id, data);
 
