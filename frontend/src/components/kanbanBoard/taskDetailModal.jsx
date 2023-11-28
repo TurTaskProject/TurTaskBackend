@@ -349,23 +349,12 @@ export function TaskDetailModal({
                 type="text"
                 placeholder={starteventValue}
                 className="input input-bordered w-full max-w-xs"
-                onClick={() => handleStartEventTimeChange(dateStart)}
                 disabled={!isCheckboxStartTimeChecked}
               />
               <div className="rounded mx-2">
                 <button className="btn btn-sm" onClick={() => handleStartEventTimeChange(dateStart)}>
                   Update Time
                 </button>
-              </div>
-            </div>
-
-            {/* Complete? */}
-            <div className="mx-4">
-              <div className="flex items-center space-x-2 mt-4">
-                <div className="flex-1 flex-row card shadow border-2 p-2 pr-2">
-                  <p className="text-md mx-2">Complete</p>
-                  <input type="checkbox" checked={isTaskComplete} className="checkbox checkbox-xl bg-gray-400" />
-                </div>
               </div>
             </div>
           </div>
@@ -396,7 +385,6 @@ export function TaskDetailModal({
                   type="text"
                   placeholder={endeventValue}
                   className="input input-bordered w-full max-w-xs"
-                  onClick={() => handleEndEventTimeChange(dateEnd)}
                   disabled={!isCheckboxEndTimeChecked}
                 />
                 <div className="rounded mx-2">
@@ -466,6 +454,20 @@ export function TaskDetailModal({
                   checked={isImportantChecked}
                   className="checkbox bg-black"
                   onChange={handleImportantChange}
+                />
+              </label>
+            </div>
+          </div>
+          {/* Complete? */}
+          <div className="card shadow border-2 p-2">
+            <div className="form-control">
+              <label className="label cursor-pointer space-x-2">
+                <span className="label-text">Complete</span>
+                <input
+                  type="checkbox"
+                  checked={isTaskComplete}
+                  className="checkbox bg-black"
+                  onChange={handleTaskCompleteChange}
                 />
               </label>
             </div>
