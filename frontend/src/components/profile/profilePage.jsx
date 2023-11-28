@@ -5,14 +5,18 @@ import { useEffect, useState } from "react";
 export function ProfileUpdatePage() {
   const [profile_pic, setProfilePic] = useState(undefined);
   const [about, setAbout] = useState();
+  const [firstName, setFirstname] = useState();
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axiosInstance.get("/user/data/");
         const fetchedProfilePic = response.data.profile_pic;
         const fetchedAbout = response.data.about;
+        console.log(fetchedAbout);
+        const fetchedFirstname = response.data.first_name;
         setProfilePic(fetchedProfilePic);
         setAbout(fetchedAbout);
+        setFirstname(fetchedFirstname);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -24,7 +28,7 @@ export function ProfileUpdatePage() {
       <div className="stats shadow mt-3">
         <div className="stat">
           <div className="stat-title truncate">Firstname</div>
-          <div className="stat-value truncate">Sirin</div>
+          <div className="stat-value truncate">{firstName}</div>
           {/* <div className="stat-desc truncate">User ID</div> */}
           <div className="stat-figure text-secondary">
             <div className="avatar online">
@@ -57,7 +61,7 @@ export function ProfileUpdatePage() {
             max="100"
           ></progress>
         </div> */}
-{/* 
+        {/* 
         <div className="stat">
           <div className="stat-title truncate">Level</div>
           <div className="stat-value flex">
@@ -118,14 +122,11 @@ export function ProfileUpdatePage() {
           <textarea
             className="textarea textarea-bordered textarea-lg w-full"
             disabled
-        placeholder="Enter your about me"
-      >
-            {about}
-          </textarea>
-      
+            placeholder="Enter your about me"
+            value={about}
+          ></textarea>
         </div>
       </div>
-
       {/* <div className="grid grid-cols-2 grid-rows-2 gap-4 my-2">
         <div className="col-span-full">
           <div className="card bg-base-100 shadow">
