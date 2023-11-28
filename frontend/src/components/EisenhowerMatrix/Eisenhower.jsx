@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { FiAlertCircle, FiClock, FiXCircle, FiCheckCircle } from "react-icons/fi";
+import {
+  FiAlertCircle,
+  FiClock,
+  FiXCircle,
+  FiCheckCircle,
+} from "react-icons/fi";
 import { readTodoTasks } from "../../api/TaskApi";
 import { axiosInstance } from "src/api/AxiosConfig";
 
@@ -26,7 +31,9 @@ function EachBlog({ name, colorCode, contentList, icon }) {
   };
 
   return (
-    <div className={`h-full text-left p-4 rounded-lg bg-white border border-gray-300 overflow-y-auto`}>
+    <div
+      className={`h-full text-left p-4 rounded-lg bg-white border border-gray-300 overflow-y-auto`}
+    >
       <div className="flex" style={{ color: colorCode }}>
         <span className="mx-2 mt-1">{icon}</span>
         <span>{name}</span>
@@ -39,10 +46,14 @@ function EachBlog({ name, colorCode, contentList, icon }) {
               <input
                 type="checkbox"
                 checked={item.completed}
-                className="checkbox mt-1 mr-2"
+                className="checkbox mt-1 mr-2 bg-gray-300 "
                 onChange={() => handleCheckboxChange(index)}
               />
-              <label className={`cursor-pointer ${item.completed ? "line-through text-gray-500" : ""}`}>
+              <label
+                className={`cursor-pointer ${
+                  item.completed ? "line-through text-gray-500" : ""
+                }`}
+              >
                 {item.title}
               </label>
             </div>
