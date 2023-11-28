@@ -25,6 +25,10 @@ export function TaskCard({ task, deleteTask, updateTask }) {
 
   // ---- DESC AND TAG ---- */
 
+  if (task.tags === undefined) {
+    task.tags = [];
+  }
+
   // Tags
   const tags =
     task.tags.length > 0 ? (
@@ -32,8 +36,8 @@ export function TaskCard({ task, deleteTask, updateTask }) {
         {task.tags.map((tag, index) => (
           <div
             key={index}
-            className={`text-xs inline-flex items-center font-bold leading-sm uppercase px-2 py-1 bg-${tag.color}-200 text-${tag.color}-700 rounded-full`}>
-            {tag.label}
+            className={`inline-flex items-center font-bold leading-sm uppercase w-1/3 h-3 p-2 mr-1 bg-${tag.color}-200 text-${tag.color}-700 rounded`}>
+            <p className="text-[9px] truncate">{tag}</p>
           </div>
         ))}
       </div>
@@ -42,7 +46,7 @@ export function TaskCard({ task, deleteTask, updateTask }) {
   // difficulty?
   const difficultyTag = task.difficulty ? (
     <span
-      className={`text-[10px] inline-flex items-center font-bold leading-sm uppercase px-2 py-1 rounded-full ${
+      className={`text-[9px] inline-flex items-center font-bold leading-sm uppercase px-2 py-1 rounded-full ${
         task.difficulty === 1
           ? "bg-blue-200 text-blue-700"
           : task.difficulty === 2
@@ -50,8 +54,8 @@ export function TaskCard({ task, deleteTask, updateTask }) {
           : task.difficulty === 3
           ? "bg-yellow-200 text-yellow-700"
           : task.difficulty === 4
-          ? "bg-purple-200 text-purple-700"
-          : "bg-red-200 text-red-700"
+          ? "bg-red-200 text-red-700"
+          : "bg-purple-200 text-purple-700"
       }`}>
       difficulty
     </span>
@@ -60,7 +64,7 @@ export function TaskCard({ task, deleteTask, updateTask }) {
   // Due Date
   const dueDateTag =
     task.end_event && new Date(task.end_event) > new Date()
-      ? (() => {  
+      ? (() => {
           const daysUntilDue = Math.ceil((new Date(task.end_event) - new Date()) / (1000 * 60 * 60 * 24));
 
           let colorClass =
@@ -93,7 +97,7 @@ export function TaskCard({ task, deleteTask, updateTask }) {
 
   // Subtask count
   const subtaskCountTag = task.subtaskCount ? (
-    <span className="bg-green-200 text-green-600 text-[10px] font-xl font-bold me-2 px-2.5 py-0.5 rounded">
+    <span className="flex flex-row items-center bg-green-200 text-green-600 text-[10px] font-xl font-bold me-2 px-2.5 py-0.5 rounded">
       <GoChecklist /> {task.subtaskCount}
     </span>
   ) : null;
@@ -124,6 +128,7 @@ export function TaskCard({ task, deleteTask, updateTask }) {
         challenge={task.challenge}
         importance={task.importance}
         updateTask={updateTask}
+        completed={task.completed}
       />
 
       {/* -------- Task Card -------- */}
@@ -138,7 +143,8 @@ export function TaskCard({ task, deleteTask, updateTask }) {
         }}
         onMouseLeave={() => {
           setMouseIsOver(false);
-        }}>
+        }}
+        onClick={() => document.getElementById(`task_detail_modal_${task.id}`).showModal()}>
         {/* -------- Task Content -------- */}
         {/* Tags */}
         {tags}
