@@ -5,18 +5,17 @@ import { useEffect, useState } from "react";
 export function ProfileUpdatePage() {
   const [profile_pic, setProfilePic] = useState(undefined);
   const [about, setAbout] = useState();
-  const [firstName, setFirstname] = useState();
+  const [username, setUsernames] = useState();
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axiosInstance.get("/user/data/");
         const fetchedProfilePic = response.data.profile_pic;
         const fetchedAbout = response.data.about;
-        console.log(fetchedAbout);
-        const fetchedFirstname = response.data.first_name;
+        const fetchedUsernames = response.data.username;
         setProfilePic(fetchedProfilePic);
         setAbout(fetchedAbout);
-        setFirstname(fetchedFirstname);
+        setUsernames(fetchedUsernames);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -27,8 +26,8 @@ export function ProfileUpdatePage() {
     <div>
       <div className="stats shadow mt-3">
         <div className="stat">
-          <div className="stat-title truncate">Firstname</div>
-          <div className="stat-value truncate">{firstName}</div>
+          <div className="stat-title truncate">Username</div>
+          <div className="stat-value truncate">{username}</div>
           {/* <div className="stat-desc truncate">User ID</div> */}
           <div className="stat-figure text-secondary">
             <div className="avatar online">
