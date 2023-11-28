@@ -1,44 +1,141 @@
 import { useState, useEffect } from "react";
 import { FaTasks, FaRegListAlt } from "react-icons/fa";
-import { FaPlus, FaRegTrashCan } from "react-icons/fa6";
+import { FaPlus, FaRegTrashCan, FaPencil } from "react-icons/fa6";
 import { TbChecklist } from "react-icons/tb";
 import DatePicker from "react-datepicker";
-import { TimePicker } from "react-ios-time-picker";
 import "react-datepicker/dist/react-datepicker.css";
 import { addSubtasks, deleteSubtasks, getSubtask, updateSubtask } from "src/api/SubTaskApi";
+import { updateTodoTaskPartial } from "src/api/TaskApi";
+import format from "date-fns/format";
 
-export function TaskDetailModal({ title, description, tags, difficulty, challenge, importance, taskId, updateTask }) {
+export function TaskDetailModal({
+  title,
+  description,
+  tags,
+  difficulty,
+  challenge,
+  importance,
+  taskId,
+  updateTask,
+  completed,
+}) {
   const [isChallengeChecked, setChallengeChecked] = useState(challenge);
   const [isImportantChecked, setImportantChecked] = useState(importance);
-  const [currentDifficulty, setCurrentDifficulty] = useState(difficulty);
+  const [currentDifficulty, setCurrentDifficulty] = useState((difficulty - 1) * 25);
   const [selectedTags, setSelectedTags] = useState([]);
   const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
   const [startDateEnabled, setStartDateEnabled] = useState(false);
   const [endDateEnabled, setEndDateEnabled] = useState(false);
-  const [isTaskComplete, setTaskComplete] = useState(false);
-  const [value, setValue] = useState("10:00");
+  const [isTaskComplete, setTaskComplete] = useState(completed);
+  const [starteventValue, setStartEventValue] = useState("10:00 PM");
+  const [endeventValue, setEndEventValue] = useState("11:00 AM");
   const [subtaskText, setSubtaskText] = useState("");
   const [subtasks, setSubtasks] = useState([]);
+  const [currentTitle, setTitle] = useState(title);
+  const [isTitleEditing, setTitleEditing] = useState(false);
 
-  const onChange = (timeValue) => {
-    setValue(timeValue);
+  const handleTitleChange = async () => {
+    const data = {
+      title: currentTitle,
+    };
+    await updateTodoTaskPartial(taskId, data);
+    setTitleEditing(false);
   };
-  const handleChallengeChange = () => {
+
+  const handleStartEventTimeChange = async (timeValue) => {
+    const formattedTime = convertToFormattedTime(timeValue);
+    setStartEventValue(formattedTime);
+    console.log(formattedTime);
+    const data = {
+      startTime: formattedTime,
+    };
+    await updateTodoTaskPartial(taskId, data);
+  };
+
+  const handleEndEventTimeChange = async (timeValue) => {
+    const inputTime = event.target.value;
+    // Validate the input time format
+    if (!validateTimeFormat(inputTime)) {
+      // Display an error message or handle invalid format
+      console.error("Invalid time format. Please use HH:mm AM/PM");
+      return;
+    }
+
+    const formattedTime = convertToFormattedTime(timeValue);
+    setEndEventValue(formattedTime);
+    const data = {
+      endTime: formattedTime,
+    };
+    await updateTodoTaskPartial(taskId, data);
+  };
+
+  const convertToFormattedTime = (timeValue) => {
+    const formattedTime = format(timeValue, "HH:mm:ss.SSSX", { timeZone: "UTC" });
+    return formattedTime;
+  };
+
+  const validateTimeFormat = (time) => {
+    const timeFormatRegex = /^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i;
+    return timeFormatRegex.test(time);
+  };
+
+  const handleChallengeChange = async () => {
     setChallengeChecked(!isChallengeChecked);
+    const data = {
+      challenge: !isChallengeChecked,
+    };
+    await updateTodoTaskPartial(taskId, data);
   };
 
-  const handleImportantChange = () => {
+  const handleImportantChange = async () => {
     setImportantChecked(!isImportantChecked);
+    const data = {
+      important: !isImportantChecked,
+    };
+    await updateTodoTaskPartial(taskId, data);
   };
 
-  const handleDifficultyChange = (event) => {
+  const handleDifficultyChange = async (event) => {
     setCurrentDifficulty(parseInt(event.target.value, 10));
+    let diff = event.target.value / 25 + 1;
+    const data = {
+      difficulty: diff,
+    };
+    await updateTodoTaskPartial(taskId, data);
   };
 
   const handleTagChange = (tag) => {
     const isSelected = selectedTags.includes(tag);
     setSelectedTags(isSelected ? selectedTags.filter((selectedTag) => selectedTag !== tag) : [...selectedTags, tag]);
+    ``;
+  };
+
+  const handleStartDateValueChange = (date) => {
+    if (!isTaskComplete) {
+      setDateStart(date);
+      const formattedStartDate = convertToFormattedDate(date);
+      const data = {
+        startTime: formattedStartDate,
+      };
+      updateTodoTaskPartial(taskId, data);
+    }
+  };
+
+  const handleEndDateValueChange = (date) => {
+    if (!isTaskComplete) {
+      setDateEnd(date);
+      const formattedEndDate = convertToFormattedDate(date);
+      const data = {
+        endTime: formattedEndDate,
+      };
+      updateTodoTaskPartial(taskId, data);
+    }
+  };
+
+  const convertToFormattedDate = (dateValue) => {
+    const formattedDate = format(dateValue, "yyyy-MM-dd'T'", { timeZone: "UTC" });
+    return formattedDate;
   };
 
   const handleStartDateChange = () => {
@@ -53,14 +150,21 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
     }
   };
 
-  const handleTaskCompleteChange = () => {
+  const handleTaskCompleteChange = async () => {
+    let completed = false;
     if (isTaskComplete) {
       setTaskComplete(false);
+      completed = false;
     } else {
       setTaskComplete(true);
+      completed = true;
       setStartDateEnabled(false);
       setEndDateEnabled(false);
     }
+    const data = {
+      completed: completed,
+    };
+    await updateTodoTaskPartial(taskId, data);
   };
 
   const addSubtask = async () => {
@@ -130,7 +234,7 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
     <div
       key={index}
       className={`text-xs inline-flex items-center font-bold leading-sm uppercase px-2 py-1 bg-${tag.color}-200 text-${tag.color}-700 rounded-full`}>
-      {tag.label}
+      {tag.name}
     </div>
   ));
 
@@ -139,7 +243,7 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
     <div
       key={index}
       className={`text-xs inline-flex items-center font-bold leading-sm uppercase px-2 py-1 bg-${tag.color}-200 text-${tag.color}-700 rounded-full`}>
-      {tag.label}
+      {tag.name}
     </div>
   ));
 
@@ -149,13 +253,29 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
         {/* Title */}
         <div className="flex flex-col py-2">
           <div className="flex flex-col">
-            <h3 className="font-bold text-lg">
-              <span className="flex gap-2">
-                {<FaTasks className="my-2" />}
-                {title}
-              </span>
-            </h3>
-            <p className="text-xs">{title}</p>
+            {isTitleEditing ? (
+              <div className="flex gap-2 items-center">
+                <FaTasks className="my-2" />
+                <input
+                  type="text"
+                  className="input-md input-bordered font-bold text-lg"
+                  value={currentTitle}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+                <button className="btn btn-sm" onClick={handleTitleChange}>
+                  Save
+                </button>
+              </div>
+            ) : (
+              <h3 className="font-bold text-lg">
+                <span className="flex gap-2">
+                  {<FaTasks className="my-2" />}
+                  {currentTitle}
+                  <FaPencil className="my-2" onClick={() => setTitleEditing(true)} />
+                </span>
+              </h3>
+            )}
+            <p className="text-xs">{currentTitle}</p>
           </div>
         </div>
         {/* Tags */}
@@ -175,7 +295,7 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
                         className="checkbox checkbox-sm"
                         onChange={() => handleTagChange(tag)}
                       />
-                      {tag.label}
+                      {tag}
                     </label>
                   </li>
                 ))}
@@ -201,33 +321,31 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
                   onChange={handleStartDateChange}
                 />
                 <div className={`rounded p-2 shadow border-2 ${!startDateEnabled && "opacity-50"}`}>
-                  <DatePicker
-                    selected={dateStart}
-                    onChange={(date) => setDateStart(date)}
-                    disabled={!startDateEnabled}
-                  />
+                  <DatePicker selected={dateStart} onChange={handleStartDateValueChange} disabled={!startDateEnabled} />
                 </div>
               </div>
             </div>
 
-            <div className="rounded p-2 shadow border-2">
-              <TimePicker
-                value={value}
-                onChange={onChange}
-                className="rounded p-2 shadow border-2 z-[10000] relative"
+            {/* Start event time picker */}
+            <div className="rounded p-2 shadow border-2 ml-2 mt-4">
+              {/* handleStartEventTimeChange */}
+              <input
+                type="text"
+                placeholder="10:00 AM"
+                className="input input-bordered w-full max-w-xs"
+                onClick={handleStartEventTimeChange}
               />
             </div>
+
             {/* Complete? */}
             <div className="mx-4">
               <div className="flex items-center space-x-2 mt-4">
                 <div className="flex-1 flex-row card shadow border-2 p-2 pr-2">
                   <p className="text-md mx-2">Complete</p>
-                  <input
-                    type="checkbox"
-                    checked={isTaskComplete}
-                    className="checkbox checkbox-xl bg-gray-400"
-                    onChange={handleTaskCompleteChange}
-                  />
+                  <input type="checkbox" checked={isTaskComplete} className="checkbox checkbox-xl bg-gray-400" />
+                  <button className="btn btn-sm mt-2" onClick={handleStartEventTimeChange}>
+                    Update Start Time
+                  </button>
                 </div>
               </div>
             </div>
@@ -243,8 +361,10 @@ export function TaskDetailModal({ title, description, tags, difficulty, challeng
                 onChange={handleEndDateChange}
               />
               <div className={`rounded p-2 shadow border-2 ${!endDateEnabled && "opacity-50"}`}>
-                <DatePicker selected={dateEnd} onChange={(date) => setDateEnd(date)} disabled={!endDateEnabled} />
+                <DatePicker selected={dateEnd} onChange={handleEndDateValueChange} disabled={!endDateEnabled} />
               </div>
+              {/* End event time picker */}
+              <div className="rounded p-2 shadow border-2">this is time picker</div>
             </div>
           </div>
         </div>

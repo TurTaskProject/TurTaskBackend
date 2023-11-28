@@ -34,6 +34,7 @@
     "@wojtekmaj/react-daterange-picker": "^5.4.4",
     "axios": "^1.6.1",
     "bootstrap": "^5.3.2",
+    "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "framer-motion": "^10.16.4",
     "gapi-script": "^1.2.0",
