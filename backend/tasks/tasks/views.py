@@ -35,6 +35,18 @@ class TodoViewSet(viewsets.ModelViewSet):
             return TaskCreateSerializer
         return TaskSerializer
 
+    def list(self, request, *args, **kwargs):
+        """
+        list all tasks of the authenticated 
+        user and send tags if those Todo too.
+        """
+        try:
+            queryset = self.get_queryset()
+            serializer = TaskSerializer(queryset, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     def create(self, request, *args, **kwargs):
         try:
             new_task_data = request.data

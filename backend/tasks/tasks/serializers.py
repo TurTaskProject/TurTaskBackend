@@ -4,6 +4,9 @@ from boards.models import ListBoard
 from tasks.models import Todo, RecurrenceTask, Habit, Subtask
 
 class TaskSerializer(serializers.ModelSerializer):
+    tags = serializers.SerializerMethodField()
+    sub_task_count = serializers.SerializerMethodField()
+    
     class Meta:
         model = Todo
         fields = '__all__'
@@ -18,6 +21,12 @@ class TaskSerializer(serializers.ModelSerializer):
 
         validated_data['user'] = user
         return Todo.objects.create(**validated_data)
+
+    def get_tags(self, instance):
+        return [tag.name for tag in instance.tags.all()]
+
+    def get_sub_task_count(self, instance):
+        return instance.subtask_set.count()
 
 class TaskCreateSerializer(serializers.ModelSerializer):
     class Meta:

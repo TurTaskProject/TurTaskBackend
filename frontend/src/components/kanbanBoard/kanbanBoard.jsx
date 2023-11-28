@@ -121,6 +121,7 @@ export function KanbanBoard() {
           user: task.user,
           list_board: task.list_board,
           tags: task.tags,
+          subtaskCount: task.sub_task_count,
         }));
         setTasks(transformedTasks);
 
