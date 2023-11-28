@@ -29,13 +29,13 @@ export function TaskDetailModal({
   const [endDateEnabled, setEndDateEnabled] = useState(false);
   const [isTaskComplete, setTaskComplete] = useState(completed);
   const [starteventValue, setStartEventValue] = useState("10:00 PM");
-  const [endeventValue, setEndEventValue] = useState("11:00 AM");
+  const [endeventValue, setEndEventValue] = useState("10:00 AM");
   const [subtaskText, setSubtaskText] = useState("");
   const [subtasks, setSubtasks] = useState([]);
   const [currentTitle, setTitle] = useState(title);
   const [isTitleEditing, setTitleEditing] = useState(false);
-  const [isCheckboxChecked, setCheckboxChecked] = useState(false);
-  
+  const [isCheckboxStartTimeChecked, setCheckboxStartTimeChecked] = useState(false);
+  const [isCheckboxEndTimeChecked, setCheckboxEndTimeChecked] = useState(false);
 
   const handleTitleChange = async () => {
     const data = {
@@ -45,8 +45,12 @@ export function TaskDetailModal({
     setTitleEditing(false);
   };
 
-  const handleCheckboxChange = () => {
-    setCheckboxChecked(!isCheckboxChecked);
+  const handleCheckboxStartTimeChange = () => {
+    setCheckboxStartTimeChecked(!isCheckboxStartTimeChecked);
+  };
+
+  const handleCheckboxEndTimeChange = () => {
+    setCheckboxEndTimeChecked(!isCheckboxEndTimeChecked);
   };
 
   const handleStartEventTimeChange = async (timeValue) => {
@@ -337,16 +341,16 @@ export function TaskDetailModal({
               {/* handleStartEventTimeChange */}
               <input
                 type="checkbox"
-                checked={isCheckboxChecked}
+                checked={isCheckboxStartTimeChecked}
                 className="checkbox checkbox-xs bg-gray-400 mr-2"
-                onChange={handleCheckboxChange}
+                onChange={handleCheckboxStartTimeChange}
               />
               <input
                 type="text"
-                placeholder="10:00 AM"
+                placeholder={starteventValue}
                 className="input input-bordered w-full max-w-xs"
                 onClick={() => handleStartEventTimeChange(dateStart)}
-                disabled={!isCheckboxChecked}
+                disabled={!isCheckboxStartTimeChecked}
               />
               <div className="rounded mx-2">
                 <button className="btn btn-sm" onClick={() => handleStartEventTimeChange(dateStart)}>
@@ -380,7 +384,27 @@ export function TaskDetailModal({
                 <DatePicker selected={dateEnd} onChange={handleEndDateValueChange} disabled={!endDateEnabled} />
               </div>
               {/* End event time picker */}
-              <div className="rounded p-2 shadow border-2">this is time picker</div>
+              <div className="rounded mx-2 flex flex-row items-center">
+                {/* handleEndEventTimeChange */}
+                <input
+                  type="checkbox"
+                  checked={isCheckboxEndTimeChecked}
+                  className="checkbox checkbox-xs bg-gray-400 mr-2"
+                  onChange={handleCheckboxEndTimeChange}
+                />
+                <input
+                  type="text"
+                  placeholder={endeventValue}
+                  className="input input-bordered w-full max-w-xs"
+                  onClick={() => handleEndEventTimeChange(dateEnd)}
+                  disabled={!isCheckboxEndTimeChecked}
+                />
+                <div className="rounded mx-2">
+                  <button className="btn btn-sm" onClick={() => handleEndEventTimeChange(dateEnd)}>
+                    Update Time
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
