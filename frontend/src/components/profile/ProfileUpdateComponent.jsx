@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 export function ProfileUpdateComponent() {
   const [file, setFile] = useState(null);
-  const [firstName, setFirstName] = useState("");
+  const [username, setUserName] = useState("");
   const [about, setAbout] = useState();
   const fileInputRef = useRef(null);
   const [profile_pic, setProfilePic] = useState(undefined);
@@ -14,11 +14,11 @@ export function ProfileUpdateComponent() {
       try {
         const response = await axiosInstance.get("/user/data/");
         const fetchedProfilePic = response.data.profile_pic;
-        const fetchedName = response.data.first_name;
+        const fetchedName = response.data.username;
         const fetchedAbout = response.data.about;
         setProfilePic(fetchedProfilePic);
         setAbout(fetchedAbout);
-        setFirstName(fetchedName);
+        setUserName(fetchedName);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -42,7 +42,7 @@ export function ProfileUpdateComponent() {
   const handleSave = () => {
     const formData = new FormData();
     formData.append("profile_pic", file);
-    formData.append("first_name", firstName);
+    formData.append("username", username);
     formData.append("about", about);
 
     ApiUpdateUserProfile(formData);
@@ -62,16 +62,9 @@ export function ProfileUpdateComponent() {
             ref={fileInputRef}
           />
         </label>
-        <div
-          className="avatar w-32 h-32 cursor-pointer hover:blur"
-          onClick={handleImageUpload}
-        >
+        <div className="avatar w-32 h-32 cursor-pointer hover:blur" onClick={handleImageUpload}>
           {file ? (
-            <img
-              src={URL.createObjectURL(file)}
-              alt="Profile"
-              className="rounded-full"
-            />
+            <img src={URL.createObjectURL(file)} alt="Profile" className="rounded-full" />
           ) : (
             <>
               <img src={profile_pic} alt="Default" className="rounded-full" />
@@ -96,13 +89,13 @@ export function ProfileUpdateComponent() {
 
       {/* Full Name Field */}
       <div className="w-96">
-        <label className="block mb-2 text-gray-600">First Name</label>
+        <label className="block mb-2 text-gray-600">username</label>
         <input
           type="text"
-          placeholder="Enter your first name"
+          placeholder="Enter your username"
           className="input w-full"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
+          value={username}
+          onChange={(e) => setUserName(e.target.value)}
         />
       </div>
 
