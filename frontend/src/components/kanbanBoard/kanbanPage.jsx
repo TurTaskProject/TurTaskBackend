@@ -1,5 +1,6 @@
 import { KanbanBoard } from "./kanbanBoard";
 import { useState } from "react";
+import { TableBoard } from "./tableBoard";
 
 export const KanbanPage = () => {
   const [activeTab, setActiveTab] = useState("kanban");
@@ -16,19 +17,21 @@ export const KanbanPage = () => {
             <a
               id="kanban"
               className={`tab ${activeTab === "kanban" ? "tab-active" : ""}`}
-              onClick={() => handleTabClick("kanban")}>
+              onClick={() => handleTabClick("kanban")}
+            >
               Kanban
             </a>
-            {/* <a
+            <a
               id="table"
               className={`tab ${activeTab === "table" ? "tab-active" : ""}`}
-              onClick={() => handleTabClick("table")}>
+              onClick={() => handleTabClick("table")}
+            >
               Table
-            </a> */}
+            </a>
           </div>
         </div>
       </div>
-      <KanbanBoard />
+      {activeTab === "kanban" ? <KanbanBoard /> : <TableBoard />}
     </div>
   );
 };
