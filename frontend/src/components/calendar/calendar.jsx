@@ -13,6 +13,14 @@ export class Calendar extends React.Component {
     currentEvents: [],
   };
 
+  async handleGoogleClick() {
+    try {
+      const response = await axiosInstance.get("calendar-events/");
+    } catch (error) {
+      console.error("Error fetching data from Google:", error);
+    }
+  }
+
   render() {
     return (
       <div className="flex font-sans w-full h-screen">
@@ -47,10 +55,7 @@ export class Calendar extends React.Component {
       <div className="w-72 bg-blue-100 border-r border-blue-200 p-8 flex flex-col">
         {/* Description Zone */}
         <div className="mb-8">
-          <h2 className="text-xl font-bold">Instructions</h2>
           <ul className="list-disc pl-4">
-            <li>Select dates and you will be prompted to create a new event</li>
-            <li>Drag, drop, and resize events</li>
             <li>Click an event to delete it</li>
           </ul>
         </div>
@@ -66,7 +71,7 @@ export class Calendar extends React.Component {
             />
             Toggle weekends
           </label>
-          <button className="btn btn-info" onClick={() => alert("Commit soon🥺")}>
+          <button className="btn btn-info" onClick={() => this.handleGoogleClick()}>
             Load Data from Google
           </button>
         </div>
