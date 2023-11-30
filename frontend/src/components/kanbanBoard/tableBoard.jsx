@@ -51,11 +51,7 @@ export function TableBoard() {
         {/* head */}
         <thead>
           <tr>
-            <th>
-              <label>
-                <input type="checkbox" className="checkbox" />
-              </label>
-            </th>
+            <th></th>
             <th>Title</th>
             <th>Description</th>
             <th>Priority</th>
@@ -67,9 +63,7 @@ export function TableBoard() {
           {tasks.map((task, index) => (
             <tr key={index}>
               <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
+                <label></label>
               </th>
               <td>
                 <div className="flex items-center gap-3">
@@ -86,9 +80,7 @@ export function TableBoard() {
               </td>
               <td>{task.priority}</td>
               <th>
-                <button className="btn btn-ghost btn-xs">
-                  {task.end_event}
-                </button>
+                <button className="btn btn-ghost btn-xs">{task.end_event}</button>
               </th>
             </tr>
           ))}
