@@ -16,26 +16,48 @@ export function TaskDetailModal({
   challenge,
   importance,
   taskId,
+  start_event,
+  end_event,
   updateTask,
   completed,
 }) {
+  if (importance >= 3) {
+    importance = true;
+  } else {
+    importance = false;
+  }
+
+  const s = formatAMPM(new Date(start_event));
+  const e = formatAMPM(new Date(end_event));
   const [isChallengeChecked, setChallengeChecked] = useState(challenge);
   const [isImportantChecked, setImportantChecked] = useState(importance);
   const [currentDifficulty, setCurrentDifficulty] = useState((difficulty - 1) * 25);
   const [selectedTags, setSelectedTags] = useState([]);
-  const [dateStart, setDateStart] = useState(new Date());
-  const [dateEnd, setDateEnd] = useState(new Date());
+  const [dateStart, setDateStart] = useState(new Date(start_event));
+  const [dateEnd, setDateEnd] = useState(new Date(end_event));
   const [startDateEnabled, setStartDateEnabled] = useState(false);
   const [endDateEnabled, setEndDateEnabled] = useState(false);
   const [isTaskComplete, setTaskComplete] = useState(completed);
-  const [starteventValue, setStartEventValue] = useState("10:00 PM");
-  const [endeventValue, setEndEventValue] = useState("10:00 AM");
+  const [starteventValue, setStartEventValue] = useState(e);
+  const [endeventValue, setEndEventValue] = useState(s);
   const [subtaskText, setSubtaskText] = useState("");
   const [subtasks, setSubtasks] = useState([]);
   const [currentTitle, setTitle] = useState(title);
   const [isTitleEditing, setTitleEditing] = useState(false);
-  const [isCheckboxStartTimeChecked, setCheckboxStartTimeChecked] = useState(false);
-  const [isCheckboxEndTimeChecked, setCheckboxEndTimeChecked] = useState(false);
+  const [isDescriptionEditing, setDescriptionEditing] = useState(false);
+  const [updatedDescription, setUpdatedDescription] = useState(description);
+
+  const handleDescriptionEditToggle = () => {
+    setDescriptionEditing(!isDescriptionEditing);
+  };
+
+  const handleDescriptionChange = async () => {
+    const data = {
+      notes: updatedDescription,
+    };
+    await updateTodoTaskPartial(taskId, data);
+    setDescriptionEditing(false);
+  };
 
   const handleTitleChange = async () => {
     const data = {
@@ -45,50 +67,112 @@ export function TaskDetailModal({
     setTitleEditing(false);
   };
 
-  const handleCheckboxStartTimeChange = () => {
-    setCheckboxStartTimeChecked(!isCheckboxStartTimeChecked);
-  };
+  {
+    /* -------- Time -------- */
+  }
 
-  const handleCheckboxEndTimeChange = () => {
-    setCheckboxEndTimeChecked(!isCheckboxEndTimeChecked);
-  };
+  function formatAMPM(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
+  }
 
-  const handleStartEventTimeChange = async (timeValue) => {
-    const formattedTime = convertToFormattedTime(timeValue);
-    setStartEventValue(formattedTime);
-    console.log(formattedTime);
-    const data = {
-      startTime: formattedTime,
-    };
-    await updateTodoTaskPartial(taskId, data);
-  };
-
-  const handleEndEventTimeChange = async (timeValue) => {
-    const inputTime = event.target.value;
-    // Validate the input time format
-    if (!validateTimeFormat(inputTime)) {
-      // Display an error message or handle invalid format
-      console.error("Invalid time format. Please use HH:mm AM/PM");
+  const handleStartEventTimeChange = async (startdate, starttime) => {
+    if (!validateTimeFormat(starttime)) {
+      console.error("Wrong time format");
       return;
     }
 
-    const formattedTime = convertToFormattedTime(timeValue);
-    setEndEventValue(formattedTime);
+    // Format incoming date
+    setDateStart(startdate);
+    setStartEventValue(starttime);
+    const formatDate = convertToFormattedDate(startdate);
+    // Format incoming time
+    const formatTime = convertToFormattedTime(starttime).slice(0, -1) + ":00.000000Z";
+    console.log(formatTime);
+    // Combine both of them
+    const formatDateTime = formatDate + formatTime;
+
     const data = {
-      endTime: formattedTime,
+      startTime: formatDateTime,
+    };
+    console.log(formatDateTime);
+    await updateTodoTaskPartial(taskId, data);
+  };
+
+  const handleEndEventTimeChange = async (enddate, endtime) => {
+    if (!validateTimeFormat(endtime)) {
+      console.error("Wrong time format");
+      return;
+    }
+
+    // Format incoming date
+    setDateEnd(enddate);
+    setEndEventValue(endtime);
+    const formatDate = convertToFormattedDate(enddate);
+    // Format incoming time
+    const formatTime = convertToFormattedTime(endtime);
+
+    // Combine both of them
+    const formatDateTime = formatDate + formatTime;
+
+    const data = {
+      startTime: formatDateTime,
     };
     await updateTodoTaskPartial(taskId, data);
   };
 
+  const convertToFormattedDate = (dateValue) => {
+    const formattedDate = format(dateValue, "yyyy-MM-dd'T'", {
+      timeZone: "UTC",
+    });
+    return formattedDate;
+  };
+
   const convertToFormattedTime = (timeValue) => {
-    const formattedTime = format(timeValue, "HH:mm:ss.SSSX", { timeZone: "UTC" });
-    return formattedTime;
+    // 2023-11-28 T [04:37:48.000000Z]
+    // 12:00 AM -> 12:00:00.000000Z
+    // 10:00 PM -> 22:00:00.000000Z
+
+    var hours = parseInt(timeValue.substr(0, 2));
+    if (timeValue.indexOf("AM") != -1 && hours == 12) {
+      timeValue = timeValue.replace("12", "0");
+    }
+    if (timeValue.indexOf("PM") != -1 && hours < 12) {
+      timeValue = timeValue.replace(hours, hours + 12);
+    }
+    const formattedTime = timeValue.replace(/(AM|PM)/, "");
+    const [formattedHours, restOfTime] = formattedTime.split(":");
+    const paddedHours = formattedHours.length === 1 ? `0${formattedHours}` : formattedHours;
+    console.log(`${paddedHours}:${restOfTime}`);
+    return `${paddedHours}:${restOfTime}`;
+  };
+
+  const handleStartDateChange = () => {
+    if (!isTaskComplete) {
+      setStartDateEnabled(!startDateEnabled);
+    }
+  };
+
+  const handleEndDateChange = () => {
+    if (!isTaskComplete) {
+      setEndDateEnabled(!endDateEnabled);
+    }
   };
 
   const validateTimeFormat = (time) => {
-    const timeFormatRegex = /^(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i;
+    const timeFormatRegex = /^([1-9]|1[0-2]):[0-5][0-9]( |)(AM|PM)$/i;
     return timeFormatRegex.test(time);
   };
+
+  {
+    /* -------- END Time -------- */
+  }
 
   const handleChallengeChange = async () => {
     setChallengeChecked(!isChallengeChecked);
@@ -99,9 +183,14 @@ export function TaskDetailModal({
   };
 
   const handleImportantChange = async () => {
+    let important_num = 0;
+    if (isImportantChecked) {
+      important_num = 5;
+    }
+
     setImportantChecked(!isImportantChecked);
     const data = {
-      important: !isImportantChecked,
+      important: important_num,
     };
     await updateTodoTaskPartial(taskId, data);
   };
@@ -119,45 +208,6 @@ export function TaskDetailModal({
     const isSelected = selectedTags.includes(tag);
     setSelectedTags(isSelected ? selectedTags.filter((selectedTag) => selectedTag !== tag) : [...selectedTags, tag]);
     ``;
-  };
-
-  const handleStartDateValueChange = (date) => {
-    if (!isTaskComplete) {
-      setDateStart(date);
-      const formattedStartDate = convertToFormattedDate(date);
-      const data = {
-        startTime: formattedStartDate,
-      };
-      updateTodoTaskPartial(taskId, data);
-    }
-  };
-
-  const handleEndDateValueChange = (date) => {
-    if (!isTaskComplete) {
-      setDateEnd(date);
-      const formattedEndDate = convertToFormattedDate(date);
-      const data = {
-        endTime: formattedEndDate,
-      };
-      updateTodoTaskPartial(taskId, data);
-    }
-  };
-
-  const convertToFormattedDate = (dateValue) => {
-    const formattedDate = format(dateValue, "yyyy-MM-dd'T'", { timeZone: "UTC" });
-    return formattedDate;
-  };
-
-  const handleStartDateChange = () => {
-    if (!isTaskComplete) {
-      setStartDateEnabled(!startDateEnabled);
-    }
-  };
-
-  const handleEndDateChange = () => {
-    if (!isTaskComplete) {
-      setEndDateEnabled(!endDateEnabled);
-    }
   };
 
   const handleTaskCompleteChange = async () => {
@@ -193,7 +243,9 @@ export function TaskDetailModal({
     try {
       const updatedSubtasks = [...subtasks];
       updatedSubtasks[index].completed = !updatedSubtasks[index].completed;
-      await updateSubtask(updatedSubtasks[index].id, { completed: updatedSubtasks[index].completed });
+      await updateSubtask(updatedSubtasks[index].id, {
+        completed: updatedSubtasks[index].completed,
+      });
       setSubtasks(updatedSubtasks);
     } catch (error) {
       console.error("Error updating subtask:", error);
@@ -331,7 +383,11 @@ export function TaskDetailModal({
                   onChange={handleStartDateChange}
                 />
                 <div className={`rounded p-2 shadow border-2 ${!startDateEnabled && "opacity-50"}`}>
-                  <DatePicker selected={dateStart} onChange={handleStartDateValueChange} disabled={!startDateEnabled} />
+                  <DatePicker
+                    selected={dateStart}
+                    onChange={(dateStart) => setDateStart(dateStart)}
+                    disabled={!startDateEnabled}
+                  />
                 </div>
               </div>
             </div>
@@ -340,19 +396,18 @@ export function TaskDetailModal({
             <div className="rounded mx-2 mt-4 flex flex-row items-center">
               {/* handleStartEventTimeChange */}
               <input
-                type="checkbox"
-                checked={isCheckboxStartTimeChecked}
-                className="checkbox checkbox-xs bg-gray-400 mr-2"
-                onChange={handleCheckboxStartTimeChange}
-              />
-              <input
                 type="text"
                 placeholder={starteventValue}
+                value={starteventValue}
+                onChange={(starteventValue) => setStartEventValue(starteventValue)}
                 className="input input-bordered w-full max-w-xs"
-                disabled={!isCheckboxStartTimeChecked}
+                disabled={!startDateEnabled}
               />
               <div className="rounded mx-2">
-                <button className="btn btn-sm" onClick={() => handleStartEventTimeChange(dateStart)}>
+                <button
+                  className="btn btn-sm"
+                  disabled={isTaskComplete}
+                  onClick={() => handleStartEventTimeChange(dateStart, starteventValue)}>
                   Update Time
                 </button>
               </div>
@@ -370,25 +425,22 @@ export function TaskDetailModal({
                 onChange={handleEndDateChange}
               />
               <div className={`rounded p-2 shadow border-2 ${!endDateEnabled && "opacity-50"}`}>
-                <DatePicker selected={dateEnd} onChange={handleEndDateValueChange} disabled={!endDateEnabled} />
+                <DatePicker selected={dateEnd} onChange={(dateEnd) => setDateEnd(dateEnd)} disabled={!endDateEnabled} />
               </div>
               {/* End event time picker */}
               <div className="rounded mx-2 flex flex-row items-center">
                 {/* handleEndEventTimeChange */}
                 <input
-                  type="checkbox"
-                  checked={isCheckboxEndTimeChecked}
-                  className="checkbox checkbox-xs bg-gray-400 mr-2"
-                  onChange={handleCheckboxEndTimeChange}
-                />
-                <input
                   type="text"
                   placeholder={endeventValue}
                   className="input input-bordered w-full max-w-xs"
-                  disabled={!isCheckboxEndTimeChecked}
+                  disabled={!endDateEnabled}
                 />
                 <div className="rounded mx-2">
-                  <button className="btn btn-sm" onClick={() => handleEndEventTimeChange(dateEnd)}>
+                  <button
+                    className="btn btn-sm"
+                    disabled={isTaskComplete}
+                    onClick={() => handleEndEventTimeChange(dateEnd, endeventValue)}>
                     Update Time
                   </button>
                 </div>
@@ -397,17 +449,38 @@ export function TaskDetailModal({
           </div>
         </div>
         {/* Description */}
-        <div className="flex flex-col gap-2">
-          <h2 className="font-bold">
-            <span className="flex gap-2">
-              <FaRegListAlt className="my-1" />
-              Description
-            </span>
-          </h2>
-          <textarea className="textarea w-full" disabled>
-            {description}
-          </textarea>
-        </div>
+        {isDescriptionEditing ? (
+          <div className="flex flex-col gap-2">
+            <h2 className="font-bold">
+              <span className="flex gap-2">
+                <FaRegListAlt className="my-1" />
+                Description
+              </span>
+            </h2>
+            <textarea
+              className="textarea w-full"
+              value={updatedDescription}
+              onChange={(e) => setUpdatedDescription(e.target.value)}
+            />
+            <button className="btn btn-sm" onClick={handleDescriptionChange}>
+              Save
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            <h2 className="font-bold">
+              <span className="flex gap-2">
+                <FaRegListAlt className="my-1" />
+                Description
+              </span>
+            </h2>
+            <textarea className="textarea w-full" disabled>
+              {description}
+            </textarea>
+            <FaPencil className="cursor-pointer" onClick={handleDescriptionEditToggle} />
+          </div>
+        )}
+
         {/* Difficulty, Challenge, and Importance */}
         <div className="flex flex-row space-x-3 my-4">
           <div className="flex-1 card shadow border-2 p-2">
