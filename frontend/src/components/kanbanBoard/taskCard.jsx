@@ -50,12 +50,12 @@ export function TaskCard({ task, deleteTask, updateTask }) {
         task.difficulty === 1
           ? "bg-blue-200 text-blue-700"
           : task.difficulty === 2
-          ? "bg-green-200 text-green-700"
-          : task.difficulty === 3
-          ? "bg-yellow-200 text-yellow-700"
-          : task.difficulty === 4
-          ? "bg-red-200 text-red-700"
-          : "bg-purple-200 text-purple-700"
+            ? "bg-green-200 text-green-700"
+            : task.difficulty === 3
+              ? "bg-yellow-200 text-yellow-700"
+              : task.difficulty === 4
+                ? "bg-red-200 text-red-700"
+                : "bg-purple-200 text-purple-700"
       }`}>
       difficulty
     </span>
@@ -71,12 +71,12 @@ export function TaskCard({ task, deleteTask, updateTask }) {
             daysUntilDue >= 365
               ? "gray-200"
               : daysUntilDue >= 30
-              ? "blue-200"
-              : daysUntilDue >= 7
-              ? "green-200"
-              : daysUntilDue > 0
-              ? "yellow-200"
-              : "red-200";
+                ? "blue-200"
+                : daysUntilDue >= 7
+                  ? "green-200"
+                  : daysUntilDue > 0
+                    ? "yellow-200"
+                    : "red-200";
 
           const formattedDueDate =
             daysUntilDue >= 365
@@ -85,7 +85,10 @@ export function TaskCard({ task, deleteTask, updateTask }) {
                   month: "short",
                   year: "numeric",
                 })
-              : new Date(task.end_event).toLocaleDateString("en-US", { day: "numeric", month: "short" });
+              : new Date(task.end_event).toLocaleDateString("en-US", {
+                  day: "numeric",
+                  month: "short",
+                });
 
           return (
             <span className={`bg-${colorClass} text-[10px] font-xl font-bold px-2 py-1 rounded-full`}>
@@ -122,13 +125,15 @@ export function TaskCard({ task, deleteTask, updateTask }) {
       <TaskDetailModal
         taskId={task.id}
         title={task.content}
-        description={task.description}
+        description={task.notes}
         tags={task.tags}
         difficulty={task.difficulty}
         challenge={task.challenge}
         importance={task.importance}
         updateTask={updateTask}
         completed={task.completed}
+        start_event={task.start_event}
+        end_event={task.end_event}
       />
 
       {/* -------- Task Card -------- */}
